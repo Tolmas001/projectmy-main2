@@ -70,9 +70,19 @@ body {
     font-size: 14px;
 }
 
-.cart-btn {
-    position: relative;
+.lang-select {
+    border: none;
+    background: transparent;
+    font-weight: 600;
     cursor: pointer;
+    outline: none;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.lang-select option {
+    background: white;
+    color: black;
 }
 
 #cartCount {

@@ -1,3 +1,63 @@
+const translations = {
+    uz: {
+        "nav-home": "Bosh sahifa",
+        "nav-shop": "Do'kon",
+        "nav-story": "Biz haqimizda",
+        "nav-blog": "Blog",
+        "nav-contact": "Aloqa",
+        "hero-sub": "Klassik Eksklyuziv",
+        "hero-title": "Ayollar To'plami",
+        "hero-off": "40% GACHA CHEGIRMA",
+        "shop-now": "Sotib olish",
+        "category-title": "Kategoriyalar",
+        "bestseller-title": "Eng ko'p sotilganlar",
+        "footer-info": "Ma'lumotlar",
+        "footer-service": "Xizmatlar",
+        "footer-subscribe": "Obuna bo'ling"
+    },
+    en: {
+        "nav-home": "Home",
+        "nav-shop": "Shop",
+        "nav-story": "Our Story",
+        "nav-blog": "Blog",
+        "nav-contact": "Contact Us",
+        "hero-sub": "Classic Exclusive",
+        "hero-title": "Women's Collection",
+        "hero-off": "UPTO 40% OFF",
+        "shop-now": "Shop Now",
+        "category-title": "Shop by Categories",
+        "bestseller-title": "Our Bestseller",
+        "footer-info": "Information",
+        "footer-service": "Service",
+        "footer-subscribe": "Subscribe"
+    }
+};
+
+// Tilni o'zgartirish funksiyasi
+const langSelect = document.getElementById('langSelect');
+
+langSelect.addEventListener('change', (e) => {
+    setLanguage(e.target.value);
+});
+
+function setLanguage(lang) {
+    const elements = document.querySelectorAll('[data-i18n]');
+    elements.forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) {
+            el.innerText = translations[lang][key];
+        }
+    });
+    localStorage.setItem('selectedLang', lang);
+}
+
+// Sahifa yuklanganda tilni tekshirish
+document.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('selectedLang') || 'en';
+    langSelect.value = savedLang;
+    setLanguage(savedLang);
+});
+
 const products = [
     { id: 1, name: "Roadster Printed T-Shirt", price: 38.00, oldPrice: 48.00, image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500" },
     { id: 2, name: "Allen Solly Handheld Bag", price: 80.00, oldPrice: 100.00, image: "https://images.unsplash.com/photo-1584917033904-47e120121300?w=500" },
@@ -22,10 +82,10 @@ if (productGrid) {
         productGrid.innerHTML += `
             <div class="product-card-krist">
                 <div class="img-container">
-                    <img src="${p.image}" alt="${p.name}">
+                    <img src="${p.image}" alt="${p.name}" onclick="window.location.href='product-detail.html?id=${p.id}'" style="cursor:pointer">
                     <div class="add-to-cart-overlay" onclick="addToCart(${p.id})">Add to Cart</div>
                 </div>
-                <div class="product-info-krist">
+                <div class="product-info-krist" onclick="window.location.href='product-detail.html?id=${p.id}'" style="cursor:pointer">
                     <h4>${p.name}</h4>
                     <p>$${p.price.toFixed(2)} <span style="text-decoration: line-through; color: #999; font-size: 0.8em; margin-left: 10px;">$${p.oldPrice.toFixed(2)}</span></p>
                 </div>
@@ -42,6 +102,9 @@ window.addToCart = (id) => {
 
 function updateCart() {
     cartCount.innerText = cart.length;
+    // localStorage'ga saqlash (Checkout uchun)
+    localStorage.setItem('krist_cart', JSON.stringify(cart));
+    
     const itemsDiv = document.getElementById('cartItems');
     if (itemsDiv) {
         itemsDiv.innerHTML = cart.map((i, index) => `

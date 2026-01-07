@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krist - Buyurtma berish</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="auth-container" style="background: #f3f4f6;">
+        <div class="auth-box" style="max-width: 500px; text-align: left;">
+            <h1 class="logo" style="text-align: center; margin-bottom: 20px;">Krist</h1>
+            <h2 style="margin-bottom: 20px; font-size: 1.2rem; text-align: center;">Buyurtmani rasmiylashtirish</h2>
+            
+            <div id="orderSummary" style="margin-bottom: 20px; background: #fafafa; padding: 15px; border-radius: 8px;">
+                <h4 style="margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Sizning mahsulotlaringiz:</h4>
+                <div id="summaryItems"></div>
+                <div id="summaryTotal" style="margin-top: 10px; font-weight: bold; border-top: 1px solid #ddd; padding-top: 10px;"></div>
+            </div>
+
+            <form id="orderForm">
+                <div class="input-group">
+                    <label>To'liq ismingiz</label>
+                    <input type="text" id="fullName" required placeholder="Ism va familiya">
+                </div>
+                <div class="input-group">
+                    <label>Telefon raqamingiz</label>
+                    <input type="tel" id="phone" required placeholder="+998 90 123 45 67">
+                </div>
+                <div class="input-group">
+                    <label>Manzil</label>
+                    <input type="text" id="address" required placeholder="Shahar, tuman, ko'cha, uy">
+                </div>
+                <button type="submit" class="btn-primary-krist">Buyurtmani tasdiqlash</button>
+                <a href="index.html" style="display: block; text-align: center; margin-top: 15px; color: var(--dark-gray); text-decoration: none;">Savatchaga qaytish</a>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
+        const summaryItems = document.getElementById('summaryItems');
+        const summaryTotal = document.getElementById('summaryTotal');
+
+        if (cart.length === 0) {
+            window.location.href = 'index.html';
+        }
+
+        let total = 0;
+        cart.forEach(item => {
+            total += item.price;
+            summaryItems.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                <span>${item.name}</span>
+                <span>$${item.price.toFixed(2)}</span>
+            </div>`;
+        });
+        summaryTotal.innerText = `Jami: $${total.toFixed(2)}`;
+
+        document.getElementById('orderForm').onsubmit = (e) => {
+            e.preventDefault();
+            
+            const orderData = {
+                id: Date.now(),
+                customer: {
+                    name: document.getElementById('fullName').value,
+                    phone: document.getElementById('phone').value,
+                    address: document.getElementById('address').value
+                },
+                items: cart,
+                total: total,
+                date: new Date().toISOString()
+            };
+
+            // Brauzer xotirasiga saqlash
+            const allOrders = JSON.parse(localStorage.getItem('krist_orders')) || [];
+            allOrders.push(orderData);
+            localStorage.setItem('krist_orders', JSON.stringify(allOrders));
+
+            alert("Buyurtmangiz muvaffaqiyatli qabul qilindi!");
+            
+            // Savatchani tozalash
+            localStorage.removeItem('krist_cart');
+            window.location.href = 'index.html';
+        };
+    </script>
+</body>
+</html>

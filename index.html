@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Krist - Modern E-commerce</title>
+    <title>Krist - Modern Fashion Store | Sifatli kiyimlar va kosmetika</title>
+    <meta name="description" content="Krist - eng zamonaviy ayollar to'plami, aksessuarlar va sifatli kosmetika do'koni. O'zbekiston bo'ylab yetkazib berish.">
+    <meta name="keywords" content="Krist, onlayn do'kon, kiyim-kechak, kosmetika, ayollar kiyimi, moda, Toshkent, O'zbekiston">
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -13,15 +15,19 @@
         <div class="header-container">
             <div class="logo">Krist</div>
             <nav class="nav-menu">
-                <a href="#">Home</a>
+                <a href="#" data-i18n="nav-home">Home</a>
                 <div class="dropdown">
-                    <a href="#">Shop <i class="fas fa-chevron-down"></i></a>
+                    <a href="#" data-i18n="nav-shop">Shop <i class="fas fa-chevron-down"></i></a>
                 </div>
-                <a href="#">Our Story</a>
-                <a href="#">Blog</a>
-                <a href="#">Contact Us</a>
+                <a href="#" data-i18n="nav-story">Our Story</a>
+                <a href="#" data-i18n="nav-blog">Blog</a>
+                <a href="#" data-i18n="nav-contact">Contact Us</a>
             </nav>
             <div class="header-actions">
+                <select id="langSelect" class="lang-select">
+                    <option value="uz">UZ</option>
+                    <option value="en">EN</option>
+                </select>
                 <i class="fas fa-search"></i>
                 <i class="far fa-heart"></i>
                 <div class="cart-btn" id="cartBtn">
@@ -37,10 +43,12 @@
         <!-- Hero Section -->
         <section class="hero-krist">
             <div class="hero-text">
-                <p class="hero-sub">Classic Exclusive</p>
-                <h1>Women's <br> Collection</h1>
-                <p class="hero-off">UPTO 40% OFF</p>
-                <a href="#products" class="shop-now-btn">Shop Now <i class="fas fa-arrow-right"></i></a>
+                <p class="hero-sub" data-i18n="hero-sub">Classic Exclusive</p>
+                <h1 data-i18n="hero-title">Women's Collection</h1>
+                <p class="hero-off" data-i18n="hero-off">UPTO 40% OFF</p>
+                <a href="#products" class="shop-now-btn">
+                    <span data-i18n="shop-now">Shop Now</span> <i class="fas fa-arrow-right"></i>
+                </a>
             </div>
             <div class="hero-image">
                 <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Hero">
@@ -161,9 +169,20 @@
             <h2>Savatchangiz</h2>
             <div id="cartItems"></div>
             <div class="cart-total">Total: <span id="cartTotalSum">0</span> so'm</div>
-            <button class="btn-primary-krist">Order Now</button>
+            <button class="btn-primary-krist" onclick="goToCheckout()">Order Now</button>
         </div>
     </div>
+
+    <script>
+        function goToCheckout() {
+            const cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
+            if (cart.length > 0) {
+                window.location.href = 'checkout.html';
+            } else {
+                alert("Savatchangiz bo'sh!");
+            }
+        }
+    </script>
 
     <script src="script.js"></script>
 </body>
