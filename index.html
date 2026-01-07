@@ -28,13 +28,16 @@
                     <option value="uz">UZ</option>
                     <option value="en">EN</option>
                 </select>
-                <i class="fas fa-search"></i>
+                <div class="search-box">
+                    <input type="text" id="searchInput" placeholder="Qidiruv...">
+                    <i class="fas fa-search"></i>
+                </div>
                 <i class="far fa-heart"></i>
+                <a href="profile.html" class="user-icon" title="Shaxsiy kabinet"><i class="far fa-user"></i></a>
                 <div class="cart-btn" id="cartBtn">
                     <i class="fas fa-shopping-bag"></i>
                     <span id="cartCount">0</span>
                 </div>
-                <a href="register.html" class="login-btn">Login</a>
             </div>
         </div>
     </header>
@@ -80,7 +83,17 @@
 
         <!-- Our Bestseller -->
         <section id="products" class="bestseller-section">
-            <h2 class="section-title-krist">Our Bestseller</h2>
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
+                <h2 class="section-title-krist" data-i18n="bestseller-title" style="margin:0;">Our Bestseller</h2>
+                <div class="filter-options">
+                    <select id="priceFilter" class="lang-select" style="border:1px solid #ddd; padding:5px 10px; border-radius:5px;">
+                        <option value="all">Barcha narxlar</option>
+                        <option value="0-50"> $0 - $50</option>
+                        <option value="51-100">$51 - $100</option>
+                        <option value="101+">$101 dan yuqori</option>
+                    </select>
+                </div>
+            </div>
             <div class="product-grid-krist" id="productGrid">
                 <!-- JS will fill this -->
             </div>
@@ -128,23 +141,21 @@
                 <p>3891 Ranchview Dr. Richardson, California 62639</p>
             </div>
             <div class="footer-links">
-                <h4>Information</h4>
-                <a href="#">My Account</a>
-                <a href="#">Login</a>
-                <a href="#">My Cart</a>
+                <h4 data-i18n="footer-info">Information</h4>
+                <a href="profile.html">My Account</a>
+                <a href="register.html">Login</a>
                 <a href="#">My Wishlist</a>
-                <a href="#">Checkout</a>
+                <a href="checkout.html">Checkout</a>
             </div>
             <div class="footer-links">
-                <h4>Service</h4>
+                <h4 data-i18n="footer-service">Service</h4>
                 <a href="#">About Us</a>
                 <a href="#">Careers</a>
                 <a href="#">Delivery Information</a>
                 <a href="#">Privacy Policy</a>
-                <a href="#">Terms & Conditions</a>
             </div>
             <div class="footer-subscribe">
-                <h4>Subscribe</h4>
+                <h4 data-i18n="footer-subscribe">Subscribe</h4>
                 <p>Enter your email below to be the first to know about new collections.</p>
                 <div class="subscribe-box">
                     <i class="far fa-envelope"></i>

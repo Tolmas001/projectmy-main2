@@ -33,31 +33,6 @@ const translations = {
     }
 };
 
-// Tilni o'zgartirish funksiyasi
-const langSelect = document.getElementById('langSelect');
-
-langSelect.addEventListener('change', (e) => {
-    setLanguage(e.target.value);
-});
-
-function setLanguage(lang) {
-    const elements = document.querySelectorAll('[data-i18n]');
-    elements.forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (translations[lang][key]) {
-            el.innerText = translations[lang][key];
-        }
-    });
-    localStorage.setItem('selectedLang', lang);
-}
-
-// Sahifa yuklanganda tilni tekshirish
-document.addEventListener('DOMContentLoaded', () => {
-    const savedLang = localStorage.getItem('selectedLang') || 'en';
-    langSelect.value = savedLang;
-    setLanguage(savedLang);
-});
-
 const products = [
     { id: 1, name: "Roadster Printed T-Shirt", price: 38.00, oldPrice: 48.00, image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=500" },
     { id: 2, name: "Allen Solly Handheld Bag", price: 80.00, oldPrice: 100.00, image: "https://images.unsplash.com/photo-1584917033904-47e120121300?w=500" },
@@ -69,16 +44,51 @@ const products = [
     { id: 8, name: "Zyla Women Sandals", price: 35.00, oldPrice: 40.00, image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=500" }
 ];
 
-let cart = [];
+let cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
 
-const productGrid = document.getElementById('productGrid');
-const cartCount = document.getElementById('cartCount');
-const cartBtn = document.getElementById('cartBtn');
-const cartModal = document.getElementById('cartModal');
-const closeBtn = document.querySelector('.close');
+// Tilni o'zgartirish
+const langSelect = document.getElementById('langSelect');
+if (langSelect) {
+    langSelect.addEventListener('change', (e) => setLanguage(e.target.value));
+}
 
-if (productGrid) {
-    products.forEach(p => {
+function setLanguage(lang) {
+    const elements = document.querySelectorAll('[data-i18n]');
+    elements.forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang][key]) el.innerText = translations[lang][key];
+    });
+    localStorage.setItem('selectedLang', lang);
+}
+
+// Qidiruv va Filtr
+const searchInput = document.getElementById('searchInput');
+const priceFilter = document.getElementById('priceFilter');
+
+if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        const filtered = products.filter(p => p.name.toLowerCase().includes(term));
+        renderProducts(filtered);
+    });
+}
+
+if (priceFilter) {
+    priceFilter.addEventListener('change', (e) => {
+        const val = e.target.value;
+        let filtered = products;
+        if (val === '0-50') filtered = products.filter(p => p.price <= 50);
+        else if (val === '51-100') filtered = products.filter(p => p.price > 50 && p.price <= 100);
+        else if (val === '101+') filtered = products.filter(p => p.price > 100);
+        renderProducts(filtered);
+    });
+}
+
+function renderProducts(data) {
+    const productGrid = document.getElementById('productGrid');
+    if (!productGrid) return;
+    productGrid.innerHTML = '';
+    data.forEach(p => {
         productGrid.innerHTML += `
             <div class="product-card-krist">
                 <div class="img-container">
@@ -87,7 +97,7 @@ if (productGrid) {
                 </div>
                 <div class="product-info-krist" onclick="window.location.href='product-detail.html?id=${p.id}'" style="cursor:pointer">
                     <h4>${p.name}</h4>
-                    <p>$${p.price.toFixed(2)} <span style="text-decoration: line-through; color: #999; font-size: 0.8em; margin-left: 10px;">$${p.oldPrice.toFixed(2)}</span></p>
+                    <p>$${p.price.toFixed(2)}</p>
                 </div>
             </div>
         `;
@@ -98,11 +108,12 @@ window.addToCart = (id) => {
     const p = products.find(item => item.id === id);
     cart.push(p);
     updateCart();
+    alert("Savatchaga qo'shildi!");
 };
 
 function updateCart() {
-    cartCount.innerText = cart.length;
-    // localStorage'ga saqlash (Checkout uchun)
+    const cartCount = document.getElementById('cartCount');
+    if (cartCount) cartCount.innerText = cart.length;
     localStorage.setItem('krist_cart', JSON.stringify(cart));
     
     const itemsDiv = document.getElementById('cartItems');
@@ -114,7 +125,8 @@ function updateCart() {
             </div>
         `).join('');
         const total = cart.reduce((sum, i) => sum + i.price, 0);
-        document.getElementById('cartTotalSum').innerText = total.toFixed(2);
+        const totalSumEl = document.getElementById('cartTotalSum');
+        if (totalSumEl) totalSumEl.innerText = total.toFixed(2);
     }
 }
 
@@ -123,10 +135,18 @@ window.removeFromCart = (index) => {
     updateCart();
 };
 
-if (cartBtn) {
-    cartBtn.onclick = () => cartModal.style.display = "block";
-}
-if (closeBtn) {
-    closeBtn.onclick = () => cartModal.style.display = "none";
-}
-window.onclick = (e) => { if (e.target == cartModal) cartModal.style.display = "none"; };
+document.addEventListener('DOMContentLoaded', () => {
+    const savedLang = localStorage.getItem('selectedLang') || 'en';
+    if (langSelect) langSelect.value = savedLang;
+    setLanguage(savedLang);
+    renderProducts(products);
+    updateCart();
+    
+    const cartBtn = document.getElementById('cartBtn');
+    const cartModal = document.getElementById('cartModal');
+    const closeBtn = document.querySelector('.close');
+    
+    if (cartBtn) cartBtn.onclick = () => cartModal.style.display = "block";
+    if (closeBtn) closeBtn.onclick = () => cartModal.style.display = "none";
+    window.onclick = (e) => { if (e.target == cartModal) cartModal.style.display = "none"; };
+});
