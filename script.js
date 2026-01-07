@@ -58,12 +58,67 @@ const products = [
 ];
 
 let cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
+let wishlist = JSON.parse(localStorage.getItem('krist_wishlist')) || [];
 
-// Tilni o'zgartirish
-const langSelect = document.getElementById('langSelect');
-if (langSelect) {
-    langSelect.addEventListener('change', (e) => setLanguage(e.target.value));
+// SweetAlert bilan alertni almashtirish
+window.alert = (msg) => {
+    Swal.fire({
+        text: msg,
+        confirmButtonColor: '#131118',
+        icon: 'success'
+    });
+};
+
+// Wishlist mantiqi
+window.toggleWishlist = (id) => {
+    const index = wishlist.findIndex(p => p.id === id);
+    if (index > -1) {
+        wishlist.splice(index, 1);
+        Swal.fire({
+            toast: true, position: 'top-end', icon: 'info',
+            title: 'Saralanganlardan o\'chirildi', showConfirmButton: false, timer: 2000
+        });
+    } else {
+        const p = products.find(item => item.id === id);
+        wishlist.push(p);
+        Swal.fire({
+            toast: true, position: 'top-end', icon: 'success',
+            title: 'Saralanganlarga qo\'shildi', showConfirmButton: false, timer: 2000
+        });
+    }
+    updateWishCount();
+};
+
+function updateWishCount() {
+    const wishCount = document.getElementById('wishCount');
+    if (wishCount) wishCount.innerText = wishlist.length;
+    localStorage.setItem('krist_wishlist', JSON.stringify(wishlist));
 }
+
+function renderProducts(data) {
+    const productGrid = document.getElementById('productGrid');
+    if (!productGrid) return;
+    productGrid.innerHTML = '';
+    data.forEach(p => {
+        const isWished = wishlist.some(item => item.id === p.id);
+        productGrid.innerHTML += `
+            <div class="product-card-krist" data-aos="fade-up">
+                <div class="img-container">
+                    <img src="${p.image}" alt="${p.name}" onclick="window.location.href='product-detail.html?id=${p.id}'" style="cursor:pointer">
+                    <div class="wishlist-btn" onclick="toggleWishlist(${p.id})" style="position:absolute; top:15px; right:15px; font-size:20px; color:${isWished ? 'red' : '#ccc'}; cursor:pointer;">
+                        <i class="${isWished ? 'fas' : 'far'} fa-heart"></i>
+                    </div>
+                    <div class="add-to-cart-overlay" onclick="addToCart(${p.id})">Add to Cart</div>
+                </div>
+                <div class="product-info-krist" onclick="window.location.href='product-detail.html?id=${p.id}'" style="cursor:pointer">
+                    <h4>${p.name}</h4>
+                    <p>$${p.price.toFixed(2)}</p>
+                </div>
+            </div>
+        `;
+    });
+}
+
 
 function setLanguage(lang) {
     const elements = document.querySelectorAll('[data-i18n]');
@@ -148,18 +203,28 @@ window.removeFromCart = (index) => {
     updateCart();
 };
 
+// Dark Mode mantiqi
+function toggleTheme() {
+    const body = document.documentElement;
+    const currentTheme = body.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    body.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    updateThemeIcon(newTheme);
+}
+
+function updateThemeIcon(theme) {
+    const icon = document.getElementById('themeIcon');
+    if (icon) {
+        icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    }
+}
+
+// Sahifa yuklanganda mavzuni tekshirish
 document.addEventListener('DOMContentLoaded', () => {
-    const savedLang = localStorage.getItem('selectedLang') || 'en';
-    if (langSelect) langSelect.value = savedLang;
-    setLanguage(savedLang);
-    renderProducts(products);
-    updateCart();
-    
-    const cartBtn = document.getElementById('cartBtn');
-    const cartModal = document.getElementById('cartModal');
-    const closeBtn = document.querySelector('.close');
-    
-    if (cartBtn) cartBtn.onclick = () => cartModal.style.display = "block";
-    if (closeBtn) closeBtn.onclick = () => cartModal.style.display = "none";
-    window.onclick = (e) => { if (e.target == cartModal) cartModal.style.display = "none"; };
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    updateThemeIcon(savedTheme);
+    // ... qolgan kodlar
 });
+

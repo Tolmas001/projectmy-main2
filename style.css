@@ -4,29 +4,40 @@
     --dark-gray: #666;
     --white: #ffffff;
     --primary-color: #d4a373;
+    --bg-color: #ffffff;
+    --text-color: #131118;
+    --card-bg: #ffffff;
 }
 
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+[data-theme="dark"] {
+    --bg-color: #131118;
+    --text-color: #f3f4f6;
+    --card-bg: #1e1b24;
+    --gray: #242129;
+    --white: #131118;
+    --dark-gray: #bbb;
 }
 
 body {
     font-family: 'Inter', sans-serif;
-    color: var(--black);
-    background-color: var(--white);
+    color: var(--text-color);
+    background-color: var(--bg-color);
+    transition: background 0.3s, color 0.3s;
 }
 
-/* Header */
-.main-header {
-    border-bottom: 1px solid #eee;
-    padding: 20px 0;
-    position: sticky;
-    top: 0;
-    background: white;
-    z-index: 1000;
+.main-header, .product-card-krist, .info-card, .orders-card, .modal-content {
+    background: var(--card-bg) !important;
+    color: var(--text-color);
 }
+
+.nav-menu a, .logo {
+    color: var(--text-color);
+}
+
+.img-container {
+    background: var(--gray);
+}
+
 
 .header-container {
     max-width: 1200px;
