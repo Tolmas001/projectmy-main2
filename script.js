@@ -59,16 +59,38 @@ const translations = {
     }
 };
 
-const products = [
-    { id: 1, name: "Matte Lipstick (Rose Red)", price: 15.00, oldPrice: 20.00, category: "Make Up", image: "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500" },
-    { id: 2, name: "Vitamin C Face Serum", price: 45.00, oldPrice: 60.00, category: "Skin Care", image: "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500" },
-    { id: 3, name: "Rose Garden Perfume", price: 85.00, oldPrice: 110.00, category: "Fragrances", image: "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500" },
-    { id: 4, name: "Moisturizing Cleansing Gel", price: 25.00, oldPrice: 35.00, category: "Skin Care", image: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500" },
-    { id: 5, name: "Eyeshadow Palette (Nude)", price: 38.00, oldPrice: 50.00, category: "Make Up", image: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500" },
-    { id: 6, name: "Luxury Nail Polish (Set)", price: 12.00, oldPrice: 18.00, category: "Make Up", image: "https://images.unsplash.com/photo-1630750304803-5f3dd61482b9?w=500" },
-    { id: 7, name: "Argan Oil Hair Mask", price: 30.00, oldPrice: 40.00, category: "Hair Care", image: "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500" },
-    { id: 8, name: "Sun Protection Cream (SPF 50)", price: 22.00, oldPrice: 28.00, category: "Skin Care", image: "https://images.unsplash.com/photo-1556229167-731913076839?w=500" }
+const productData = [
+    { name: "Matte Lipstick", category: "Make Up", basePrice: 12, img: "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d" },
+    { name: "Vitamin C Serum", category: "Skin Care", basePrice: 35, img: "https://images.unsplash.com/photo-1599733594230-6b823276abcc" },
+    { name: "Luxury Perfume", category: "Fragrances", basePrice: 75, img: "https://images.unsplash.com/photo-1541643600914-78b084683601" },
+    { name: "Cleansing Gel", category: "Skin Care", basePrice: 20, img: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571" },
+    { name: "Eyeshadow Palette", category: "Make Up", basePrice: 30, img: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796" },
+    { name: "Hair Mask", category: "Hair Care", basePrice: 25, img: "https://images.unsplash.com/photo-1527799822340-304bc6475a6c" },
+    { name: "Sunscreen SPF 50", category: "Skin Care", basePrice: 18, img: "https://images.unsplash.com/photo-1556229167-731913076839" },
+    { name: "Moisturizing Cream", category: "Skin Care", basePrice: 28, img: "https://images.unsplash.com/photo-1552046122-03184de85e08" },
+    { name: "Floral Cologne", category: "Fragrances", basePrice: 55, img: "https://images.unsplash.com/photo-1592945403244-b3fbafd7f539" },
+    { name: "Shampoo Revive", category: "Hair Care", basePrice: 15, img: "https://images.unsplash.com/photo-1535585209827-a15fcdbc4c2d" },
+    { name: "Foundation Glow", category: "Make Up", basePrice: 40, img: "https://images.unsplash.com/photo-1599733589046-9b8308b5b50d" },
+    { name: "Eyeliner Black", category: "Make Up", basePrice: 10, img: "https://images.unsplash.com/photo-1625093742435-6fa192b6fb1a" },
+    { name: "Night Repair Oil", category: "Skin Care", basePrice: 50, img: "https://images.unsplash.com/photo-1601049541289-9b1b7bbbfe19" },
+    { name: "Body Mist Vanilla", category: "Fragrances", basePrice: 25, img: "https://images.unsplash.com/photo-1547887538-e3a2f32cb1cc" },
+    { name: "Conditioner Silk", category: "Hair Care", basePrice: 16, img: "https://images.unsplash.com/photo-1519735810594-4556ef79b5b6" }
 ];
+
+const products = [];
+for (let i = 1; i <= 150; i++) {
+    const baseProduct = productData[(i - 1) % productData.length];
+    const variation = Math.floor((i - 1) / productData.length) + 1;
+    const price = baseProduct.basePrice + (i % 10);
+    products.push({
+        id: i,
+        name: `${baseProduct.name} ${variation > 1 ? '#' + variation : ''}`,
+        price: price,
+        oldPrice: price + 10,
+        category: baseProduct.category,
+        image: `${baseProduct.img}?w=500&sig=${i}`
+    });
+}
 
 let cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
 let wishlist = JSON.parse(localStorage.getItem('krist_wishlist')) || [];
@@ -84,7 +106,6 @@ function setLanguage(lang) {
     localStorage.setItem('selectedLang', lang);
 }
 
-// Qidiruv va Filtr
 function renderProducts(data) {
     const grid = document.getElementById('productGrid');
     if (!grid) return;
@@ -115,11 +136,17 @@ window.toggleWishlist = (id) => {
         wishlist.splice(index, 1);
         Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'O\'chirildi', showConfirmButton: false, timer: 1500 });
     } else {
-        wishlist.push(products.find(item => item.id === id));
+        const p = products.find(item => item.id === id);
+        if(p) wishlist.push(p);
         Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Qo\'shildi', showConfirmButton: false, timer: 1500 });
     }
     updateWishCount();
-    renderProducts(products);
+    const currentSearch = document.getElementById('searchInput')?.value || "";
+    if(currentSearch) {
+        renderProducts(products.filter(p => p.name.toLowerCase().includes(currentSearch.toLowerCase())));
+    } else {
+        renderProducts(products);
+    }
 };
 
 function updateWishCount() {
@@ -150,7 +177,8 @@ window.filterByCategory = (cat) => {
 };
 
 window.addToCart = (id) => {
-    cart.push(products.find(p => p.id === id));
+    const p = products.find(prod => prod.id === id);
+    if(p) cart.push(p);
     updateCart();
     Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Savatchaga qo\'shildi', showConfirmButton: false, timer: 1500 });
 };
@@ -218,6 +246,16 @@ document.addEventListener('DOMContentLoaded', () => {
         else if (e.target.value === '101+') filtered = products.filter(p => p.price > 100);
         renderProducts(filtered);
     });
+
+    const hamburger = document.getElementById('hamburger');
+    const navMenu = document.getElementById('navMenu');
+    if (hamburger) {
+        hamburger.addEventListener('click', () => {
+            navMenu.classList.toggle('active');
+            hamburger.querySelector('i').classList.toggle('fa-bars');
+            hamburger.querySelector('i').classList.toggle('fa-times');
+        });
+    }
 
     window.onclick = (e) => { 
         if (e.target == document.getElementById('cartModal')) toggleCartModal(false);
