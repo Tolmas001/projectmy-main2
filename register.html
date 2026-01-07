@@ -3,17 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Krist - Ro'yxatdan o'tish</title>
+    <title>Krist - Akkaunt yaratish</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="auth.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="auth-container">
-        <div class="auth-box">
-            <h1 class="logo">Krist</h1>
-            <p>Davom etish uchun profil yarating</p>
+        <div class="auth-box" id="authBox">
+            <h1 class="logo" style="font-size: 36px; margin-bottom: 10px;">Krist</h1>
+            <p id="authSubtitle" style="margin-bottom: 25px; color: #666;">Go'zallik olamiga xush kelibsiz!</p>
             
+            <!-- Registration Form -->
             <form id="registerForm">
                 <div class="profile-upload" onclick="document.getElementById('profileInput').click()">
                     <img id="profilePreview" src="https://via.placeholder.com/100" alt="Avatar">
@@ -23,17 +25,32 @@
 
                 <div class="input-group">
                     <label>To'liq ism</label>
-                    <input type="text" id="username" required placeholder="Ism va familiya">
+                    <input type="text" id="username" required placeholder="Ismingizni kiriting">
                 </div>
                 <div class="input-group">
-                    <label>Email</label>
+                    <label>Email manzil</label>
                     <input type="email" id="email" required placeholder="example@mail.com">
                 </div>
                 <div class="input-group">
                     <label>Parol</label>
                     <input type="password" id="password" required placeholder="********">
                 </div>
-                <button type="submit" class="btn-primary-krist">Ro'yxatdan o'tish</button>
+                <button type="submit" class="btn-primary-krist">Akkaunt yaratish</button>
+                <p style="margin-top: 20px; font-size: 14px;">Akkauntingiz bormi? <a href="#" onclick="toggleAuth(false)" style="color: var(--primary-color); font-weight: 600;">Kirish</a></p>
+            </form>
+
+            <!-- Login Form (Hidden by default) -->
+            <form id="loginForm" style="display: none;">
+                <div class="input-group">
+                    <label>Email manzil</label>
+                    <input type="email" id="loginEmail" required placeholder="example@mail.com">
+                </div>
+                <div class="input-group">
+                    <label>Parol</label>
+                    <input type="password" id="loginPassword" required placeholder="********">
+                </div>
+                <button type="submit" class="btn-primary-krist">Tizimga kirish</button>
+                <p style="margin-top: 20px; font-size: 14px;">Yangi foydalanuvchimisiz? <a href="#" onclick="toggleAuth(true)" style="color: var(--primary-color); font-weight: 600;">Ro'yxatdan o'tish</a></p>
             </form>
         </div>
     </div>
@@ -53,6 +70,13 @@
             if (file) reader.readAsDataURL(file);
         };
 
+        function toggleAuth(isRegister) {
+            document.getElementById('registerForm').style.display = isRegister ? 'block' : 'none';
+            document.getElementById('loginForm').style.display = isRegister ? 'none' : 'block';
+            document.getElementById('authSubtitle').innerText = isRegister ? "Go'zallik olamiga xush kelibsiz!" : "Tizimga qaytganingizdan xursandmiz!";
+        }
+
+        // Registration Logic
         document.getElementById('registerForm').onsubmit = (e) => {
             e.preventDefault();
             const userData = {
@@ -62,8 +86,39 @@
                 joinedDate: new Date().toISOString()
             };
             localStorage.setItem('krist_user', JSON.stringify(userData));
-            alert("Xush kelibsiz!");
-            window.location.href = 'index.html';
+            Swal.fire({
+                title: 'Tabriklaymiz!',
+                text: 'Akkauntingiz muvaffaqiyatli yaratildi.',
+                icon: 'success',
+                confirmButtonColor: '#131118'
+            }).then(() => {
+                window.location.href = 'index.html';
+            });
+        };
+
+        // Login Logic (Simulated)
+        document.getElementById('loginForm').onsubmit = (e) => {
+            e.preventDefault();
+            const email = document.getElementById('loginEmail').value;
+            const savedUser = JSON.parse(localStorage.getItem('krist_user'));
+
+            if (savedUser && savedUser.email === email) {
+                Swal.fire({
+                    title: 'Xush kelibsiz!',
+                    text: `Salom, ${savedUser.name}!`,
+                    icon: 'success',
+                    confirmButtonColor: '#131118'
+                }).then(() => {
+                    window.location.href = 'index.html';
+                });
+            } else {
+                Swal.fire({
+                    title: 'Xatolik!',
+                    text: 'Bunday akkaunt topilmadi. Iltimos, ro\'yxatdan o\'ting.',
+                    icon: 'error',
+                    confirmButtonColor: '#131118'
+                });
+            }
         };
     </script>
 </body>
