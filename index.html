@@ -109,11 +109,12 @@
 
         <!-- Our Bestseller -->
         <section id="products" class="bestseller-section">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:40px; flex-wrap:wrap; gap:20px;">
                 <h2 class="section-title-krist" data-i18n="bestseller-title" style="margin:0;">Our Bestseller</h2>
-                <div class="filter-options">
-                    <select id="priceFilter" class="lang-select" style="border:1px solid #ddd; padding:5px 10px; border-radius:5px;">
-                        <option value="all">Barcha narxlar</option>
+                <div class="filter-options" style="display:flex; gap:10px; align-items:center;">
+                    <button onclick="renderProducts(products)" class="lang-select" style="border:1px solid #ddd; padding:8px 15px; border-radius:5px; cursor:pointer; font-size:13px; background:var(--card-bg); color:var(--text-color);">Hammasi</button>
+                    <select id="priceFilter" class="lang-select" style="border:1px solid #ddd; padding:8px 15px; border-radius:5px; background:var(--card-bg); color:var(--text-color);">
+                        <option value="all">Narxlar</option>
                         <option value="0-50"> $0 - $50</option>
                         <option value="51-100">$51 - $100</option>
                         <option value="101+">$101 dan yuqori</option>
@@ -124,6 +125,16 @@
                 <!-- JS will fill this -->
             </div>
         </section>
+
+        <!-- Wishlist Modal -->
+        <div id="wishlistModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeWishlist()">&times;</span>
+                <h2>Sizning Saralanganlaringiz</h2>
+                <div id="wishlistItems" style="margin-top:20px;"></div>
+                <button class="btn-primary-krist" style="margin-top:20px;" onclick="closeWishlist()">Yopish</button>
+            </div>
+        </div>
 
         <!-- Services -->
         <section id="services" class="services-bar">
