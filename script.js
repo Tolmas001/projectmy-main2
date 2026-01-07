@@ -73,49 +73,18 @@ const products = [
 let cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
 let wishlist = JSON.parse(localStorage.getItem('krist_wishlist')) || [];
 
-// SweetAlert simulyatsiyasi
-window.alert = (msg) => {
-    Swal.fire({ text: msg, confirmButtonColor: '#131118', icon: 'success' });
-};
-
-// Wishlist Logic
-window.toggleWishlist = (id) => {
-    const index = wishlist.findIndex(p => p.id === id);
-    if (index > -1) {
-        wishlist.splice(index, 1);
-        Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'O\'chirildi', showConfirmButton: false, timer: 1500 });
-    } else {
-        const p = products.find(item => item.id === id);
-        wishlist.push(p);
-        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Qo\'shildi', showConfirmButton: false, timer: 1500 });
-    }
-    updateWishCount();
-    renderProducts(products); // UI ni yangilash
-};
-
-function updateWishCount() {
-    const el = document.getElementById('wishCount');
-    if (el) el.innerText = wishlist.length;
-    localStorage.setItem('krist_wishlist', JSON.stringify(wishlist));
+function setLanguage(lang) {
+    const elements = document.querySelectorAll('[data-i18n]');
+    elements.forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang] && translations[lang][key]) {
+            el.innerText = translations[lang][key];
+        }
+    });
+    localStorage.setItem('selectedLang', lang);
 }
 
-window.showWishlist = () => {
-    const modal = document.getElementById('wishlistModal');
-    const itemsDiv = document.getElementById('wishlistItems');
-    if(!modal) return;
-    modal.style.display = "block";
-    itemsDiv.innerHTML = wishlist.length === 0 ? '<p style="text-align:center;">Saralanganlar bo\'sh.</p>' : 
-        wishlist.map(p => `
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px;">
-                <span>${p.name}</span>
-                <i class="fas fa-trash" style="color:red; cursor:pointer;" onclick="toggleWishlist(${p.id}); showWishlist();"></i>
-            </div>
-        `).join('');
-};
-
-window.closeWishlist = () => { document.getElementById('wishlistModal').style.display = "none"; };
-
-// Render
+// Qidiruv va Filtr
 function renderProducts(data) {
     const grid = document.getElementById('productGrid');
     if (!grid) return;
@@ -140,28 +109,46 @@ function renderProducts(data) {
     });
 }
 
-// Filters
-const searchInput = document.getElementById('searchInput');
-if (searchInput) searchInput.addEventListener('input', (e) => {
-    const filtered = products.filter(p => p.name.toLowerCase().includes(e.target.value.toLowerCase()));
-    renderProducts(filtered);
-});
+window.toggleWishlist = (id) => {
+    const index = wishlist.findIndex(p => p.id === id);
+    if (index > -1) {
+        wishlist.splice(index, 1);
+        Swal.fire({ toast: true, position: 'top-end', icon: 'info', title: 'O\'chirildi', showConfirmButton: false, timer: 1500 });
+    } else {
+        wishlist.push(products.find(item => item.id === id));
+        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Qo\'shildi', showConfirmButton: false, timer: 1500 });
+    }
+    updateWishCount();
+    renderProducts(products);
+};
 
-const priceFilter = document.getElementById('priceFilter');
-if (priceFilter) priceFilter.addEventListener('change', (e) => {
-    let filtered = products;
-    if (e.target.value === '0-50') filtered = products.filter(p => p.price <= 50);
-    else if (e.target.value === '51-100') filtered = products.filter(p => p.price > 50 && p.price <= 100);
-    else if (e.target.value === '101+') filtered = products.filter(p => p.price > 100);
-    renderProducts(filtered);
-});
+function updateWishCount() {
+    const el = document.getElementById('wishCount');
+    if (el) el.innerText = wishlist.length;
+    localStorage.setItem('krist_wishlist', JSON.stringify(wishlist));
+}
+
+window.showWishlist = () => {
+    const modal = document.getElementById('wishlistModal');
+    const itemsDiv = document.getElementById('wishlistItems');
+    if(!modal) return;
+    modal.style.display = "block";
+    itemsDiv.innerHTML = wishlist.length === 0 ? '<p style="text-align:center;">Saralanganlar bo\'sh.</p>' : 
+        wishlist.map(p => `
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px;">
+                <span>${p.name}</span>
+                <i class="fas fa-trash" style="color:red; cursor:pointer;" onclick="toggleWishlist(${p.id}); showWishlist();"></i>
+            </div>
+        `).join('');
+};
+
+window.closeWishlist = () => { document.getElementById('wishlistModal').style.display = "none"; };
 
 window.filterByCategory = (cat) => {
     renderProducts(products.filter(p => p.category === cat));
     document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
 };
 
-// Cart
 window.addToCart = (id) => {
     cart.push(products.find(p => p.id === id));
     updateCart();
@@ -186,7 +173,6 @@ function updateCart() {
 
 window.removeFromCart = (i) => { cart.splice(i, 1); updateCart(); };
 
-// Theme
 function toggleTheme() {
     const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', theme);
@@ -195,22 +181,43 @@ function toggleTheme() {
     if(icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
 }
 
-// Cart Modal
 window.toggleCartModal = (show) => {
     const modal = document.getElementById('cartModal');
     if (modal) modal.style.display = show ? "block" : "none";
 };
 
-// Init
 document.addEventListener('DOMContentLoaded', () => {
     const theme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', theme);
-    const icon = document.getElementById('themeIcon');
-    if(icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    const themeIcon = document.getElementById('themeIcon');
+    if(themeIcon) themeIcon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     
+    const savedLang = localStorage.getItem('selectedLang') || 'en';
+    const langSelect = document.getElementById('langSelect');
+    if (langSelect) {
+        langSelect.value = savedLang;
+        langSelect.addEventListener('change', (e) => setLanguage(e.target.value));
+    }
+    setLanguage(savedLang);
+
     renderProducts(products);
     updateCart();
     updateWishCount();
+
+    const searchInput = document.getElementById('searchInput');
+    if (searchInput) searchInput.addEventListener('input', (e) => {
+        const filtered = products.filter(p => p.name.toLowerCase().includes(e.target.value.toLowerCase()));
+        renderProducts(filtered);
+    });
+
+    const priceFilter = document.getElementById('priceFilter');
+    if (priceFilter) priceFilter.addEventListener('change', (e) => {
+        let filtered = products;
+        if (e.target.value === '0-50') filtered = products.filter(p => p.price <= 50);
+        else if (e.target.value === '51-100') filtered = products.filter(p => p.price > 50 && p.price <= 100);
+        else if (e.target.value === '101+') filtered = products.filter(p => p.price > 100);
+        renderProducts(filtered);
+    });
 
     window.onclick = (e) => { 
         if (e.target == document.getElementById('cartModal')) toggleCartModal(false);
