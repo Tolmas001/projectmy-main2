@@ -1,40 +1,168 @@
 /* checkout.css */
-.checkout-layout {
-    display: grid;
-    grid-template-columns: 1.5fr 1fr;
-    gap: 40px;
-    max-width: 1200px;
-    margin: 40px auto;
-    padding: 0 20px;
+.checkout-page {
+    background-color: #f8f9fa;
+    min-height: 100vh;
+    padding-bottom: 50px;
 }
-.checkout-form-section {
+
+.checkout-container-custom {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 40px 20px;
+}
+
+.checkout-grid {
+    display: grid;
+    grid-template-columns: 1.2fr 0.8fr;
+    gap: 30px;
+}
+
+.checkout-card {
     background: white;
     padding: 30px;
     border-radius: 20px;
-    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
-}
-.order-summary-card {
-    background: #fdfdfd;
-    padding: 30px;
-    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.03);
     border: 1px solid #eee;
-    position: sticky;
-    top: 100px;
 }
-.payment-selector {
+
+.checkout-title {
+    font-size: 24px;
+    font-weight: 700;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Order Summary */
+.summary-box {
+    background: #fafafa;
+    padding: 20px;
+    border-radius: 15px;
+    margin-bottom: 25px;
+}
+
+.summary-item {
     display: flex;
-    gap: 15px;
-    margin-top: 15px;
+    justify-content: space-between;
+    margin-bottom: 10px;
+    font-size: 14px;
 }
-.pay-option {
+
+.summary-total-row {
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid #ddd;
+    font-weight: 700;
+    font-size: 16px;
+}
+
+/* Promo Section */
+.promo-group {
+    display: flex;
+    gap: 10px;
+    margin: 15px 0;
+}
+
+.promo-input {
     flex: 1;
+    padding: 10px 15px;
     border: 1px solid #ddd;
-    padding: 15px;
+    border-radius: 8px;
+    outline: none;
+    font-size: 14px;
+}
+
+.promo-btn {
+    padding: 10px 20px;
+    background: var(--black);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: 0.3s;
+}
+
+.promo-btn:hover {
+    opacity: 0.9;
+}
+
+/* Payment Methods */
+.payment-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+
+.method-item {
+    border: 1px solid #eee;
+    padding: 20px;
     border-radius: 12px;
     text-align: center;
     cursor: pointer;
+    transition: 0.3s;
+    background: #fff;
 }
-.pay-option.active {
-    border-color: black;
-    background: #f8f8f8;
+
+.method-item i {
+    display: block;
+    font-size: 24px;
+    margin-bottom: 8px;
+}
+
+.method-item.active {
+    border-color: var(--black);
+    background: #fdfdfd;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+/* Card Details */
+.card-details-box {
+    background: #f9f9f9;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid #eee;
+    margin-bottom: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+/* Input Styles */
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #555;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    outline: none;
+    transition: 0.3s;
+}
+
+.form-input:focus {
+    border-color: var(--black);
+}
+
+/* Dark Mode support */
+[data-theme="dark"] .checkout-page { background-color: #0f0e13; }
+[data-theme="dark"] .checkout-card { background-color: #1a1921; border-color: #333; }
+[data-theme="dark"] .summary-box, [data-theme="dark"] .card-details-box { background-color: #242129; border-color: #333; }
+[data-theme="dark"] .form-input, [data-theme="dark"] .promo-input { background-color: #1a1921; color: white; border-color: #444; }
+[data-theme="dark"] .method-item { background-color: #1a1921; border-color: #333; color: white; }
+[data-theme="dark"] .method-item.active { border-color: white; }
+
+/* Responsive */
+@media (max-width: 850px) {
+    .checkout-grid {
+        grid-template-columns: 1fr;
+    }
 }

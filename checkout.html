@@ -5,64 +5,113 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Krist - Buyurtma berish</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="checkout.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-<body>
-    <div class="auth-container" style="background: #f3f4f6;">
-        <div class="auth-box" style="max-width: 500px; text-align: left;">
-            <h1 class="logo" style="text-align: center; margin-bottom: 20px;">Krist</h1>
-            <h2 style="margin-bottom: 20px; font-size: 1.2rem; text-align: center;">Buyurtmani rasmiylashtirish</h2>
-            
-            <div id="orderSummary" style="margin-bottom: 20px; background: #fafafa; padding: 15px; border-radius: 8px;">
-                <h4 style="margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Sizning mahsulotlaringiz:</h4>
-                <div id="summaryItems"></div>
-                
-                <div class="promo-section" style="margin-top: 15px; display: flex; gap: 10px;">
-                    <input type="text" id="promoInput" placeholder="Promo-kod" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 5px; outline: none;">
-                    <button type="button" onclick="applyPromo()" style="padding: 8px 15px; background: var(--black); color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">Qo'llash</button>
-                </div>
-                <p id="promoMessage" style="font-size: 12px; margin-top: 5px;"></p>
+<body class="checkout-page">
+    <div class="checkout-container-custom">
+        <h1 class="logo" style="text-align: center; margin-bottom: 30px; font-size: 32px;">Krist</h1>
+        
+        <div class="checkout-grid">
+            <!-- Chap tomon: Ma'lumotlar formasi -->
+            <div class="checkout-card">
+                <h2 class="checkout-title">Yetkazib berish ma'lumotlari</h2>
+                <form id="orderForm">
+                    <div class="form-group">
+                        <label>To'liq ismingiz</label>
+                        <input type="text" id="fullName" class="form-input" required placeholder="Ism va familiya">
+                    </div>
 
-                <div id="summaryTotal" style="margin-top: 10px; font-weight: bold; border-top: 1px solid #ddd; padding-top: 10px;"></div>
+                    <h4 style="margin: 25px 0 15px; font-size: 15px;">To'lov usulini tanlang</h4>
+                    <div class="payment-grid">
+                        <div class="method-item active" onclick="selectMethod(this, 'cash')">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Naqd pul</span>
+                        </div>
+                        <div class="method-item" onclick="selectMethod(this, 'card')">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Bank kartasi</span>
+                        </div>
+                    </div>
+                    <input type="hidden" id="paymentMethod" value="cash">
+
+                    <div id="cardDetails" class="card-details-box" style="display: none;">
+                        <div class="form-group">
+                            <label>Karta raqami</label>
+                            <input type="text" id="cardNumber" class="form-input" placeholder="0000 0000 0000 0000" maxlength="19">
+                        </div>
+                        <div style="display: flex; gap: 15px;">
+                            <div class="form-group" style="flex: 1;">
+                                <label>Muddati</label>
+                                <input type="text" id="cardExpiry" class="form-input" placeholder="MM/YY" maxlength="5">
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label>CVV</label>
+                                <input type="password" id="cardCvv" class="form-input" placeholder="***" maxlength="3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Telefon raqamingiz</label>
+                        <input type="tel" id="phone" class="form-input" required placeholder="+998 90 123 45 67">
+                    </div>
+                    <div class="form-group">
+                        <label>Manzil</label>
+                        <input type="text" id="address" class="form-input" required placeholder="Shahar, tuman, ko'cha, uy">
+                    </div>
+                    
+                    <button type="submit" class="btn-primary-krist" style="margin-top: 20px;">Buyurtmani tasdiqlash</button>
+                    <a href="index.html" style="display: block; text-align: center; margin-top: 15px; color: #666; text-decoration: none; font-size: 14px;">Savatchaga qaytish</a>
+                </form>
             </div>
 
-            <form id="orderForm">
-                <div class="input-group">
-                    <label>To'liq ismingiz</label>
-                    <input type="text" id="fullName" required placeholder="Ism va familiya">
-                </div>
+            <!-- O'ng tomon: Buyurtma xulosasi -->
+            <div class="checkout-card">
+                <h3 style="margin-bottom: 20px; font-size: 18px;">Buyurtma xulosasi</h3>
+                <div class="summary-box">
+                    <div id="summaryItems"></div>
+                    
+                    <div class="promo-group">
+                        <input type="text" id="promoInput" class="promo-input" placeholder="Promo-kod">
+                        <button type="button" onclick="applyPromo()" class="promo-btn">Qo'llash</button>
+                    </div>
+                    <p id="promoMessage" style="font-size: 12px; margin-top: 5px;"></p>
 
-                <h4 style="margin: 20px 0 10px;">To'lov usuli:</h4>
-                <div class="payment-methods">
-                    <div class="method-card active" onclick="selectMethod(this, 'cash')">
-                        <i class="fas fa-money-bill-wave"></i> Naqd pul
-                    </div>
-                    <div class="method-card" onclick="selectMethod(this, 'click')">
-                        <i class="fas fa-mouse-pointer"></i> Click
-                    </div>
-                    <div class="method-card" onclick="selectMethod(this, 'payme')">
-                        <i class="fas fa-credit-card"></i> Payme
-                    </div>
+                    <div id="summaryTotal" class="summary-total-row"></div>
                 </div>
-                <input type="hidden" id="paymentMethod" value="cash">
-
-                <div class="input-group">
-                    <label>Telefon raqamingiz</label>
-                    <input type="tel" id="phone" required placeholder="+998 90 123 45 67">
-                </div>
-                <div class="input-group">
-                    <label>Manzil</label>
-                    <input type="text" id="address" required placeholder="Shahar, tuman, ko'cha, uy">
-                </div>
-                <button type="submit" class="btn-primary-krist">Buyurtmani tasdiqlash</button>
-                <a href="index.html" style="display: block; text-align: center; margin-top: 15px; color: var(--dark-gray); text-decoration: none;">Savatchaga qaytish</a>
-            </form>
+                <p style="font-size: 12px; color: #888; text-align: center;">
+                    <i class="fas fa-lock"></i> Barcha to'lovlar xavfsiz himoyalangan
+                </p>
+            </div>
         </div>
     </div>
 
     <script>
+        // Mavzuni qo'llash
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.documentElement.setAttribute('data-theme', savedTheme);
+
+        function selectMethod(el, method) {
+            document.querySelectorAll('.method-item').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('paymentMethod').value = method;
+            
+            const cardDetails = document.getElementById('cardDetails');
+            cardDetails.style.display = method === 'card' ? 'block' : 'none';
+        }
+
+        // Avtomatik to'ldirish
+        const user = JSON.parse(localStorage.getItem('krist_user'));
+        if (user) {
+            setTimeout(() => {
+                const nameInput = document.getElementById('fullName');
+                if (nameInput) nameInput.value = user.name;
+            }, 100);
+        }
+
         const cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
         const summaryItems = document.getElementById('summaryItems');
         const summaryTotal = document.getElementById('summaryTotal');
@@ -78,55 +127,59 @@
             total = 0;
             cart.forEach(item => {
                 total += item.price;
-                summaryItems.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                    <span>${item.name}</span>
-                    <span>$${item.price.toFixed(2)}</span>
-                </div>`;
+                summaryItems.innerHTML += `
+                    <div class="summary-item">
+                        <span>${item.name}</span>
+                        <span>$${item.price.toFixed(2)}</span>
+                    </div>`;
             });
 
             const finalTotal = total - (total * discount);
             summaryTotal.innerHTML = `
-                <div style="display:flex; justify-content:space-between;">
+                <div class="summary-item">
                     <span>Subtotal:</span> <span>$${total.toFixed(2)}</span>
                 </div>
                 ${discount > 0 ? `
-                <div style="display:flex; justify-content:space-between; color: green;">
+                <div class="summary-item" style="color: #27ae60;">
                     <span>Chegirma (${discount * 100}%):</span> <span>-$${(total * discount).toFixed(2)}</span>
                 </div>` : ''}
-                <div style="display:flex; justify-content:space-between; margin-top:5px; font-size: 1.1em;">
+                <div class="summary-item" style="margin-top:10px; font-size: 1.2em;">
                     <span>Jami:</span> <span>$${finalTotal.toFixed(2)}</span>
                 </div>
             `;
         }
 
-        const validPromos = {
-            "KRIST10": 0.10, // 10% chegirma
-            "GLOW20": 0.20,  // 20% chegirma
-            "YANGIYIL": 0.30 // 30% chegirma
-        };
+        const validPromos = { "KRIST10": 0.10, "GLOW20": 0.20, "YANGIYIL": 0.30 };
 
         window.applyPromo = () => {
             const input = document.getElementById('promoInput').value.toUpperCase();
             const msg = document.getElementById('promoMessage');
-            
             if (validPromos[input]) {
                 discount = validPromos[input];
-                msg.innerText = "Promo-kod muvaffaqiyatli qo'llanildi!";
-                msg.style.color = "green";
-                updateDisplay();
+                msg.innerText = "Promo-kod qo'llanildi!";
+                msg.style.color = "#27ae60";
             } else {
                 discount = 0;
-                msg.innerText = "Xato promo-kod kiritildi!";
-                msg.style.color = "red";
-                updateDisplay();
+                msg.innerText = "Xato promo-kod!";
+                msg.style.color = "#e74c3c";
             }
+            updateDisplay();
         };
+
+        // Karta formatlash
+        document.getElementById('cardNumber')?.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim();
+        });
+        document.getElementById('cardExpiry')?.addEventListener('input', (e) => {
+            let v = e.target.value.replace(/\D/g, '');
+            if (v.length > 2) v = v.substring(0,2) + '/' + v.substring(2,4);
+            e.target.value = v;
+        });
 
         updateDisplay();
 
         document.getElementById('orderForm').onsubmit = (e) => {
             e.preventDefault();
-            
             const orderData = {
                 id: Date.now(),
                 customer: {
@@ -135,14 +188,11 @@
                     address: document.getElementById('address').value
                 },
                 items: cart,
-                subtotal: total,
-                discount: total * discount,
                 total: total - (total * discount),
                 paymentMethod: document.getElementById('paymentMethod').value,
                 date: new Date().toISOString()
             };
 
-            // Brauzer xotirasiga saqlash
             const allOrders = JSON.parse(localStorage.getItem('krist_orders')) || [];
             allOrders.push(orderData);
             localStorage.setItem('krist_orders', JSON.stringify(allOrders));
