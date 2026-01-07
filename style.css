@@ -32,6 +32,9 @@ body {
     transition: background 0.3s, color 0.3s;
 }
 
+/* Modal stillari modal.css ga o'tkazildi */
+.modal { display: none; }
+
 /* Header */
 .main-header {
     border-bottom: 1px solid #eee;

@@ -179,6 +179,12 @@ function toggleTheme() {
     if(icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
 }
 
+// Cart Modal
+window.toggleCartModal = (show) => {
+    const modal = document.getElementById('cartModal');
+    if (modal) modal.style.display = show ? "block" : "none";
+};
+
 // Init
 document.addEventListener('DOMContentLoaded', () => {
     const theme = localStorage.getItem('theme') || 'light';
@@ -190,13 +196,8 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCart();
     updateWishCount();
 
-    const cartBtn = document.getElementById('cartBtn');
-    const cartModal = document.getElementById('cartModal');
-    if (cartBtn) cartBtn.onclick = () => cartModal.style.display = "block";
-    const closeBtn = document.querySelector('.close');
-    if (closeBtn) closeBtn.onclick = () => { cartModal.style.display = "none"; };
     window.onclick = (e) => { 
-        if (e.target == cartModal) cartModal.style.display = "none";
-        if (e.target == document.getElementById('wishlistModal')) e.target.style.display = "none";
+        if (e.target == document.getElementById('cartModal')) toggleCartModal(false);
+        if (e.target == document.getElementById('wishlistModal')) closeWishlist();
     };
 });
