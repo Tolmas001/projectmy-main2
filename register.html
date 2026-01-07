@@ -18,7 +18,7 @@
             <!-- Registration Form -->
             <form id="registerForm">
                 <div class="profile-upload" onclick="document.getElementById('profileInput').click()">
-                    <img id="profilePreview" src="https://via.placeholder.com/100" alt="Avatar">
+                    <img id="profilePreview" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150" alt="Avatar">
                     <div class="upload-icon"><i class="fas fa-camera"></i></div>
                     <input type="file" id="profileInput" hidden accept="image/*">
                 </div>
@@ -82,7 +82,7 @@
             const userData = {
                 name: document.getElementById('username').value,
                 email: document.getElementById('email').value,
-                avatar: base64Image || "https://via.placeholder.com/100",
+                avatar: base64Image || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150",
                 joinedDate: new Date().toISOString()
             };
             localStorage.setItem('krist_user', JSON.stringify(userData));
