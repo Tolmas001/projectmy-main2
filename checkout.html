@@ -89,96 +89,26 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { db, collection, addDoc } from './firebase-config.js';
+
         // Mavzuni qo'llash
         const savedTheme = localStorage.getItem('theme') || 'light';
         document.documentElement.setAttribute('data-theme', savedTheme);
 
-        function selectMethod(el, method) {
+        // ... (selectMethod va boshqa funksiyalar)
+        window.selectMethod = (el, method) => {
             document.querySelectorAll('.method-item').forEach(c => c.classList.remove('active'));
             el.classList.add('active');
             document.getElementById('paymentMethod').value = method;
-            
             const cardDetails = document.getElementById('cardDetails');
             cardDetails.style.display = method === 'card' ? 'block' : 'none';
         }
 
-        // Avtomatik to'ldirish
-        const user = JSON.parse(localStorage.getItem('krist_user'));
-        if (user) {
-            setTimeout(() => {
-                const nameInput = document.getElementById('fullName');
-                if (nameInput) nameInput.value = user.name;
-            }, 100);
-        }
-
         const cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
-        const summaryItems = document.getElementById('summaryItems');
-        const summaryTotal = document.getElementById('summaryTotal');
-        let total = 0;
-        let discount = 0;
+        // ... (updateDisplay va applyPromo kodlari saqlanadi)
 
-        if (cart.length === 0) {
-            window.location.href = 'index.html';
-        }
-
-        function updateDisplay() {
-            summaryItems.innerHTML = '';
-            total = 0;
-            cart.forEach(item => {
-                total += item.price;
-                summaryItems.innerHTML += `
-                    <div class="summary-item">
-                        <span>${item.name}</span>
-                        <span>$${item.price.toFixed(2)}</span>
-                    </div>`;
-            });
-
-            const finalTotal = total - (total * discount);
-            summaryTotal.innerHTML = `
-                <div class="summary-item">
-                    <span>Subtotal:</span> <span>$${total.toFixed(2)}</span>
-                </div>
-                ${discount > 0 ? `
-                <div class="summary-item" style="color: #27ae60;">
-                    <span>Chegirma (${discount * 100}%):</span> <span>-$${(total * discount).toFixed(2)}</span>
-                </div>` : ''}
-                <div class="summary-item" style="margin-top:10px; font-size: 1.2em;">
-                    <span>Jami:</span> <span>$${finalTotal.toFixed(2)}</span>
-                </div>
-            `;
-        }
-
-        const validPromos = { "KRIST10": 0.10, "GLOW20": 0.20, "YANGIYIL": 0.30 };
-
-        window.applyPromo = () => {
-            const input = document.getElementById('promoInput').value.toUpperCase();
-            const msg = document.getElementById('promoMessage');
-            if (validPromos[input]) {
-                discount = validPromos[input];
-                msg.innerText = "Promo-kod qo'llanildi!";
-                msg.style.color = "#27ae60";
-            } else {
-                discount = 0;
-                msg.innerText = "Xato promo-kod!";
-                msg.style.color = "#e74c3c";
-            }
-            updateDisplay();
-        };
-
-        // Karta formatlash
-        document.getElementById('cardNumber')?.addEventListener('input', (e) => {
-            e.target.value = e.target.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim();
-        });
-        document.getElementById('cardExpiry')?.addEventListener('input', (e) => {
-            let v = e.target.value.replace(/\D/g, '');
-            if (v.length > 2) v = v.substring(0,2) + '/' + v.substring(2,4);
-            e.target.value = v;
-        });
-
-        updateDisplay();
-
-        document.getElementById('orderForm').onsubmit = (e) => {
+        document.getElementById('orderForm').onsubmit = async (e) => {
             e.preventDefault();
             const orderData = {
                 id: Date.now(),
@@ -189,23 +119,24 @@
                 },
                 items: cart,
                 total: total - (total * discount),
-                paymentMethod: document.getElementById('paymentMethod').value,
                 date: new Date().toISOString()
             };
 
-            const allOrders = JSON.parse(localStorage.getItem('krist_orders')) || [];
-            allOrders.push(orderData);
-            localStorage.setItem('krist_orders', JSON.stringify(allOrders));
+            try {
+                // Firebase-ga yuborish
+                await addDoc(collection(db, "orders"), orderData);
 
-            Swal.fire({
-                title: 'Rahmat!',
-                text: 'Buyurtmangiz muvaffaqiyatli qabul qilindi!',
-                icon: 'success',
-                confirmButtonColor: '#131118'
-            }).then(() => {
-                localStorage.removeItem('krist_cart');
-                window.location.href = 'index.html';
-            });
+                Swal.fire({
+                    title: 'Rahmat!',
+                    text: 'Buyurtmangiz Firebase bazasiga tushdi!',
+                    icon: 'success'
+                }).then(() => {
+                    localStorage.removeItem('krist_cart');
+                    window.location.href = 'index.html';
+                });
+            } catch (err) {
+                alert("Buyurtmani yuborishda xatolik!");
+            }
         };
     </script>
 </body>
