@@ -20,10 +20,21 @@
     </style>
 </head>
 <body>
-    <div class="admin-container">
+    <!-- Login Overlay -->
+    <div id="adminLogin" style="height: 100vh; display: flex; justify-content: center; align-items: center; background: #f3f4f6; position: fixed; width: 100%; top: 0; left: 0; z-index: 9999;">
+        <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; width: 350px;">
+            <h1 class="logo">Krist Admin</h1>
+            <p style="margin: 20px 0; color: #666;">Boshqaruv paneliga kirish uchun kodni kiriting:</p>
+            <input type="password" id="adminCode" placeholder="Kirish kodi" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; text-align: center; font-size: 18px; outline: none; margin-bottom: 20px;">
+            <button onclick="checkAdminCode()" class="btn-primary-krist">Kirish</button>
+            <p id="errorMsg" style="color: red; margin-top: 15px; font-size: 14px; display: none;">Xato kod kiritildi!</p>
+        </div>
+    </div>
+
+    <div class="admin-container" id="adminContent" style="display: none;">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 30px;">
             <h1 class="logo" style="margin:0;">Krist Admin</h1>
-            <button onclick="window.location.href='index.html'" style="background:#eee; border:none; padding:8px 15px; border-radius:5px; cursor:pointer;">Saytga qaytish</button>
+            <button onclick="logoutAdmin()" style="background:#eee; border:none; padding:8px 15px; border-radius:5px; cursor:pointer;">Chiqish</button>
         </div>
         
         <div class="tab-menu">
@@ -43,6 +54,34 @@
     </div>
 
     <script>
+        const SECRET_CODE = "2026";
+
+        function checkAdminCode() {
+            const input = document.getElementById('adminCode').value;
+            if (input === SECRET_CODE) {
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
+                sessionStorage.setItem('admin_access', 'true');
+                loadOrders();
+            } else {
+                document.getElementById('errorMsg').style.display = 'block';
+            }
+        }
+
+        function logoutAdmin() {
+            sessionStorage.removeItem('admin_access');
+            window.location.reload();
+        }
+
+        // Sahifa yuklanganda sessiyani tekshirish
+        document.addEventListener('DOMContentLoaded', () => {
+            if (sessionStorage.getItem('admin_access') === 'true') {
+                document.getElementById('adminLogin').style.display = 'none';
+                document.getElementById('adminContent').style.display = 'block';
+                loadOrders();
+            }
+        });
+
         function showTab(tab) {
             document.getElementById('ordersTab').style.display = tab === 'orders' ? 'block' : 'none';
             document.getElementById('productsTab').style.display = tab === 'products' ? 'block' : 'none';
