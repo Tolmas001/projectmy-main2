@@ -40,6 +40,22 @@ const translations = {
         "footer-info": "Information",
         "footer-service": "Service",
         "footer-subscribe": "Subscribe to Updates"
+    },
+    ru: {
+        "nav-home": "Главная",
+        "nav-shop": "Каталог",
+        "nav-story": "О нас",
+        "nav-blog": "Советы",
+        "nav-contact": "Контакты",
+        "hero-sub": "Натурально и Изящно",
+        "hero-title": "Секрет красоты в ваших руках",
+        "hero-off": "СКИДКА -30% НА ВСЁ",
+        "shop-now": "Купить",
+        "category-title": "Сортировка по категориям",
+        "bestseller-title": "Хиты продаж",
+        "footer-info": "Информация",
+        "footer-service": "Услуги",
+        "footer-subscribe": "Подпишитесь на новости"
     }
 };
 
