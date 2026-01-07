@@ -29,9 +29,11 @@
                     <p style="color:#666;">Xush kelibsiz!</p>
                 </div>
                 <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
-                <p><strong>Ism:</strong> Foydalanuvchi</p>
-                <p><strong>Email:</strong> user@example.com</p>
-                <button class="btn-primary-krist" style="margin-top:20px; background:#f34f4f;">Chiqish</button>
+                <div id="profileInfo">
+                    <p><strong>Ism:</strong> <span id="userName">Foydalanuvchi</span></p>
+                    <p><strong>Email:</strong> <span id="userEmail">user@example.com</span></p>
+                </div>
+                <button onclick="logout()" class="btn-primary-krist" style="margin-top:20px; background:#f34f4f;">Chiqish</button>
             </div>
 
             <div style="flex:2; min-width:300px;">
@@ -44,6 +46,22 @@
     </div>
 
     <script>
+        // Profil ma'lumotlarini yuklash
+        const user = JSON.parse(localStorage.getItem('krist_user'));
+        if (user) {
+            document.getElementById('userName').innerText = user.name;
+            document.getElementById('userEmail').innerText = user.email;
+        } else {
+            window.location.href = 'register.html';
+        }
+
+        function logout() {
+            if (confirm("Haqiqatan ham profildan chiqmoqchimisiz?")) {
+                localStorage.removeItem('krist_user');
+                window.location.href = 'register.html';
+            }
+        }
+
         const orders = JSON.parse(localStorage.getItem('krist_orders')) || [];
         const list = document.getElementById('userOrdersList');
 

@@ -1,3 +1,16 @@
+// Tizimga kirganlikni tekshirish
+function checkAuth() {
+    const user = JSON.parse(localStorage.getItem('krist_user'));
+    const currentPage = window.location.pathname;
+    
+    // Agar foydalanuvchi kirmagan bo'lsa va register sahifasida bo'lmasa, registerga yuborish
+    if (!user && !currentPage.includes('register.html')) {
+        window.location.href = 'register.html';
+    }
+}
+
+checkAuth();
+
 const translations = {
     uz: {
         "nav-home": "Bosh sahifa",

@@ -24,6 +24,21 @@
                     <label>To'liq ismingiz</label>
                     <input type="text" id="fullName" required placeholder="Ism va familiya">
                 </div>
+
+                <h4 style="margin: 20px 0 10px;">To'lov usuli:</h4>
+                <div class="payment-methods">
+                    <div class="method-card active" onclick="selectMethod(this, 'cash')">
+                        <i class="fas fa-money-bill-wave"></i> Naqd pul
+                    </div>
+                    <div class="method-card" onclick="selectMethod(this, 'click')">
+                        <i class="fas fa-mouse-pointer"></i> Click
+                    </div>
+                    <div class="method-card" onclick="selectMethod(this, 'payme')">
+                        <i class="fas fa-credit-card"></i> Payme
+                    </div>
+                </div>
+                <input type="hidden" id="paymentMethod" value="cash">
+
                 <div class="input-group">
                     <label>Telefon raqamingiz</label>
                     <input type="tel" id="phone" required placeholder="+998 90 123 45 67">
@@ -39,6 +54,20 @@
     </div>
 
     <script>
+        function selectMethod(el, method) {
+            document.querySelectorAll('.method-card').forEach(c => c.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('paymentMethod').value = method;
+        }
+
+        // Avtomatik to'ldirish
+        const user = JSON.parse(localStorage.getItem('krist_user'));
+        if (user) {
+            setTimeout(() => {
+                document.getElementById('fullName').value = user.name;
+            }, 100);
+        }
+
         const cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
         const summaryItems = document.getElementById('summaryItems');
         const summaryTotal = document.getElementById('summaryTotal');

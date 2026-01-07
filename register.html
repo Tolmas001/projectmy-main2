@@ -3,33 +3,44 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ro'yxatdan o'tish - Glow Beauty</title>
+    <title>Krist - Ro'yxatdan o'tish</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-    <div class="auth-container">
+    <div class="auth-container" style="background: #f3f4f6;">
         <div class="auth-box">
-            <h1>Glow Beauty</h1>
-            <p>Xush kelibsiz! Iltimos, ro'yxatdan o'ting.</p>
+            <h1 class="logo">Krist</h1>
+            <p style="margin-bottom: 20px; color: #666;">Onlayn do'konimizga xush kelibsiz! Davom etish uchun profil yarating.</p>
             <form id="registerForm">
                 <div class="input-group">
-                    <label for="username">Ism va familiya</label>
+                    <label>Ism va familiya</label>
                     <input type="text" id="username" required placeholder="Ismingizni kiriting">
                 </div>
                 <div class="input-group">
-                    <label for="email">Email</label>
+                    <label>Email</label>
                     <input type="email" id="email" required placeholder="example@mail.com">
                 </div>
                 <div class="input-group">
-                    <label for="password">Parol</label>
+                    <label>Parol</label>
                     <input type="password" id="password" required placeholder="********">
                 </div>
-                <button type="submit" class="btn-primary">Ro'yxatdan o'tish</button>
+                <button type="submit" class="btn-primary-krist">Ro'yxatdan o'tish</button>
             </form>
-            <p class="auth-footer">Profilingiz bormi? <a href="index.html">Asosiy sahifa (Mehmon)</a></p>
         </div>
     </div>
-    <script src="script.js"></script>
+    <script>
+        document.getElementById('registerForm').onsubmit = (e) => {
+            e.preventDefault();
+            const userData = {
+                name: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                joinedDate: new Date().toISOString()
+            };
+            localStorage.setItem('krist_user', JSON.stringify(userData));
+            alert("Tabriklaymiz! Profil muvaffaqiyatli yaratildi.");
+            window.location.href = 'index.html';
+        };
+    </script>
 </body>
 </html>
