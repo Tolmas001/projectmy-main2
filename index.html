@@ -25,10 +25,10 @@
                 <div class="dropdown">
                     <a href="#products" data-i18n="nav-shop">Shop <i class="fas fa-chevron-down"></i></a>
                     <div class="dropdown-content">
-                        <a href="#products">Casual Wear</a>
-                        <a href="#products">Western Wear</a>
-                        <a href="#products">Ethnic Wear</a>
-                        <a href="#products">Kids Wear</a>
+                        <a href="#products" onclick="filterByCategory('Skin Care')">Skin Care</a>
+                        <a href="#products" onclick="filterByCategory('Make Up')">Make Up</a>
+                        <a href="#products" onclick="filterByCategory('Fragrances')">Fragrances</a>
+                        <a href="#products" onclick="filterByCategory('Hair Care')">Hair Care</a>
                     </div>
                 </div>
                 <a href="#services" data-i18n="nav-story">Our Story</a>
@@ -87,23 +87,23 @@
 
         <!-- Shop by Categories -->
         <section class="categories-section">
-            <h2 class="section-title-krist">Shop by Categories</h2>
+            <h2 class="section-title-krist" data-i18n="category-title">Shop by Categories</h2>
             <div class="categories-grid">
-                <div class="category-item" onclick="filterByCategory('Casual Wear')">
-                    <img src="https://images.unsplash.com/photo-1516762689617-e1cffcef479d?w=400" alt="Casual">
-                    <div class="category-tag">Casual Wear</div>
+                <div class="category-item" onclick="filterByCategory('Skin Care')">
+                    <img src="https://images.unsplash.com/photo-1570172619644-dfd03ed5d881?w=400" alt="Skin Care">
+                    <div class="category-tag">Skin Care</div>
                 </div>
-                <div class="category-item" onclick="filterByCategory('Western Wear')">
-                    <img src="https://images.unsplash.com/photo-1539109132314-3477524c8830?w=400" alt="Western">
-                    <div class="category-tag">Western Wear</div>
+                <div class="category-item" onclick="filterByCategory('Make Up')">
+                    <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=400" alt="Make Up">
+                    <div class="category-tag">Make Up</div>
                 </div>
-                <div class="category-item" onclick="filterByCategory('Ethnic Wear')">
-                    <img src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=400" alt="Ethnic">
-                    <div class="category-tag">Ethnic Wear</div>
+                <div class="category-item" onclick="filterByCategory('Fragrances')">
+                    <img src="https://images.unsplash.com/photo-1541643600914-78b084683601?w=400" alt="Fragrances">
+                    <div class="category-tag">Fragrances</div>
                 </div>
-                <div class="category-item" onclick="filterByCategory('Kids Wear')">
-                    <img src="https://images.unsplash.com/photo-1519233157271-e37456721511?w=400" alt="Kids">
-                    <div class="category-tag">Kids Wear</div>
+                <div class="category-item" onclick="filterByCategory('Hair Care')">
+                    <img src="https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=400" alt="Hair Care">
+                    <div class="category-tag">Hair Care</div>
                 </div>
             </div>
         </section>
