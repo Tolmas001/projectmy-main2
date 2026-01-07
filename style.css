@@ -10,12 +10,13 @@
 }
 
 [data-theme="dark"] {
-    --bg-color: #131118;
-    --text-color: #f3f4f6;
-    --card-bg: #1e1b24;
+    --bg-color: #0f0e13;
+    --text-color: #ffffff;
+    --card-bg: #1a1921;
     --gray: #242129;
-    --white: #131118;
-    --dark-gray: #bbb;
+    --white: #0f0e13;
+    --dark-gray: #cccccc;
+    --black: #ffffff; /* Dark modeda qora rang oqqa aylanadi */
 }
 
 body {
@@ -25,17 +26,44 @@ body {
     transition: background 0.3s, color 0.3s;
 }
 
-.main-header, .product-card-krist, .info-card, .orders-card, .modal-content {
-    background: var(--card-bg) !important;
-    color: var(--text-color);
+/* Barcha matnlarni dark modega moslash */
+[data-theme="dark"] h1, 
+[data-theme="dark"] h2, 
+[data-theme="dark"] h3, 
+[data-theme="dark"] h4, 
+[data-theme="dark"] p, 
+[data-theme="dark"] a, 
+[data-theme="dark"] span, 
+[data-theme="dark"] i,
+[data-theme="dark"] .product-info-krist h4,
+[data-theme="dark"] .product-info-krist p,
+[data-theme="dark"] .category-tag {
+    color: #ffffff !important;
 }
 
-.nav-menu a, .logo {
-    color: var(--text-color);
+[data-theme="dark"] .category-tag {
+    background-color: #1a1921;
 }
 
-.img-container {
-    background: var(--gray);
+[data-theme="dark"] .main-header {
+    background-color: #0f0e13 !important;
+    border-bottom: 1px solid #333;
+}
+
+[data-theme="dark"] .product-card-krist {
+    background-color: #1a1921 !important;
+}
+
+[data-theme="dark"] .img-container {
+    background-color: #242129;
+}
+
+[data-theme="dark"] .search-box {
+    background-color: #242129;
+}
+
+[data-theme="dark"] .search-box input {
+    color: #ffffff;
 }
 
 
