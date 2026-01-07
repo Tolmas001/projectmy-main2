@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout — GlowSkin</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .checkout-page { padding: 80px 0; }
+        .checkout-container { display: grid; grid-template-columns: 1.5fr 1fr; gap: 60px; }
+        .checkout-form-section { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+        .checkout-summary-section { background: var(--rose); padding: 40px; border-radius: 20px; height: fit-content; }
+        .checkout-header { margin-bottom: 40px; }
+        .checkout-header h1 { font-family: var(--font-display); font-size: 36px; }
+        .summary-item { display: flex; justify-content: space-between; margin-bottom: 15px; font-size: 14px; }
+        .summary-total { border-top: 1px solid rgba(0,0,0,0.1); pt: 20px; mt: 20px; font-weight: 700; font-size: 18px; }
+        .delivery-notice { font-size: 12px; color: var(--muted); margin-top: 10px; }
+    </style>
+</head>
+<body class="bg-paper">
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="/" class="logo">Glow<span>Skin</span></a>
+            <div class="lang-switcher">
+                <button class="lang-btn" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="uz">UZ</button>
+                <button class="lang-btn" data-lang="ru">RU</button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container checkout-page">
+        <div class="checkout-container">
+            <!-- Delivery Info -->
+            <div class="checkout-form-section">
+                <div class="checkout-header">
+                    <h1 data-i18n="checkout_title">Shipping Details</h1>
+                </div>
+                <form id="order-form" class="auth-form">
+                    <div class="input-group">
+                        <label data-i18n="checkout_phone">Phone Number</label>
+                        <input type="tel" id="order-phone" placeholder="+998 90 123 45 67" required>
+                    </div>
+                    <div class="input-group">
+                        <label data-i18n="checkout_location">Delivery Address / Location</label>
+                        <textarea id="order-location" rows="4" placeholder="City, Street, House number..." class="input-group" style="width: 100%; border-radius: 12px; border: 1px solid rgba(0,0,0,0.05); padding: 15px; font-family: inherit; outline: none; background: var(--paper);" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary btn-block" data-i18n="checkout_confirm_btn">Confirm Order</button>
+                </form>
+            </div>
+
+            <!-- Order Summary -->
+            <div class="checkout-summary-section">
+                <h3 class="checkout-header" data-i18n="order_summary">Order Summary</h3>
+                <div id="summary-items-list" class="space-y-4 mb-8">
+                    <!-- Items from JS -->
+                </div>
+                <div class="summary-total">
+                    <div class="summary-item">
+                        <span data-i18n="subtotal">Subtotal</span>
+                        <span id="subtotal-val">$0.00</span>
+                    </div>
+                    <div class="summary-item">
+                        <span data-i18n="delivery_fee">Delivery Fee</span>
+                        <span id="delivery-fee-val">$0.00</span>
+                    </div>
+                    <div class="summary-item summary-total">
+                        <span data-i18n="total">Total</span>
+                        <span id="total-val">$0.00</span>
+                    </div>
+                </div>
+                <p class="delivery-notice" data-i18n="delivery_notice">Delivery price is fixed for all orders.</p>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            renderOrderSummary();
+            
+            document.getElementById('order-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                const phone = document.getElementById('order-phone').value;
+                const location = document.getElementById('order-location').value;
+                
+                if (cart.length === 0) {
+                    alert('Your cart is empty');
+                    return;
+                }
+
+                const orderData = {
+                    items: cart,
+                    customer: JSON.parse(localStorage.getItem('user')),
+                    phone,
+                    location,
+                    total: calculateOrderTotal().total,
+                    date: new Date().toISOString()
+                };
+
+                console.log('Order Placed:', orderData);
+                alert('Order successful! We will contact you soon.');
+                
+                // Clear cart
+                cart = [];
+                localStorage.setItem('cart', JSON.stringify(cart));
+                window.location.href = 'index.html';
+            });
+        });
+    </script>
+</body>
+</html>

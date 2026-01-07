@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GlowSkin — Organic & Natural Cosmetics</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@lucide/web"></script>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="auth-locked">
+    <!-- Auth Overlay -->
+    <div id="auth-overlay" class="auth-overlay">
+        <div class="auth-card">
+            <div class="auth-header">
+                <h2 id="auth-title" data-i18n="auth_register_title">Create Account</h2>
+                <p id="auth-subtitle" data-i18n="auth_register_subtitle">Enter your details to get started</p>
+            </div>
+            <form id="auth-form" class="auth-form">
+                <div class="input-group" id="name-group">
+                    <label data-i18n="auth_name">Full Name</label>
+                    <input type="text" id="auth-name" placeholder="John Doe">
+                </div>
+                <div class="input-group">
+                    <label data-i18n="auth_email">Email Address</label>
+                    <input type="email" id="auth-email" placeholder="john@example.com" required>
+                </div>
+                <div class="input-group">
+                    <label data-i18n="auth_password">Password</label>
+                    <input type="password" id="auth-password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn btn-primary btn-block" id="auth-submit" data-i18n="auth_register_btn">Register</button>
+            </form>
+            <div class="auth-footer">
+                <p id="auth-switch-text" data-i18n="auth_have_account">Already have an account? <a href="#" id="auth-switch" data-i18n="auth_login_link">Login</a></p>
+            </div>
+        </div>
+    </div>
+
+    <nav class="navbar">
+        <div class="container nav-container">
+            <a href="/" class="logo">Glow<span>Skin</span></a>
+            
+            <div class="nav-links">
+                <a href="#" data-i18n="nav_shop">Shop</a>
+                <a href="#" data-i18n="nav_collections">Collections</a>
+                <a href="#" data-i18n="nav_philosophy">Philosophy</a>
+                <a href="#" data-i18n="nav_about">About</a>
+            </div>
+
+            <div class="nav-actions">
+                <div class="lang-switcher">
+                    <button class="lang-btn" data-lang="en">EN</button>
+                    <span>/</span>
+                    <button class="lang-btn" data-lang="uz">UZ</button>
+                    <span>/</span>
+                    <button class="lang-btn" data-lang="ru">RU</button>
+                </div>
+                <button class="icon-btn"><i data-lucide="search"></i></button>
+                <div class="cart-wrapper">
+                    <button class="icon-btn cart-toggle">
+                        <i data-lucide="shopping-bag"></i>
+                        <span class="cart-count">0</span>
+                    </button>
+                    <!-- Cart Dropdown -->
+                    <div class="cart-dropdown">
+                        <h4 data-i18n="cart_title">Shopping Cart</h4>
+                        <div class="cart-items">
+                            <!-- Items will be injected here -->
+                        </div>
+                        <div class="cart-footer">
+                            <div class="cart-total">
+                                <span data-i18n="cart_total">Total:</span>
+                                <span class="total-amount">$0.00</span>
+                            </div>
+                            <button class="btn btn-primary btn-block" data-i18n="cart_checkout">Checkout</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main>
+        <section class="hero">
+            <div class="container hero-container">
+                <div class="hero-content">
+                    <span class="subtitle" data-i18n="hero_new">New Collection 2026</span>
+                    <h1 data-i18n="hero_title">Beauty In Simplicity</h1>
+                    <p data-i18n="hero_desc">Experience the pure essence of nature with our dermatologically tested, organic skincare routine. Crafted for every skin type.</p>
+                    
+                    <div class="hero-actions">
+                        <a href="#shop" class="btn btn-primary" data-i18n="hero_cta">Shop Now</a>
+                        <a href="#" class="story-link">
+                            <span data-i18n="hero_story">Our Story</span>
+                            <span class="line"></span>
+                        </a>
+                    </div>
+
+                    <div class="hero-stats">
+                        <div class="stat">
+                            <span class="val">98%</span>
+                            <span class="label" data-i18n="hero_feat1">Natural Ingredients</span>
+                        </div>
+                        <div class="stat">
+                            <span class="val">100%</span>
+                            <span class="label" data-i18n="hero_feat2">Cruelty Free</span>
+                        </div>
+                        <div class="stat">
+                            <span class="val">24h</span>
+                            <span class="label" data-i18n="hero_feat3">Deep Hydration</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-image">
+                    <div class="img-wrapper">
+                        <img src="images/cosmetics-hero.jpg" alt="Clean Beauty">
+                        <div class="overlay"></div>
+                    </div>
+                    <div class="floating-card">
+                        <div class="card-icon">★</div>
+                        <p>"The best organic serum I've ever used. My skin feels reborn."</p>
+                        <span class="author">— Sophia, Verified Buyer</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="shop" class="shop">
+            <!-- Existing Shop Content -->
+            ...
+        </section>
+
+        <!-- Events Section -->
+        <section id="events" class="events">
+            <div class="container">
+                <div class="section-header">
+                    <span class="subtitle" data-i18n="events_subtitle">Upcoming Events</span>
+                    <h2 data-i18n="events_title">Experience Our World</h2>
+                </div>
+                <div class="events-grid">
+                    <div class="event-card">
+                        <div class="event-img">
+                            <img src="https://images.unsplash.com/photo-1514525253361-bee8a187499b?auto=format&fit=crop&w=600&q=80" alt="Masterclass">
+                        </div>
+                        <div class="event-info">
+                            <h3 data-i18n="event1_title">Skincare Masterclass</h3>
+                            <p data-i18n="event1_desc">Learn the secrets of a perfect routine from our experts.</p>
+                            <span class="event-date">Jan 20, 2026</span>
+                        </div>
+                    </div>
+                    <div class="event-card">
+                        <div class="event-img">
+                            <img src="https://images.unsplash.com/photo-1556910103-1c02745aae4d?auto=format&fit=crop&w=600&q=80" alt="New Launch">
+                        </div>
+                        <div class="event-info">
+                            <h3 data-i18n="event2_title">Paris Collection Launch</h3>
+                            <p data-i18n="event2_desc">Be the first to try our new organic line.</p>
+                            <span class="event-date">Feb 05, 2026</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Testimonials Section -->
+        <section class="testimonials">
+            <div class="container">
+                <div class="testimonials-grid">
+                    <div class="testimonial-card">
+                        <p data-i18n="test1_content">"My skin has never looked so radiant. These products are a game changer."</p>
+                        <span class="author">— Emma L.</span>
+                    </div>
+                    <div class="testimonial-card">
+                        <p data-i18n="test2_content">"Finally, organic skincare that actually delivers results. Highly recommend!"</p>
+                        <span class="author">— Marcus G.</span>
+                    </div>
+                    <div class="testimonial-card">
+                        <p data-i18n="test3_content">"The hydration is incredible. My face feels soft and fresh all day long."</p>
+                        <span class="author">— Leila K.</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="contact">
+            <div class="container">
+                <div class="contact-card">
+                    <div class="contact-info">
+                        <h2 data-i18n="contact_title">Get In Touch</h2>
+                        <p data-i18n="contact_subtitle">We'd love to hear from you. Send us a message.</p>
+                        <div class="contact-details">
+                            <p>hello@glowskin.com</p>
+                            <p>+33 1 23 45 67 89</p>
+                            <p>Paris, France</p>
+                        </div>
+                    </div>
+                    <form class="contact-form">
+                        <input type="text" placeholder="Name" data-i18n-placeholder="auth_name">
+                        <input type="email" placeholder="Email" data-i18n-placeholder="auth_email">
+                        <textarea placeholder="Message" rows="4"></textarea>
+                        <button type="submit" class="btn btn-primary" data-i18n="auth_register_btn">Send</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container footer-container">
+            <div class="footer-about">
+                <a href="/" class="logo">Glow<span>Skin</span></a>
+                <p data-i18n="footer_desc">We believe in the power of nature and the beauty of simplicity.</p>
+                <div class="social-links">
+                    <a href="#">Instagram</a>
+                    <a href="#">Pinterest</a>
+                    <a href="#">TikTok</a>
+                </div>
+            </div>
+            <div class="footer-links">
+                <h4 data-i18n="footer_discover">Discover</h4>
+                <ul>
+                    <li>Skincare</li>
+                    <li>Collections</li>
+                    <li>Sets & Kits</li>
+                    <li>Gift Cards</li>
+                </ul>
+            </div>
+            <div class="footer-links">
+                <h4 data-i18n="footer_support">Support</h4>
+                <ul>
+                    <li>Shipping</li>
+                    <li>Returns</li>
+                    <li>Privacy</li>
+                    <li>Contact</li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <div class="container bottom-container">
+                <p>© 2026 GLOWSKIN COSMETICS. ALL RIGHTS RESERVED.</p>
+                <div class="credits">
+                    <span>EST. 2026</span>
+                    <span>CRAFTED IN PARIS</span>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="js/main.js"></script>
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>

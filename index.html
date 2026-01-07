@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Krist - Modern E-commerce</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <header class="main-header">
+        <div class="header-container">
+            <div class="logo">Krist</div>
+            <nav class="nav-menu">
+                <a href="#">Home</a>
+                <div class="dropdown">
+                    <a href="#">Shop <i class="fas fa-chevron-down"></i></a>
+                </div>
+                <a href="#">Our Story</a>
+                <a href="#">Blog</a>
+                <a href="#">Contact Us</a>
+            </nav>
+            <div class="header-actions">
+                <i class="fas fa-search"></i>
+                <i class="far fa-heart"></i>
+                <div class="cart-btn" id="cartBtn">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span id="cartCount">0</span>
+                </div>
+                <a href="register.html" class="login-btn">Login</a>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <!-- Hero Section -->
+        <section class="hero-krist">
+            <div class="hero-text">
+                <p class="hero-sub">Classic Exclusive</p>
+                <h1>Women's <br> Collection</h1>
+                <p class="hero-off">UPTO 40% OFF</p>
+                <a href="#products" class="shop-now-btn">Shop Now <i class="fas fa-arrow-right"></i></a>
+            </div>
+            <div class="hero-image">
+                <img src="https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?ixlib=rb-1.2.1&auto=format&fit=crop&w=800&q=80" alt="Hero">
+            </div>
+        </section>
+
+        <!-- Shop by Categories -->
+        <section class="categories-section">
+            <h2 class="section-title-krist">Shop by Categories</h2>
+            <div class="categories-grid">
+                <div class="category-item">
+                    <img src="https://images.unsplash.com/photo-1516762689617-e1cffcef479d?w=400" alt="Casual">
+                    <div class="category-tag">Casual Wear</div>
+                </div>
+                <div class="category-item">
+                    <img src="https://images.unsplash.com/photo-1539109132314-3477524c8830?w=400" alt="Western">
+                    <div class="category-tag">Western Wear</div>
+                </div>
+                <div class="category-item">
+                    <img src="https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=400" alt="Ethnic">
+                    <div class="category-tag">Ethnic Wear</div>
+                </div>
+                <div class="category-item">
+                    <img src="https://images.unsplash.com/photo-1519233157271-e37456721511?w=400" alt="Kids">
+                    <div class="category-tag">Kids Wear</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Our Bestseller -->
+        <section id="products" class="bestseller-section">
+            <h2 class="section-title-krist">Our Bestseller</h2>
+            <div class="product-grid-krist" id="productGrid">
+                <!-- JS will fill this -->
+            </div>
+        </section>
+
+        <!-- Services -->
+        <section class="services-bar">
+            <div class="service-item">
+                <i class="fas fa-shipping-fast"></i>
+                <div>
+                    <h4>Free Shipping</h4>
+                    <p>Free shipping on order above $150</p>
+                </div>
+            </div>
+            <div class="service-item">
+                <i class="fas fa-undo"></i>
+                <div>
+                    <h4>Money Guarantee</h4>
+                    <p>Within 30 days for an exchange</p>
+                </div>
+            </div>
+            <div class="service-item">
+                <i class="fas fa-headset"></i>
+                <div>
+                    <h4>Online Support</h4>
+                    <p>24 hours a day, 7 days a week</p>
+                </div>
+            </div>
+            <div class="service-item">
+                <i class="fas fa-credit-card"></i>
+                <div>
+                    <h4>Flexible Payment</h4>
+                    <p>Pay with multiple credit cards</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer-krist">
+        <div class="footer-main">
+            <div class="footer-brand">
+                <div class="logo white">Krist</div>
+                <p>(704) 555-0127</p>
+                <p>krist@example.com</p>
+                <p>3891 Ranchview Dr. Richardson, California 62639</p>
+            </div>
+            <div class="footer-links">
+                <h4>Information</h4>
+                <a href="#">My Account</a>
+                <a href="#">Login</a>
+                <a href="#">My Cart</a>
+                <a href="#">My Wishlist</a>
+                <a href="#">Checkout</a>
+            </div>
+            <div class="footer-links">
+                <h4>Service</h4>
+                <a href="#">About Us</a>
+                <a href="#">Careers</a>
+                <a href="#">Delivery Information</a>
+                <a href="#">Privacy Policy</a>
+                <a href="#">Terms & Conditions</a>
+            </div>
+            <div class="footer-subscribe">
+                <h4>Subscribe</h4>
+                <p>Enter your email below to be the first to know about new collections.</p>
+                <div class="subscribe-box">
+                    <i class="far fa-envelope"></i>
+                    <input type="email" placeholder="Your Email">
+                    <button><i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom-krist">
+            <p>©2023 Krist All Rights are reserved</p>
+            <div class="socials">
+                <i class="fab fa-facebook-f"></i>
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-twitter"></i>
+            </div>
+        </div>
+    </footer>
+
+    <div id="cartModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h2>Savatchangiz</h2>
+            <div id="cartItems"></div>
+            <div class="cart-total">Total: <span id="cartTotalSum">0</span> so'm</div>
+            <button class="btn-primary-krist">Order Now</button>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
