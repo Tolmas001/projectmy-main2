@@ -15,15 +15,23 @@
 <body>
     <header class="main-header">
         <div class="header-container">
+            <div class="hamburger" id="hamburger" style="display:none; cursor:pointer; font-size:24px;">
+                <i class="fas fa-bars"></i>
+            </div>
             <div class="logo">Krist</div>
-            <nav class="nav-menu">
-                <a href="#" data-i18n="nav-home">Home</a>
+            <nav class="nav-menu" id="navMenu">
+                <a href="index.html" data-i18n="nav-home">Home</a>
                 <div class="dropdown">
-                    <a href="#" data-i18n="nav-shop">Shop <i class="fas fa-chevron-down"></i></a>
+                    <a href="#products" data-i18n="nav-shop">Shop <i class="fas fa-chevron-down"></i></a>
+                    <div class="dropdown-content">
+                        <a href="#products">Casual Wear</a>
+                        <a href="#products">Western Wear</a>
+                        <a href="#products">Ethnic Wear</a>
+                        <a href="#products">Kids Wear</a>
+                    </div>
                 </div>
-                <a href="#" data-i18n="nav-story">Our Story</a>
-                <a href="#" data-i18n="nav-blog">Blog</a>
-                <a href="#" data-i18n="nav-contact">Contact Us</a>
+                <a href="#services" data-i18n="nav-story">Our Story</a>
+                <a href="#footer" data-i18n="nav-contact">Contact Us</a>
             </nav>
             <div class="header-actions">
                 <select id="langSelect" class="lang-select">
@@ -40,6 +48,10 @@
                 <div class="wishlist-icon" onclick="showWishlist()" style="position:relative; cursor:pointer;">
                     <i class="far fa-heart"></i>
                     <span id="wishCount" style="position:absolute; top:-10px; right:-10px; background:var(--primary-color); color:white; font-size:10px; padding:2px 5px; border-radius:50%;">0</span>
+                </div>
+                <div class="cart-btn" id="cartBtn" style="position:relative; cursor:pointer;">
+                    <i class="fas fa-shopping-bag"></i>
+                    <span id="cartCount" style="position:absolute; top:-10px; right:-10px; background:red; color:white; font-size:10px; padding:2px 5px; border-radius:50%;">0</span>
                 </div>
                 <a href="profile.html" class="user-profile-link">
                     <img id="navAvatar" src="https://via.placeholder.com/35" alt="U" style="width:35px; height:35px; border-radius:50%; object-fit:cover; border:1px solid #ddd;">
@@ -58,7 +70,7 @@
 
     <main>
         <!-- Hero Section -->
-        <section class="hero-krist">
+        <section id="home" class="hero-krist">
             <div class="hero-text">
                 <p class="hero-sub" data-i18n="hero-sub">Classic Exclusive</p>
                 <h1 data-i18n="hero-title">Women's Collection</h1>
@@ -114,7 +126,7 @@
         </section>
 
         <!-- Services -->
-        <section class="services-bar">
+        <section id="services" class="services-bar">
             <div class="service-item">
                 <i class="fas fa-shipping-fast"></i>
                 <div>
@@ -146,7 +158,7 @@
         </section>
     </main>
 
-    <footer class="footer-krist">
+    <footer id="footer" class="footer-krist">
         <div class="footer-main">
             <div class="footer-brand">
                 <div class="logo white">Krist</div>
