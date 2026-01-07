@@ -1,0 +1,35 @@
+/* profile.css */
+.profile-header {
+    background: linear-gradient(45deg, #131118, #333);
+    color: white;
+    padding: 60px 0;
+    text-align: center;
+    border-radius: 0 0 50px 50px;
+}
+.user-avatar-big {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    border: 5px solid white;
+    margin-bottom: 15px;
+}
+.profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 30px;
+    max-width: 1200px;
+    margin: -40px auto 50px;
+    padding: 0 20px;
+}
+.info-card, .orders-card {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+}
+.order-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 0;
+    border-bottom: 1px solid #f0f0f0;
+}

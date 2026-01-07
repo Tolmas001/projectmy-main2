@@ -33,14 +33,24 @@
                     <i class="fas fa-search"></i>
                 </div>
                 <i class="far fa-heart"></i>
-                <a href="profile.html" class="user-icon" title="Shaxsiy kabinet"><i class="far fa-user"></i></a>
                 <div class="cart-btn" id="cartBtn">
                     <i class="fas fa-shopping-bag"></i>
                     <span id="cartCount">0</span>
                 </div>
+                <a href="profile.html" class="user-profile-link">
+                    <img id="navAvatar" src="https://via.placeholder.com/35" alt="U" style="width:35px; height:35px; border-radius:50%; object-fit:cover; border:1px solid #ddd;">
+                </a>
             </div>
         </div>
     </header>
+
+    <script>
+        // Navbardagi rasmni yangilash
+        const userData = JSON.parse(localStorage.getItem('krist_user'));
+        if (userData && userData.avatar) {
+            document.getElementById('navAvatar').src = userData.avatar;
+        }
+    </script>
 
     <main>
         <!-- Hero Section -->

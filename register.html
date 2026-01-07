@@ -5,17 +5,25 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Krist - Ro'yxatdan o'tish</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="auth.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
-    <div class="auth-container" style="background: #f3f4f6;">
+    <div class="auth-container">
         <div class="auth-box">
             <h1 class="logo">Krist</h1>
-            <p style="margin-bottom: 20px; color: #666;">Onlayn do'konimizga xush kelibsiz! Davom etish uchun profil yarating.</p>
+            <p>Davom etish uchun profil yarating</p>
+            
             <form id="registerForm">
+                <div class="profile-upload" onclick="document.getElementById('profileInput').click()">
+                    <img id="profilePreview" src="https://via.placeholder.com/100" alt="Avatar">
+                    <div class="upload-icon"><i class="fas fa-camera"></i></div>
+                    <input type="file" id="profileInput" hidden accept="image/*">
+                </div>
+
                 <div class="input-group">
-                    <label>Ism va familiya</label>
-                    <input type="text" id="username" required placeholder="Ismingizni kiriting">
+                    <label>To'liq ism</label>
+                    <input type="text" id="username" required placeholder="Ism va familiya">
                 </div>
                 <div class="input-group">
                     <label>Email</label>
@@ -29,16 +37,32 @@
             </form>
         </div>
     </div>
+
     <script>
+        const profileInput = document.getElementById('profileInput');
+        const profilePreview = document.getElementById('profilePreview');
+        let base64Image = "";
+
+        profileInput.onchange = (e) => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                base64Image = reader.result;
+                profilePreview.src = base64Image;
+            };
+            if (file) reader.readAsDataURL(file);
+        };
+
         document.getElementById('registerForm').onsubmit = (e) => {
             e.preventDefault();
             const userData = {
                 name: document.getElementById('username').value,
                 email: document.getElementById('email').value,
+                avatar: base64Image || "https://via.placeholder.com/100",
                 joinedDate: new Date().toISOString()
             };
             localStorage.setItem('krist_user', JSON.stringify(userData));
-            alert("Tabriklaymiz! Profil muvaffaqiyatli yaratildi.");
+            alert("Xush kelibsiz!");
             window.location.href = 'index.html';
         };
     </script>

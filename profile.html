@@ -5,82 +5,74 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Krist - Shaxsiy Kabinet</title>
     <link rel="stylesheet" href="style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 <body>
     <header class="main-header">
         <div class="header-container">
             <div class="logo"><a href="index.html" style="text-decoration:none; color:black;">Krist</a></div>
-            <nav class="nav-menu">
-                <a href="index.html">Bosh sahifa</a>
-                <a href="index.html#products">Do'kon</a>
-            </nav>
+            <a href="index.html" style="text-decoration:none; color:var(--dark-gray);"><i class="fas fa-home"></i></a>
         </div>
     </header>
 
-    <div class="profile-container" style="max-width: 1000px; margin: 50px auto; padding: 0 20px;">
-        <div style="display:flex; gap:30px; flex-wrap:wrap;">
-            <div style="flex:1; min-width:300px; background:white; padding:30px; border-radius:10px; box-shadow:0 2px 10px rgba(0,0,0,0.05);">
-                <div style="text-align:center; margin-bottom:30px;">
-                    <div style="width:100px; height:100px; background:#f3f4f6; border-radius:50%; margin:0 auto 15px; display:flex; align-items:center; justify-content:center; font-size:40px; color:#ccc;">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <h3>Mening Profilim</h3>
-                    <p style="color:#666;">Xush kelibsiz!</p>
-                </div>
-                <hr style="border:0; border-top:1px solid #eee; margin:20px 0;">
-                <div id="profileInfo">
-                    <p><strong>Ism:</strong> <span id="userName">Foydalanuvchi</span></p>
-                    <p><strong>Email:</strong> <span id="userEmail">user@example.com</span></p>
-                </div>
-                <button onclick="logout()" class="btn-primary-krist" style="margin-top:20px; background:#f34f4f;">Chiqish</button>
-            </div>
+    <div class="profile-header">
+        <img id="userAvatar" src="" alt="Avatar" class="user-avatar-big">
+        <h2 id="userName"></h2>
+        <p id="userEmail"></p>
+    </div>
 
-            <div style="flex:2; min-width:300px;">
-                <h3>Mening buyurtmalarim</h3>
-                <div id="userOrdersList" style="margin-top:20px;">
-                    <!-- Buyurtmalar bu yerga chiqadi -->
-                </div>
-            </div>
+    <div class="profile-grid">
+        <div class="info-card">
+            <h3>Profil ma'lumotlari</h3>
+            <hr style="margin:20px 0; border:0; border-top:1px solid #eee;">
+            <p><strong>A'zo bo'lgan sana:</strong> <span id="joinedDate"></span></p>
+            <p><strong>Status:</strong> VIP Mijoz</p>
+            <button onclick="logout()" class="btn-primary-krist" style="margin-top:30px; background:#ff4757;">Chiqish</button>
+        </div>
+
+        <div class="orders-card">
+            <h3>Buyurtmalar tarixi</h3>
+            <div id="userOrdersList" style="margin-top:20px;"></div>
         </div>
     </div>
 
     <script>
-        // Profil ma'lumotlarini yuklash
         const user = JSON.parse(localStorage.getItem('krist_user'));
-        if (user) {
-            document.getElementById('userName').innerText = user.name;
-            document.getElementById('userEmail').innerText = user.email;
-        } else {
-            window.location.href = 'register.html';
-        }
+        if (!user) window.location.href = 'register.html';
 
-        function logout() {
-            if (confirm("Haqiqatan ham profildan chiqmoqchimisiz?")) {
-                localStorage.removeItem('krist_user');
-                window.location.href = 'register.html';
-            }
-        }
+        document.getElementById('userAvatar').src = user.avatar;
+        document.getElementById('userName').innerText = user.name;
+        document.getElementById('userEmail').innerText = user.email;
+        document.getElementById('joinedDate').innerText = new Date(user.joinedDate).toLocaleDateString();
 
         const orders = JSON.parse(localStorage.getItem('krist_orders')) || [];
         const list = document.getElementById('userOrdersList');
 
         if (orders.length === 0) {
-            list.innerHTML = '<div style="background:white; padding:20px; border-radius:10px; text-align:center;">Sizda hali buyurtmalar yo\'q.</div>';
+            list.innerHTML = '<p>Sizda hali buyurtmalar yo\'q.</p>';
         } else {
             orders.reverse().forEach(order => {
                 list.innerHTML += `
-                    <div style="background:white; padding:20px; border-radius:10px; margin-bottom:15px; box-shadow:0 2px 5px rgba(0,0,0,0.05);">
-                        <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                    <div class="order-row">
+                        <div>
                             <strong>Order #${order.id}</strong>
-                            <span style="color:green; font-weight:600;">Qabul qilindi</span>
+                            <p style="font-size:12px; color:#999;">${new Date(order.date).toLocaleDateString()}</p>
                         </div>
-                        <p style="font-size:14px; color:#666;">Sana: ${new Date(order.date).toLocaleDateString()}</p>
-                        <p style="font-size:14px; margin-top:5px;">Mahsulotlar: ${order.items.map(i => i.name).join(', ')}</p>
-                        <p style="margin-top:10px; font-weight:bold;">Jami: $${order.total.toFixed(2)}</p>
+                        <div style="text-align:right;">
+                            <p style="font-weight:700;">$${order.total.toFixed(2)}</p>
+                            <span style="font-size:11px; color:green;">Yetkazildi</span>
+                        </div>
                     </div>
                 `;
             });
+        }
+
+        function logout() {
+            if (confirm("Chiqmoqchimisiz?")) {
+                localStorage.removeItem('krist_user');
+                window.location.href = 'register.html';
+            }
         }
     </script>
 </body>

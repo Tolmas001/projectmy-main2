@@ -1,0 +1,18 @@
+/* product.css */
+.product-detail-page {
+    padding: 60px 5%;
+}
+.product-main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 60px;
+}
+.image-gallery img {
+    width: 100%;
+    border-radius: 30px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+}
+.product-info-box h1 { font-size: 40px; margin-bottom: 15px; }
+.price-tag { font-size: 28px; font-weight: 700; color: #d4a373; margin-bottom: 30px; }
+.description { line-height: 1.8; color: #555; margin-bottom: 40px; }
+.review-section { margin-top: 80px; border-top: 1px solid #eee; padding-top: 40px; }

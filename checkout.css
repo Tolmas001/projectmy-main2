@@ -1,0 +1,40 @@
+/* checkout.css */
+.checkout-layout {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 40px;
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+.checkout-form-section {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.05);
+}
+.order-summary-card {
+    background: #fdfdfd;
+    padding: 30px;
+    border-radius: 20px;
+    border: 1px solid #eee;
+    position: sticky;
+    top: 100px;
+}
+.payment-selector {
+    display: flex;
+    gap: 15px;
+    margin-top: 15px;
+}
+.pay-option {
+    flex: 1;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 12px;
+    text-align: center;
+    cursor: pointer;
+}
+.pay-option.active {
+    border-color: black;
+    background: #f8f8f8;
+}
