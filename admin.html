@@ -6,9 +6,13 @@
     <title>Krist - Admin Panel</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         .admin-container { padding: 40px 5%; max-width: 1200px; margin: 0 auto; }
-        .order-card { background: white; border: 1px solid #eee; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
+        .order-card { background: white; border: 1px solid #eee; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; }
+        .delete-btn { position: absolute; top: 20px; right: 80px; color: #ff4757; cursor: pointer; font-size: 18px; transition: 0.3s; }
+        .delete-btn:hover { transform: scale(1.2); }
         .status-badge { background: #e3f2fd; color: #1976d2; padding: 5px 10px; border-radius: 5px; font-size: 12px; font-weight: bold; }
         .tab-menu { display: flex; gap: 20px; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
         .tab-btn { cursor: pointer; font-weight: 600; color: #666; }
@@ -51,9 +55,10 @@
             const list = document.getElementById('adminOrdersList');
             list.innerHTML = orders.length === 0 ? '<p>Hozircha buyurtmalar yo\'q.</p>' : '';
             
-            orders.reverse().forEach(order => {
+            orders.reverse().forEach((order, index) => {
                 list.innerHTML += `
                     <div class="order-card">
+                        <i class="fas fa-trash delete-btn" onclick="deleteOrder(${order.id})" title="O'chirish"></i>
                         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
                             <strong>Buyurtma #${order.id}</strong>
                             <span class="status-badge">YANGI</span>
@@ -68,6 +73,31 @@
                     </div>
                 `;
             });
+        }
+
+        function deleteOrder(orderId) {
+            Swal.fire({
+                title: 'Ishonchingiz komilmi?',
+                text: "Bu buyurtma butunlay o'chiriladi!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#131118',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ha, o\'chirish!',
+                cancelButtonText: 'Bekor qilish'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let orders = JSON.parse(localStorage.getItem('krist_orders')) || [];
+                    orders = orders.filter(order => order.id !== orderId);
+                    localStorage.setItem('krist_orders', JSON.stringify(orders));
+                    loadOrders();
+                    Swal.fire(
+                        'O\'chirildi!',
+                        'Buyurtma muvaffaqiyatli o\'chirildi.',
+                        'success'
+                    )
+                }
+            })
         }
 
         loadOrders();
