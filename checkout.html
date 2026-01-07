@@ -6,6 +6,8 @@
     <title>Krist - Buyurtma berish</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <div class="auth-container" style="background: #f3f4f6;">
@@ -16,6 +18,13 @@
             <div id="orderSummary" style="margin-bottom: 20px; background: #fafafa; padding: 15px; border-radius: 8px;">
                 <h4 style="margin-bottom: 10px; border-bottom: 1px solid #ddd; padding-bottom: 5px;">Sizning mahsulotlaringiz:</h4>
                 <div id="summaryItems"></div>
+                
+                <div class="promo-section" style="margin-top: 15px; display: flex; gap: 10px;">
+                    <input type="text" id="promoInput" placeholder="Promo-kod" style="flex: 1; padding: 8px; border: 1px solid #ddd; border-radius: 5px; outline: none;">
+                    <button type="button" onclick="applyPromo()" style="padding: 8px 15px; background: var(--black); color: white; border: none; border-radius: 5px; cursor: pointer; font-size: 14px;">Qo'llash</button>
+                </div>
+                <p id="promoMessage" style="font-size: 12px; margin-top: 5px;"></p>
+
                 <div id="summaryTotal" style="margin-top: 10px; font-weight: bold; border-top: 1px solid #ddd; padding-top: 10px;"></div>
             </div>
 
@@ -54,37 +63,66 @@
     </div>
 
     <script>
-        function selectMethod(el, method) {
-            document.querySelectorAll('.method-card').forEach(c => c.classList.remove('active'));
-            el.classList.add('active');
-            document.getElementById('paymentMethod').value = method;
-        }
-
-        // Avtomatik to'ldirish
-        const user = JSON.parse(localStorage.getItem('krist_user'));
-        if (user) {
-            setTimeout(() => {
-                document.getElementById('fullName').value = user.name;
-            }, 100);
-        }
-
         const cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
         const summaryItems = document.getElementById('summaryItems');
         const summaryTotal = document.getElementById('summaryTotal');
+        let total = 0;
+        let discount = 0;
 
         if (cart.length === 0) {
             window.location.href = 'index.html';
         }
 
-        let total = 0;
-        cart.forEach(item => {
-            total += item.price;
-            summaryItems.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:5px;">
-                <span>${item.name}</span>
-                <span>$${item.price.toFixed(2)}</span>
-            </div>`;
-        });
-        summaryTotal.innerText = `Jami: $${total.toFixed(2)}`;
+        function updateDisplay() {
+            summaryItems.innerHTML = '';
+            total = 0;
+            cart.forEach(item => {
+                total += item.price;
+                summaryItems.innerHTML += `<div style="display:flex; justify-content:space-between; margin-bottom:5px;">
+                    <span>${item.name}</span>
+                    <span>$${item.price.toFixed(2)}</span>
+                </div>`;
+            });
+
+            const finalTotal = total - (total * discount);
+            summaryTotal.innerHTML = `
+                <div style="display:flex; justify-content:space-between;">
+                    <span>Subtotal:</span> <span>$${total.toFixed(2)}</span>
+                </div>
+                ${discount > 0 ? `
+                <div style="display:flex; justify-content:space-between; color: green;">
+                    <span>Chegirma (${discount * 100}%):</span> <span>-$${(total * discount).toFixed(2)}</span>
+                </div>` : ''}
+                <div style="display:flex; justify-content:space-between; margin-top:5px; font-size: 1.1em;">
+                    <span>Jami:</span> <span>$${finalTotal.toFixed(2)}</span>
+                </div>
+            `;
+        }
+
+        const validPromos = {
+            "KRIST10": 0.10, // 10% chegirma
+            "GLOW20": 0.20,  // 20% chegirma
+            "YANGIYIL": 0.30 // 30% chegirma
+        };
+
+        window.applyPromo = () => {
+            const input = document.getElementById('promoInput').value.toUpperCase();
+            const msg = document.getElementById('promoMessage');
+            
+            if (validPromos[input]) {
+                discount = validPromos[input];
+                msg.innerText = "Promo-kod muvaffaqiyatli qo'llanildi!";
+                msg.style.color = "green";
+                updateDisplay();
+            } else {
+                discount = 0;
+                msg.innerText = "Xato promo-kod kiritildi!";
+                msg.style.color = "red";
+                updateDisplay();
+            }
+        };
+
+        updateDisplay();
 
         document.getElementById('orderForm').onsubmit = (e) => {
             e.preventDefault();
@@ -97,7 +135,10 @@
                     address: document.getElementById('address').value
                 },
                 items: cart,
-                total: total,
+                subtotal: total,
+                discount: total * discount,
+                total: total - (total * discount),
+                paymentMethod: document.getElementById('paymentMethod').value,
                 date: new Date().toISOString()
             };
 
@@ -106,11 +147,15 @@
             allOrders.push(orderData);
             localStorage.setItem('krist_orders', JSON.stringify(allOrders));
 
-            alert("Buyurtmangiz muvaffaqiyatli qabul qilindi!");
-            
-            // Savatchani tozalash
-            localStorage.removeItem('krist_cart');
-            window.location.href = 'index.html';
+            Swal.fire({
+                title: 'Rahmat!',
+                text: 'Buyurtmangiz muvaffaqiyatli qabul qilindi!',
+                icon: 'success',
+                confirmButtonColor: '#131118'
+            }).then(() => {
+                localStorage.removeItem('krist_cart');
+                window.location.href = 'index.html';
+            });
         };
     </script>
 </body>
