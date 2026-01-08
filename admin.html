@@ -84,6 +84,10 @@
                     <input type="number" id="pPriceInput" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
                 </div>
                 <div style="margin-bottom: 15px; text-align: left;">
+                    <label style="display:block; font-size:12px; margin-bottom:5px;">Tarif (Tavsif)</label>
+                    <textarea id="pDescInput" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd; height:80px;"></textarea>
+                </div>
+                <div style="margin-bottom: 15px; text-align: left;">
                     <label style="display:block; font-size:12px; margin-bottom:5px;">Kategoriya</label>
                     <select id="pCatInput" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
                         <option value="Yuz parvarishi">Yuz parvarishi</option>
@@ -200,10 +204,10 @@
             document.getElementById('modalTitle').innerText = "Yangi mahsulot";
             document.getElementById('pNameInput').value = '';
             document.getElementById('pPriceInput').value = '';
+            document.getElementById('pDescInput').value = '';
             document.getElementById('pImgPreview').style.display = "none";
             document.getElementById('productModal').style.display = 'block';
         }
-        window.closeProductModal = () => { document.getElementById('productModal').style.display = 'none'; }
 
         window.editProduct = (id) => {
             const products = JSON.parse(localStorage.getItem('krist_products'));
@@ -213,6 +217,7 @@
             document.getElementById('modalTitle').innerText = "Tahrirlash";
             document.getElementById('pNameInput').value = p.name;
             document.getElementById('pPriceInput').value = p.price;
+            document.getElementById('pDescInput').value = p.description || "";
             document.getElementById('pCatInput').value = p.category;
             const preview = document.getElementById('pImgPreview');
             preview.src = p.image;
@@ -224,12 +229,20 @@
             let products = JSON.parse(localStorage.getItem('krist_products'));
             const name = document.getElementById('pNameInput').value;
             const price = parseFloat(document.getElementById('pPriceInput').value);
+            const description = document.getElementById('pDescInput').value;
             const category = document.getElementById('pCatInput').value;
 
             if (editingId) {
-                products = products.map(p => p.id === editingId ? {...p, name, price, category, image: uploadedImgBase64} : p);
+                products = products.map(p => p.id === editingId ? {...p, name, price, description, category, image: uploadedImgBase64} : p);
             } else {
-                products.unshift({ id: Date.now(), name, price, category, image: uploadedImgBase64 || "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=500" });
+                products.unshift({ 
+                    id: Date.now(), 
+                    name, 
+                    price, 
+                    description,
+                    category, 
+                    image: uploadedImgBase64 || "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=500" 
+                });
             }
             localStorage.setItem('krist_products', JSON.stringify(products));
             closeProductModal();

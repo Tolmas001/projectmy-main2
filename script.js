@@ -45,7 +45,15 @@ if (!products) {
     for (let i = 1; i <= 150; i++) {
         const base = productData[(i - 1) % productData.length];
         const p = base.basePrice + (i % 10);
-        products.push({ id: i, name: `${base.name} #${i}`, price: p, oldPrice: p + 5, category: base.category, image: `${base.img}?w=500&sig=${i}` });
+        products.push({ 
+            id: i, 
+            name: `${base.name} #${i}`, 
+            price: p, 
+            oldPrice: p + 5, 
+            category: base.category, 
+            description: "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi. 100% original va sifatli.",
+            image: `${base.img}?w=500&sig=${i}` 
+        });
     }
     localStorage.setItem('krist_products', JSON.stringify(products));
 }

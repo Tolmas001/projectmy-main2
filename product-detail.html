@@ -24,9 +24,7 @@
         <div class="detail-info" style="flex: 1; min-width: 300px;">
             <h1 id="pName" style="font-size: 32px; margin-bottom: 10px;"></h1>
             <p id="pPrice" style="font-size: 24px; color: var(--primary-color); font-weight: 700; margin-bottom: 20px;"></p>
-            <p style="color: var(--dark-gray); line-height: 1.6; margin-bottom: 30px;">
-                Ushbu premium kosmetika mahsuloti yuqori sifatli tarkibiy qismlardan tayyorlangan bo'lib, sizning go'zalligingizni yanada ta'kidlash uchun xizmat qiladi. 100% tabiiy va xavfsiz.
-            </p>
+            <p id="pDescription" style="color: var(--dark-gray); line-height: 1.6; margin-bottom: 30px;"></p>
             
             <div style="margin-bottom: 30px;">
                 <h4>Tanlov:</h4>
@@ -54,6 +52,7 @@
             document.getElementById('mainImg').src = product.image;
             document.getElementById('pName').innerText = product.name;
             document.getElementById('pPrice').innerText = `$${product.price.toFixed(2)}`;
+            document.getElementById('pDescription').innerText = product.description || "Ushbu mahsulot haqida ma'lumot kiritilmagan.";
             
             document.getElementById('addToCartBtn').onclick = () => {
                 let cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
