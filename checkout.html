@@ -91,7 +91,6 @@
             btn.innerText = "Yuborilmoqda...";
 
             const orderData = {
-                id: Date.now(),
                 customer: {
                     name: document.getElementById('fullName').value,
                     phone: document.getElementById('phone').value,
@@ -99,8 +98,7 @@
                 },
                 items: cart,
                 total: total,
-                date: new Date().toISOString(),
-                status: 'pending'
+                date: new Date().toISOString()
             };
 
             try {
@@ -110,10 +108,15 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(orderData)
                 });
+                
+                const result = await response.json();
+                // Serverdan kelgan buyurtmalardan oxirgisini olamiz
+                const serverOrders = result.orders;
+                const savedOrder = serverOrders[0]; 
 
                 // 2. Har doim lokal bazaga ham saqlaymiz (zaxira)
                 const allOrders = JSON.parse(localStorage.getItem('krist_orders')) || [];
-                allOrders.push(orderData);
+                allOrders.push(savedOrder);
                 localStorage.setItem('krist_orders', JSON.stringify(allOrders));
 
                 // 3. SAVATCHANI TOZALASH (DARHOL)
@@ -133,8 +136,9 @@
                 // Server yopiq bo'lsa ham buyurtmani lokal saqlab, davom etamiz
                 console.warn("Server ulanmagan, lekin buyurtma lokal saqlandi.");
                 
+                const backupOrder = { ...orderData, id: Date.now().toString(), status: 'pending' };
                 const allOrders = JSON.parse(localStorage.getItem('krist_orders')) || [];
-                allOrders.push(orderData);
+                allOrders.push(backupOrder);
                 localStorage.setItem('krist_orders', JSON.stringify(allOrders));
                 
                 localStorage.removeItem('krist_cart'); // Savatchani tozalash

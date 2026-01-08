@@ -187,31 +187,45 @@
                         <span class="status-badge status-${status}">${status}</span>
                         <p>Mijoz: ${o.customer.name} (${o.customer.phone})</p>
                         <p>Jami: $${o.total.toFixed(2)}</p>
-                        <div style="margin-top:10px;">
-                            <button onclick="updateStatus('${o.id}', 'processing')" style="font-size:10px; padding:3px 8px;">Tayyorlanmoqda</button>
-                            <button onclick="updateStatus('${o.id}', 'delivered')" style="font-size:10px; padding:3px 8px;">Yetkazildi</button>
+                        <div style="margin-top:10px; display:flex; gap:10px;">
+                            <button onclick="updateStatus('${o.id}', 'processing')" style="font-size:10px; padding:5px 10px; cursor:pointer; background:#e3f2fd; border:1px solid #bbdefb; border-radius:5px;">Tayyorlanmoqda</button>
+                            <button onclick="updateStatus('${o.id}', 'delivered')" style="font-size:10px; padding:5px 10px; cursor:pointer; background:#e8f5e9; border:1px solid #c8e6c9; border-radius:5px;">Yetkazildi</button>
                         </div>
                     </div>`;
             });
             loadStats();
         }
 
-        window.updateStatus = async (id, status) => {
-            const res = await fetch(`${API_URL}/orders`);
-            const orders = await res.json();
-            const order = orders.find(o => o.id == id);
-            if(order) {
-                order.status = status;
+        window.updateStatus = async (id, newStatus) => {
+            try {
                 await fetch(`${API_URL}/orders`, {
-                    method: 'POST', // Backend post bo'lsa butun arrayni yozib yuboradi yoki tahrirlash api kerak
+                    method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(order)
+                    body: JSON.stringify({ id: id, status: newStatus })
                 });
                 loadOrders();
+                Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Holat yangilandi', showConfirmButton: false, timer: 1500 });
+            } catch (e) {
+                alert("Xatolik!");
             }
         }
 
-        window.deleteOrder = async (id) => { if(confirm("O'chirilsinmi?")) { await fetch(`${API_URL}/orders/${id}`, { method: 'DELETE' }); loadOrders(); } }
+        window.deleteOrder = async (id) => {
+            const result = await Swal.fire({
+                title: 'O\'chirilsinmi?',
+                text: "Bu buyurtma butunlay o'chib ketadi!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ff4757',
+                confirmButtonText: 'Ha, o\'chirish'
+            });
+
+            if (result.isConfirmed) {
+                await fetch(`${API_URL}/orders/${id}`, { method: 'DELETE' });
+                loadOrders();
+                Swal.fire('O\'chirildi!', '', 'success');
+            }
+        }
 
         async function loadAdminProducts() {
             const list = document.getElementById('adminProductsList');

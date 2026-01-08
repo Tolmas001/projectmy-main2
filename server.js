@@ -86,28 +86,39 @@ app.delete('/api/products/:id', (req, res) => {
     res.json({ message: "O'chirildi" });
 });
 
-// Buyurtmalarni saqlash
+// Buyurtmalarni saqlash yoki yangilash
 app.post('/api/orders', (req, res) => {
     const db = readDB();
-    const order = { id: Date.now(), ...req.body };
-    db.orders.unshift(order);
+    const orderData = req.body;
+    
+    if (orderData.id) {
+        // Yangilash (Status o'zgartirish uchun)
+        const index = db.orders.findIndex(o => o.id == orderData.id);
+        if (index !== -1) {
+            db.orders[index] = { ...db.orders[index], ...orderData };
+        }
+    } else {
+        // Yangi buyurtma
+        const newOrder = { 
+            id: Date.now().toString(), 
+            ...orderData, 
+            date: new Date().toISOString(),
+            status: 'pending'
+        };
+        db.orders.unshift(newOrder);
+    }
+    
     writeDB(db);
-    res.json({ message: "Buyurtma qabul qilindi!" });
-});
-
-// Buyurtmalarni olish
-app.get('/api/orders', (req, res) => {
-    const db = readDB();
-    res.json(db.orders);
+    res.json({ message: "Muvaffaqiyatli!", orders: db.orders });
 });
 
 // Buyurtmani o'chirish
 app.delete('/api/orders/:id', (req, res) => {
     const db = readDB();
-    const id = parseInt(req.params.id);
-    db.orders = db.orders.filter(o => o.id !== id);
+    const id = req.params.id;
+    db.orders = db.orders.filter(o => o.id.toString() !== id.toString());
     writeDB(db);
-    res.json({ message: "O'chirildi" });
+    res.json({ message: "Buyurtma o'chirildi" });
 });
 
 app.listen(PORT, () => console.log(`Backend server running on http://localhost:${PORT}`));
