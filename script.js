@@ -3,8 +3,6 @@ let currentPage = 1;
 const itemsPerPage = 12;
 let allProducts = [];
 let filteredProducts = [];
-let cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
-let wishlist = JSON.parse(localStorage.getItem('krist_wishlist')) || [];
 
 const API_URL = "http://localhost:3000/api";
 
@@ -27,7 +25,7 @@ async function loadProductsFromServer() {
         filteredProducts = [...allProducts];
         renderPage(1);
     } catch (err) {
-        console.warn("Server xatosi, keshdan o'qiladi.");
+        console.warn("Server ulanmadi, kesh ishlatiladi.");
         allProducts = JSON.parse(localStorage.getItem('krist_products')) || [];
         filteredProducts = [...allProducts];
         renderPage(1);
@@ -38,9 +36,10 @@ async function loadProductsFromServer() {
 function renderProducts(data) {
     const grid = document.getElementById('productGrid');
     if (!grid) return;
-    grid.innerHTML = data.length === 0 ? '<div style="grid-column: 1/-1; text-align: center; padding: 50px;"><h3>Hech narsa topilmadi</h3></div>' : '';
+    grid.innerHTML = data.length === 0 ? '<div style="grid-column: 1/-1; text-align: center; padding: 50px;"><h3>Mahsulotlar topilmadi</h3></div>' : '';
 
     data.forEach(p => {
+        const wishlist = JSON.parse(localStorage.getItem('krist_wishlist')) || [];
         const isWished = wishlist.some(item => item.id.toString() === p.id.toString());
         grid.innerHTML += `
             <div class="product-card-krist" data-aos="fade-up">
@@ -59,10 +58,7 @@ function renderProducts(data) {
     });
 }
 
-// 5. SAVATCHA - BU QISM cart.js'ga ko'chirildi
-// Faqat renderPage va boshqa katalog mantiqlari qoladi
-
-// 6. Pagination va boshqalar
+// 5. Pagination
 window.renderPage = (page) => {
     currentPage = page;
     const start = (page - 1) * itemsPerPage;
@@ -78,38 +74,44 @@ function renderPagination() {
     container.innerHTML = '';
     if (totalPages <= 1) return;
     for (let i = 1; i <= totalPages; i++) {
-        container.innerHTML += `<button onclick="renderPage(${i})" style="padding:6px 14px; margin:0 3px; border:1px solid #ddd; background:${i === currentPage ? 'var(--black)' : 'white'}; color:${i === currentPage ? 'white' : 'var(--text-color)'}; border-radius:8px; cursor:pointer;">${i}</button>`;
+        container.innerHTML += `<button onclick="renderPage(${i})" style="padding:6px 14px; margin:0 3px; border:1px solid #ddd; background:${i === currentPage ? '#000' : '#fff'}; color:${i === currentPage ? '#fff' : '#000'}; border-radius:8px; cursor:pointer;">${i}</button>`;
     }
 }
 
-// 7. Til va Mavzu
-function setLanguage(lang) {
-    const translations = {
-        uz: { "nav-home": "Bosh sahifa", "nav-shop": "Katalog", "bestseller-title": "Eng ko'p sotilganlar" },
-        en: { "nav-home": "Home", "nav-shop": "Shop", "bestseller-title": "Our Bestsellers" },
-        ru: { "nav-home": "Главная", "nav-shop": "Каталог", "bestseller-title": "Хиты продаж" }
-    };
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (translations[lang] && translations[lang][key]) el.innerText = translations[lang][key];
-    });
-    localStorage.setItem('selectedLang', lang);
-}
-
+// 6. Qidiruv va Saralash
 document.addEventListener('DOMContentLoaded', () => {
     loadProductsFromServer();
-    updateCart();
     
+    // Headerdagi qidiruv
+    const sInput = document.getElementById('searchInput');
+    if (sInput) {
+        sInput.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            filteredProducts = allProducts.filter(p => p.name.toLowerCase().includes(term));
+            renderPage(1);
+        });
+    }
+
     // Mavzu
     const theme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', theme);
     if(document.getElementById('themeIcon')) document.getElementById('themeIcon').className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
 
-    // Til
-    const lang = localStorage.getItem('selectedLang') || 'uz';
-    setLanguage(lang);
-    
-    window.onclick = (e) => {
-        if (e.target.classList.contains('modal')) e.target.style.display = "none";
-    };
+    // Savatcha hisobini yangilab qo'yamiz (agar cart.js yuklangan bo'lsa)
+    if (window.updateCartCount) window.updateCartCount();
 });
+
+// Wishlist
+window.toggleWishlist = (id) => {
+    let wishlist = JSON.parse(localStorage.getItem('krist_wishlist')) || [];
+    const idx = wishlist.findIndex(p => p.id.toString() === id.toString());
+    if (idx > -1) {
+        wishlist.splice(idx, 1);
+    } else {
+        const prod = allProducts.find(item => item.id.toString() === id.toString());
+        if (prod) wishlist.push(prod);
+    }
+    localStorage.setItem('krist_wishlist', JSON.stringify(wishlist));
+    if(window.updateWishCount) window.updateWishCount();
+    renderPage(currentPage);
+};
