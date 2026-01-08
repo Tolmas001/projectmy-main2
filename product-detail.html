@@ -6,33 +6,31 @@
     <title>Krist - Mahsulot haqida</title>
     <link rel="stylesheet" href="style.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body>
     <header class="main-header">
         <div class="header-container">
-            <div class="logo"><a href="index.html" style="text-decoration:none; color:black;">Krist</a></div>
+            <div class="logo"><a href="index.html" style="text-decoration:none; color:var(--text-color);">Krist</a></div>
             <a href="index.html" style="text-decoration:none; color:var(--dark-gray); font-size:14px;"><i class="fas fa-arrow-left"></i> Orqaga qaytish</a>
         </div>
     </header>
 
     <div class="product-detail-container" style="max-width: 1200px; margin: 50px auto; padding: 0 20px; display: flex; gap: 50px; flex-wrap: wrap;">
         <div class="detail-image" style="flex: 1; min-width: 300px;">
-            <img id="mainImg" src="" alt="" style="width: 100%; border-radius: 10px; background: #f8f8f8;">
+            <img id="mainImg" src="" alt="" style="width: 100%; border-radius: 10px; background: var(--gray);">
         </div>
         <div class="detail-info" style="flex: 1; min-width: 300px;">
             <h1 id="pName" style="font-size: 32px; margin-bottom: 10px;"></h1>
-            <p id="pPrice" style="font-size: 24px; color: var(--black); font-weight: 700; margin-bottom: 20px;"></p>
+            <p id="pPrice" style="font-size: 24px; color: var(--primary-color); font-weight: 700; margin-bottom: 20px;"></p>
             <p style="color: var(--dark-gray); line-height: 1.6; margin-bottom: 30px;">
-                Ushbu mahsulot yuqori sifatli materiallardan tayyorlangan bo'lib, sizning kundalik hayotingizda qulaylik va go'zallik bag'ishlaydi. Bizning barcha mahsulotlarimiz kafolatlangan va sinovdan o'tgan.
+                Ushbu premium kosmetika mahsuloti yuqori sifatli tarkibiy qismlardan tayyorlangan bo'lib, sizning go'zalligingizni yanada ta'kidlash uchun xizmat qiladi. 100% tabiiy va xavfsiz.
             </p>
             
             <div style="margin-bottom: 30px;">
-                <h4>Rangni tanlang:</h4>
-                <div style="display:flex; gap:10px; margin-top:10px;">
-                    <div style="width:30px; height:30px; border-radius:50%; background:black; cursor:pointer; border:2px solid white; outline:1px solid #ddd;"></div>
-                    <div style="width:30px; height:30px; border-radius:50%; background:navy; cursor:pointer;"></div>
-                    <div style="width:30px; height:30px; border-radius:50%; background:brown; cursor:pointer;"></div>
-                </div>
+                <h4>Tanlov:</h4>
+                <p style="font-size: 14px; color: var(--dark-gray); margin-top: 5px;">Standart o'lcham (Original)</p>
             </div>
 
             <button class="btn-primary-krist" id="addToCartBtn" style="padding: 15px 50px; width: auto;">Savatchaga qo'shish</button>
@@ -48,18 +46,8 @@
         const urlParams = new URLSearchParams(window.location.search);
         const productId = parseInt(urlParams.get('id'));
 
-        // Bu ma'lumotlar script.js'dan kelishi kerak, hozircha bu yerda ham takrorlaymiz
-        const products = [
-            { id: 1, name: "Roadster Printed T-Shirt", price: 38.00, image: "https://images.unsplash.com/photo-1521572267360-ee0c2909d518?w=800" },
-            { id: 2, name: "Allen Solly Handheld Bag", price: 80.00, image: "https://images.unsplash.com/photo-1584917033904-47e120121300?w=800" },
-            { id: 3, name: "Louis Philippe Sport T-Shirt", price: 50.00, image: "https://images.unsplash.com/photo-1581655353564-df123a1eb820?w=800" },
-            { id: 4, name: "Adidas Running Shoes", price: 60.00, image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=800" },
-            { id: 5, name: "Trendyol Maxi Dress", price: 35.00, image: "https://images.unsplash.com/photo-1595777457583-95e059d581b8?w=800" },
-            { id: 6, name: "YK Disney Printed Dress", price: 80.00, image: "https://images.unsplash.com/photo-1621335829175-95f437384d7c?w=800" },
-            { id: 7, name: "US Polo Casual Shirt", price: 40.00, image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=800" },
-            { id: 8, name: "Zyla Women Sandals", price: 35.00, image: "https://images.unsplash.com/photo-1543163521-1bf539c55dd2?w=800" }
-        ];
-
+        // Dinamik mahsulotlarni o'qish
+        const products = JSON.parse(localStorage.getItem('krist_products')) || [];
         const product = products.find(p => p.id === productId);
 
         if (product) {
@@ -71,11 +59,21 @@
                 let cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
                 cart.push(product);
                 localStorage.setItem('krist_cart', JSON.stringify(cart));
-                alert("Savatchaga qo'shildi!");
+                Swal.fire({
+                    toast: true,
+                    position: 'top-end',
+                    icon: 'success',
+                    title: 'Savatchaga qo\'shildi!',
+                    showConfirmButton: false,
+                    timer: 2000
+                });
             };
         } else {
             window.location.href = 'index.html';
         }
+
+        // Mavzuni qo'llash
+        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
     </script>
 </body>
 </html>

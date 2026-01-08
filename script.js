@@ -66,6 +66,18 @@ function renderProducts(data) {
     const grid = document.getElementById('productGrid');
     if (!grid) return;
     grid.innerHTML = '';
+    
+    if (data.length === 0) {
+        grid.innerHTML = `
+            <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
+                <i class="fas fa-search" style="font-size: 50px; color: #ccc; margin-bottom: 20px;"></i>
+                <h3>Hech narsa topilmadi</h3>
+                <p style="color: #666;">Iltimos, boshqa kalit so'zdan foydalanib ko'ring.</p>
+                <button onclick="renderProducts(products)" class="btn-primary-krist" style="width: auto; margin-top: 20px; padding: 10px 30px;">Hammasini ko'rish</button>
+            </div>`;
+        return;
+    }
+
     data.forEach(p => {
         const isWished = wishlist.some(item => item.id === p.id);
         grid.innerHTML += `
