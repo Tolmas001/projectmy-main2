@@ -19,7 +19,6 @@ const readDB = () => {
         db = JSON.parse(fs.readFileSync(DB_PATH));
     }
     
-    // Agar mahsulotlar bo'sh bo'lsa, ularni to'ldirish
     if (!db.products || db.products.length === 0) {
         const productData = [
             { name: "Matte Lipstick", category: "Makiyaj", basePrice: 12, img: "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d" },
@@ -56,18 +55,15 @@ const writeDB = (data) => {
 
 // --- API YO'LLARI ---
 
-// Mahsulotlarni olish
 app.get('/api/products', (req, res) => {
-    const db = readDB();
-    res.json(db.products);
+    res.json(readDB().products);
 });
 
-// Mahsulot qo'shish yoki tahrirlash
 app.post('/api/products', (req, res) => {
     const db = readDB();
     const product = req.body;
     if (product.id) {
-        const index = db.products.findIndex(p => p.id === product.id);
+        const index = db.products.findIndex(p => p.id == product.id);
         if (index !== -1) db.products[index] = product;
     } else {
         product.id = Date.now();
@@ -77,11 +73,9 @@ app.post('/api/products', (req, res) => {
     res.json({ message: "Saqlandi!", product });
 });
 
-// Mahsulotni o'chirish
 app.delete('/api/products/:id', (req, res) => {
     const db = readDB();
-    const id = parseInt(req.params.id);
-    db.products = db.products.filter(p => p.id !== id);
+    db.products = db.products.filter(p => p.id != req.params.id);
     writeDB(db);
     res.json({ message: "O'chirildi" });
 });
@@ -92,15 +86,16 @@ app.post('/api/orders', (req, res) => {
     const orderData = req.body;
     
     if (orderData.id) {
-        // Yangilash (Status o'zgartirish uchun)
+        // Statusni yangilash
         const index = db.orders.findIndex(o => o.id == orderData.id);
         if (index !== -1) {
             db.orders[index] = { ...db.orders[index], ...orderData };
         }
     } else {
-        // Yangi buyurtma
+        // Yangi buyurtma yaratish - Tasodifiy va Noyob ID
+        const orderId = Math.floor(100000 + Math.random() * 900000).toString();
         const newOrder = { 
-            id: Date.now().toString(), 
+            id: orderId, 
             ...orderData, 
             date: new Date().toISOString(),
             status: 'pending'
@@ -112,13 +107,15 @@ app.post('/api/orders', (req, res) => {
     res.json({ message: "Muvaffaqiyatli!", orders: db.orders });
 });
 
-// Buyurtmani o'chirish
+app.get('/api/orders', (req, res) => {
+    res.json(readDB().orders);
+});
+
 app.delete('/api/orders/:id', (req, res) => {
     const db = readDB();
-    const id = req.params.id;
-    db.orders = db.orders.filter(o => o.id.toString() !== id.toString());
+    db.orders = db.orders.filter(o => o.id != req.params.id);
     writeDB(db);
-    res.json({ message: "Buyurtma o'chirildi" });
+    res.json({ message: "O'chirildi" });
 });
 
 app.listen(PORT, () => console.log(`Backend server running on http://localhost:${PORT}`));
