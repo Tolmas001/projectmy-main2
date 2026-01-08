@@ -8,6 +8,8 @@ function checkAuth() {
 }
 checkAuth();
 
+const API_URL = "http://localhost:3000/api";
+
 const translations = {
     uz: {
         "nav-home": "Bosh sahifa", "nav-shop": "Katalog", "nav-story": "Biz haqimizda", "nav-blog": "Maslahatlar", "nav-contact": "Aloqa",
@@ -29,39 +31,21 @@ const translations = {
     }
 };
 
-// 1. Mahsulotlar bazasini yuklash
-let products = JSON.parse(localStorage.getItem('krist_products'));
-
-if (!products) {
-    const productData = [
-        { name: "Matte Lipstick", category: "Make Up", basePrice: 12, img: "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d" },
-        { name: "Vitamin C Serum", category: "Skin Care", basePrice: 35, img: "https://images.unsplash.com/photo-1599733594230-6b823276abcc" },
-        { name: "Luxury Perfume", category: "Fragrances", basePrice: 75, img: "https://images.unsplash.com/photo-1541643600914-78b084683601" },
-        { name: "Cleansing Gel", category: "Skin Care", basePrice: 20, img: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571" },
-        { name: "Eyeshadow Palette", category: "Make Up", basePrice: 30, img: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796" },
-        { name: "Hair Mask", category: "Hair Care", basePrice: 25, img: "https://images.unsplash.com/photo-1527799822340-304bc6475a6c" }
-    ];
-    products = [];
-    for (let i = 1; i <= 150; i++) {
-        const base = productData[(i - 1) % productData.length];
-        const p = base.basePrice + (i % 10);
-        products.push({ 
-            id: i, 
-            name: `${base.name} #${i}`, 
-            price: p, 
-            oldPrice: p + 5, 
-            category: base.category, 
-            description: "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi. 100% original va sifatli.",
-            image: `${base.img}?w=500&sig=${i}` 
-        });
-    }
-    localStorage.setItem('krist_products', JSON.stringify(products));
-}
-
+let products = [];
 let cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
 let wishlist = JSON.parse(localStorage.getItem('krist_wishlist')) || [];
 
-// UI Funksiyalari
+// 1. Mahsulotlarni serverdan yuklash
+async function loadProductsFromServer() {
+    try {
+        const res = await fetch(`${API_URL}/products`);
+        products = await res.json();
+        renderProducts(products);
+    } catch (err) {
+        console.error("Serverga ulanishda xato!", err);
+    }
+}
+
 function setLanguage(lang) {
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
@@ -76,13 +60,7 @@ function renderProducts(data) {
     grid.innerHTML = '';
     
     if (data.length === 0) {
-        grid.innerHTML = `
-            <div style="grid-column: 1/-1; text-align: center; padding: 50px;">
-                <i class="fas fa-search" style="font-size: 50px; color: #ccc; margin-bottom: 20px;"></i>
-                <h3>Hech narsa topilmadi</h3>
-                <p style="color: #666;">Iltimos, boshqa kalit so'zdan foydalanib ko'ring.</p>
-                <button onclick="renderProducts(products)" class="btn-primary-krist" style="width: auto; margin-top: 20px; padding: 10px 30px;">Hammasini ko'rish</button>
-            </div>`;
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 50px;"><h3>Mahsulotlar topilmadi</h3></div>';
         return;
     }
 
@@ -124,7 +102,7 @@ window.showWishlist = () => {
     if(!itemsDiv) return;
     document.getElementById('wishlistModal').style.display = "block";
     itemsDiv.innerHTML = wishlist.length === 0 ? '<p style="text-align:center;">Saralanganlar bo\'sh.</p>' : 
-        wishlist.map(p => `<div style="display:flex; justify-content:space-between; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px;"><span>${p.name}</span><i class="fas fa-trash" style="color:red; cursor:pointer;" onclick="toggleWishlist(${p.id}); showWishlist();"></i></div>`).join('');
+        wishlist.map(p => `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px;"><span>${p.name}</span><i class="fas fa-trash" style="color:red; cursor:pointer;" onclick="toggleWishlist(${p.id}); showWishlist();"></i></div>`).join('');
 };
 
 window.closeWishlist = () => { document.getElementById('wishlistModal').style.display = "none"; };
@@ -135,9 +113,12 @@ window.filterByCategory = (cat) => {
 };
 
 window.addToCart = (id) => {
-    cart.push(products.find(p => p.id === id));
-    updateCart();
-    Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Savatchaga qo\'shildi', showConfirmButton: false, timer: 1500 });
+    const p = products.find(prod => prod.id === id);
+    if(p) {
+        cart.push(p);
+        updateCart();
+        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Savatchaga qo\'shildi', showConfirmButton: false, timer: 1500 });
+    }
 };
 
 function updateCart() {
@@ -177,7 +158,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     setLanguage(savedLang);
 
-    renderProducts(products);
+    loadProductsFromServer(); // Serverdan yuklash
     updateCart();
     updateWishCount();
 

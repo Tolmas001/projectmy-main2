@@ -8,79 +8,29 @@
     <link rel="stylesheet" href="checkout.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- SweetAlert2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="checkout-page">
     <div class="checkout-container-custom">
         <h1 class="logo" style="text-align: center; margin-bottom: 30px; font-size: 32px;">Krist</h1>
-        
         <div class="checkout-grid">
-            <!-- Chap tomon -->
             <div class="checkout-card">
-                <h2 class="checkout-title">Yetkazib berish ma'lumotlari</h2>
+                <h2 class="checkout-title">Yetkazib berish</h2>
                 <form id="orderForm">
-                    <div class="form-group">
-                        <label>To'liq ismingiz</label>
-                        <input type="text" id="fullName" class="form-input" required placeholder="Ism va familiya">
-                    </div>
-
-                    <h4 style="margin: 25px 0 15px; font-size: 15px;">To'lov usuli</h4>
-                    <div class="payment-grid">
-                        <div class="method-item active" id="payCash" onclick="selectPayment('cash')">
-                            <i class="fas fa-money-bill-wave"></i> <span>Naqd pul</span>
-                        </div>
-                        <div class="method-item" id="payCard" onclick="selectPayment('card')">
-                            <i class="fas fa-credit-card"></i> <span>Bank kartasi</span>
-                        </div>
-                    </div>
-                    <input type="hidden" id="paymentMethod" value="cash">
-
-                    <div id="cardDetails" class="card-details-box" style="display: none;">
-                        <input type="text" class="form-input" placeholder="Karta raqami" style="margin-bottom:10px;">
-                        <div style="display:flex; gap:10px;">
-                            <input type="text" class="form-input" placeholder="MM/YY">
-                            <input type="password" class="form-input" placeholder="CVV">
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Telefon raqamingiz</label>
-                        <input type="tel" id="phone" class="form-input" required placeholder="+998 90 123 45 67">
-                    </div>
-                    <div class="form-group">
-                        <label>Manzil</label>
-                        <input type="text" id="address" class="form-input" required placeholder="Shahar, tuman, ko'cha, uy">
-                    </div>
-                    
-                    <button type="submit" class="btn-primary-krist" style="margin-top: 20px;">Tasdiqlash va Buyurtma berish</button>
+                    <div class="form-group"><label>To'liq ism</label><input type="text" id="fullName" class="form-input" required></div>
+                    <div class="form-group"><label>Telefon</label><input type="tel" id="phone" class="form-input" required></div>
+                    <div class="form-group"><label>Manzil</label><input type="text" id="address" class="form-input" required></div>
+                    <button type="submit" class="btn-primary-krist">Buyurtmani tasdiqlash</button>
                 </form>
             </div>
-
-            <!-- O'ng tomon -->
             <div class="checkout-card">
-                <h3>Buyurtma xulosasi</h3>
-                <div class="summary-box" id="summaryBox">
-                    <!-- Mahsulotlar JS orqali -->
-                </div>
+                <h3>Xulosa</h3>
+                <div class="summary-box" id="summaryBox"></div>
             </div>
         </div>
     </div>
-
     <script>
-        // 1. Ma'lumotlarni yuklash
         const cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
-        if (cart.length === 0) window.location.href = 'index.html';
-
-        // 2. To'lov usuli
-        window.selectPayment = (method) => {
-            document.getElementById('paymentMethod').value = method;
-            document.getElementById('payCash').classList.toggle('active', method === 'cash');
-            document.getElementById('payCard').classList.toggle('active', method === 'card');
-            document.getElementById('cardDetails').style.display = method === 'card' ? 'block' : 'none';
-        };
-
-        // 3. Ekranni yangilash
         const summaryBox = document.getElementById('summaryBox');
         let total = 0;
         cart.forEach(item => {
@@ -89,41 +39,34 @@
         });
         summaryBox.innerHTML += `<div class="summary-total-row">Jami: $${total.toFixed(2)}</div>`;
 
-        // 4. FORM TOPSHIRISH (ASOSIY QISM)
-        document.getElementById('orderForm').onsubmit = function(e) {
+        document.getElementById('orderForm').onsubmit = async function(e) {
             e.preventDefault();
-            
             const orderData = {
-                id: Math.floor(Math.random() * 1000000),
                 customer: {
                     name: document.getElementById('fullName').value,
                     phone: document.getElementById('phone').value,
                     address: document.getElementById('address').value
                 },
                 items: cart,
-                total: total,
-                date: new Date().toISOString()
+                total: total
             };
 
-            // Ma'lumotni lokal saqlash (Firebase ulanmagan bo'lsa ham ishlaydi)
-            const allOrders = JSON.parse(localStorage.getItem('krist_orders')) || [];
-            allOrders.push(orderData);
-            localStorage.setItem('krist_orders', JSON.stringify(allOrders));
-
-            // MUVAFFAQIYATLI XABAR
-            Swal.fire({
-                title: 'Muvaffaqiyatli!',
-                text: 'Buyurtma berildi! Tez orada siz bilan bog\'lanamiz.',
-                icon: 'success',
-                confirmButtonColor: '#131118',
-                confirmButtonText: 'OK'
-            }).then(() => {
-                localStorage.removeItem('krist_cart'); // Savatchani tozalash
-                window.location.href = 'index.html'; // Bosh sahifaga qaytish
-            });
+            try {
+                const res = await fetch('http://localhost:3000/api/orders', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(orderData)
+                });
+                if (res.ok) {
+                    Swal.fire('Muvaffaqiyatli!', 'Buyurtma qabul qilindi', 'success').then(() => {
+                        localStorage.removeItem('krist_cart');
+                        window.location.href = 'index.html';
+                    });
+                }
+            } catch (err) {
+                alert("Serverga ulanib bo'lmadi! node server.js yoqilganini tekshiring.");
+            }
         };
-
-        // Mavzuni yuklash
         document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
     </script>
 </body>

@@ -20,13 +20,10 @@
         .tab-btn.active { color: var(--black); border-bottom: 2px solid var(--black); }
         [data-theme="dark"] .order-card { background: #1a1921; border-color: #333; }
         .admin-product-card { background: white; padding: 15px; border-radius: 15px; text-align: center; border: 1px solid #eee; transition: 0.3s; }
-        .admin-product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
         [data-theme="dark"] .admin-product-card { background: #1a1921; border-color: #333; }
-        .image-preview { width: 100px; height: 100px; object-fit: cover; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; display: none; }
     </style>
 </head>
 <body>
-    <!-- Login Overlay -->
     <div id="adminLogin" style="height: 100vh; display: flex; justify-content: center; align-items: center; background: #f3f4f6; position: fixed; width: 100%; top: 0; left: 0; z-index: 9999;">
         <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; width: 350px;">
             <h1 class="logo">Krist Admin</h1>
@@ -48,79 +45,26 @@
             <div class="tab-btn" id="tabProducts" onclick="showTab('products')">Mahsulotlar</div>
         </div>
 
-        <!-- Orders Section -->
         <div id="ordersTab">
             <h2>Kelib tushgan buyurtmalar</h2>
             <div id="adminOrdersList" style="margin-top: 20px;">Yuklanmoqda...</div>
         </div>
 
-        <!-- Products Section -->
         <div id="productsTab" style="display:none;">
             <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
                 <h2>Mahsulotlarni boshqarish</h2>
-                <button onclick="openProductModal()" class="btn-primary-krist" style="width:auto; padding:8px 20px;">+ Yangi mahsulot</button>
+                <button onclick="openProductModal()" class="btn-primary-krist" style="width:auto; padding:8px 20px;">+ Yangi</button>
             </div>
             <div id="adminProductsList" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:20px;"></div>
-        </div>
-
-        <!-- Product Edit Modal -->
-        <div id="productModal" class="modal">
-            <div class="modal-content">
-                <span class="close" onclick="closeProductModal()">&times;</span>
-                <h2 id="modalTitle">Yangi mahsulot</h2>
-                
-                <div style="margin-bottom: 15px; text-align: center;">
-                    <img id="pImgPreview" class="image-preview" src="">
-                    <input type="file" id="pImgInput" accept="image/*" style="display:none;">
-                    <button onclick="document.getElementById('pImgInput').click()" style="padding:5px 15px; border:1px solid #ddd; background:none; cursor:pointer; border-radius:5px; font-size:12px;">Rasm yuklash</button>
-                </div>
-
-                <div style="margin-bottom: 15px; text-align: left;">
-                    <label style="display:block; font-size:12px; margin-bottom:5px;">Nomi</label>
-                    <input type="text" id="pNameInput" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
-                </div>
-                <div style="margin-bottom: 15px; text-align: left;">
-                    <label style="display:block; font-size:12px; margin-bottom:5px;">Narxi ($)</label>
-                    <input type="number" id="pPriceInput" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
-                </div>
-                <div style="margin-bottom: 15px; text-align: left;">
-                    <label style="display:block; font-size:12px; margin-bottom:5px;">Tarif (Tavsif)</label>
-                    <textarea id="pDescInput" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd; height:80px;"></textarea>
-                </div>
-                <div style="margin-bottom: 15px; text-align: left;">
-                    <label style="display:block; font-size:12px; margin-bottom:5px;">Kategoriya</label>
-                    <select id="pCatInput" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
-                        <option value="Yuz parvarishi">Yuz parvarishi</option>
-                        <option value="Makiyaj">Makiyaj</option>
-                        <option value="Atirlar">Atirlar</option>
-                        <option value="Soch parvarishi">Soch parvarishi</option>
-                    </select>
-                </div>
-                <button onclick="saveProduct()" class="btn-primary-krist">Saqlash</button>
-            </div>
         </div>
     </div>
 
     <script>
+        const API_URL = "http://localhost:3000/api";
         const SECRET_CODE = "2026";
-        let uploadedImgBase64 = "";
-
-        // Rasm yuklash mantiqi
-        document.getElementById('pImgInput').onchange = (e) => {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                uploadedImgBase64 = reader.result;
-                const preview = document.getElementById('pImgPreview');
-                preview.src = uploadedImgBase64;
-                preview.style.display = "inline-block";
-            };
-            if (file) reader.readAsDataURL(file);
-        };
 
         window.checkAdminCode = () => {
-            const input = document.getElementById('adminCode').value;
-            if (input === SECRET_CODE) {
+            if (document.getElementById('adminCode').value === SECRET_CODE) {
                 document.getElementById('adminLogin').style.display = 'none';
                 document.getElementById('adminContent').style.display = 'block';
                 sessionStorage.setItem('admin_access', 'true');
@@ -130,131 +74,59 @@
             }
         }
 
-        window.logoutAdmin = () => {
-            sessionStorage.removeItem('admin_access');
-            window.location.reload();
-        }
+        window.logoutAdmin = () => { sessionStorage.removeItem('admin_access'); window.location.reload(); }
 
         window.showTab = (tab) => {
             document.getElementById('ordersTab').style.display = tab === 'orders' ? 'block' : 'none';
             document.getElementById('productsTab').style.display = tab === 'products' ? 'block' : 'none';
             document.getElementById('tabOrders').classList.toggle('active', tab === 'orders');
             document.getElementById('tabProducts').classList.toggle('active', tab === 'products');
-            if(tab === 'products') loadAdminProducts();
+            if(tab === 'products') loadAdminProducts(); else loadOrders();
         }
 
-        function loadOrders() {
+        async function loadOrders() {
             const list = document.getElementById('adminOrdersList');
-            const orders = JSON.parse(localStorage.getItem('krist_orders')) || [];
-            if (orders.length === 0) {
-                list.innerHTML = '<p style="text-align:center; padding:20px;">Hozircha buyurtmalar yo\'q.</p>';
-                return;
-            }
-            list.innerHTML = '';
-            orders.reverse().forEach((order) => {
-                list.innerHTML += `
-                    <div class="order-card">
-                        <i class="fas fa-trash delete-btn" onclick="deleteOrder(${order.id})" title="O'chirish"></i>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+            try {
+                const res = await fetch(`${API_URL}/orders`);
+                const orders = await res.json();
+                list.innerHTML = orders.length === 0 ? '<p>Buyurtmalar yo\'q.</p>' : '';
+                orders.forEach(order => {
+                    list.innerHTML += `
+                        <div class="order-card">
+                            <i class="fas fa-trash delete-btn" onclick="deleteOrder('${order.id}')"></i>
                             <strong>Buyurtma #${order.id}</strong>
-                            <span class="status-badge">YANGI</span>
-                        </div>
-                        <p><strong>Mijoz:</strong> ${order.customer.name}</p>
-                        <p><strong>Tel:</strong> ${order.customer.phone}</p>
-                        <p><strong>Manzil:</strong> ${order.customer.address}</p>
-                        <hr style="margin:10px 0; border:0; border-top:1px solid #eee;">
-                        <p><strong>Mahsulotlar:</strong> ${order.items.map(i => i.name).join(', ')}</p>
-                        <p style="margin-top:10px; font-weight:bold; color: #d4a373;">Jami: $${order.total.toFixed(2)}</p>
-                    </div>`;
-            });
+                            <p>Mijoz: ${order.customer.name} (${order.customer.phone})</p>
+                            <p>Jami: $${order.total.toFixed(2)}</p>
+                        </div>`;
+                });
+            } catch (e) { list.innerHTML = "Xatolik!"; }
         }
 
-        window.deleteOrder = (id) => {
-            if(confirm("Buyurtmani o'chirmoqchimisiz?")) {
-                let orders = JSON.parse(localStorage.getItem('krist_orders')) || [];
-                orders = orders.filter(o => o.id !== id);
-                localStorage.setItem('krist_orders', JSON.stringify(orders));
+        window.deleteOrder = async (id) => {
+            if(confirm("O'chirilsinmi?")) {
+                await fetch(`${API_URL}/orders/${id}`, { method: 'DELETE' });
                 loadOrders();
             }
         }
 
-        // --- Mahsulot boshqaruvi ---
-        function loadAdminProducts() {
+        async function loadAdminProducts() {
             const list = document.getElementById('adminProductsList');
-            const products = JSON.parse(localStorage.getItem('krist_products')) || [];
+            const res = await fetch(`${API_URL}/products`);
+            const products = await res.json();
             list.innerHTML = '';
             products.forEach(p => {
                 list.innerHTML += `
                     <div class="admin-product-card">
-                        <img src="${p.image}" style="width:100%; height:100px; object-fit:contain; margin-bottom:10px;">
-                        <h4 style="font-size:13px; margin-bottom:5px; height:32px; overflow:hidden;">${p.name}</h4>
-                        <p style="font-weight:700; color:#d4a373;">$${p.price.toFixed(2)}</p>
-                        <div style="margin-top:10px; display:flex; gap:5px;">
-                            <button onclick="editProduct(${p.id})" style="flex:1; padding:6px; border:none; background:#eee; cursor:pointer; border-radius:5px; font-size:12px;">✍️</button>
-                            <button onclick="deleteProduct(${p.id})" style="flex:1; padding:6px; border:none; background:#ff4757; color:white; cursor:pointer; border-radius:5px; font-size:12px;">🗑️</button>
-                        </div>
+                        <img src="${p.image}" style="width:100%; height:100px; object-fit:contain;">
+                        <h4>${p.name}</h4>
+                        <button onclick="deleteProduct('${p.id}')">O'chirish</button>
                     </div>`;
             });
         }
 
-        let editingId = null;
-        window.openProductModal = () => {
-            editingId = null;
-            uploadedImgBase64 = "";
-            document.getElementById('modalTitle').innerText = "Yangi mahsulot";
-            document.getElementById('pNameInput').value = '';
-            document.getElementById('pPriceInput').value = '';
-            document.getElementById('pDescInput').value = '';
-            document.getElementById('pImgPreview').style.display = "none";
-            document.getElementById('productModal').style.display = 'block';
-        }
-
-        window.editProduct = (id) => {
-            const products = JSON.parse(localStorage.getItem('krist_products'));
-            const p = products.find(i => i.id === id);
-            editingId = id;
-            uploadedImgBase64 = p.image;
-            document.getElementById('modalTitle').innerText = "Tahrirlash";
-            document.getElementById('pNameInput').value = p.name;
-            document.getElementById('pPriceInput').value = p.price;
-            document.getElementById('pDescInput').value = p.description || "";
-            document.getElementById('pCatInput').value = p.category;
-            const preview = document.getElementById('pImgPreview');
-            preview.src = p.image;
-            preview.style.display = "inline-block";
-            document.getElementById('productModal').style.display = 'block';
-        }
-
-        window.saveProduct = () => {
-            let products = JSON.parse(localStorage.getItem('krist_products'));
-            const name = document.getElementById('pNameInput').value;
-            const price = parseFloat(document.getElementById('pPriceInput').value);
-            const description = document.getElementById('pDescInput').value;
-            const category = document.getElementById('pCatInput').value;
-
-            if (editingId) {
-                products = products.map(p => p.id === editingId ? {...p, name, price, description, category, image: uploadedImgBase64} : p);
-            } else {
-                products.unshift({ 
-                    id: Date.now(), 
-                    name, 
-                    price, 
-                    description,
-                    category, 
-                    image: uploadedImgBase64 || "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=500" 
-                });
-            }
-            localStorage.setItem('krist_products', JSON.stringify(products));
-            closeProductModal();
-            loadAdminProducts();
-            Swal.fire('Saqlandi!', '', 'success');
-        }
-
-        window.deleteProduct = (id) => {
-            if(confirm("Mahsulotni o'chirishni tasdiqlaysizmi?")) {
-                let p = JSON.parse(localStorage.getItem('krist_products'));
-                p = p.filter(i => i.id !== id);
-                localStorage.setItem('krist_products', JSON.stringify(p));
+        window.deleteProduct = async (id) => {
+            if(confirm("Mahsulot o'chirilsinmi?")) {
+                await fetch(`${API_URL}/products/${id}`, { method: 'DELETE' });
                 loadAdminProducts();
             }
         }
