@@ -12,7 +12,22 @@ app.use(bodyParser.json({ limit: '50mb' }));
 
 const DB_PATH = path.join(__dirname, 'database.json');
 
-// Dastlabki 150 ta mahsulotni yaratish funksiyasi
+const readDB = () => {
+    let db = { products: [], orders: [], users: [] };
+    if (fs.existsSync(DB_PATH)) {
+        try {
+            db = JSON.parse(fs.readFileSync(DB_PATH));
+        } catch (e) { console.error("JSON Error"); }
+    }
+    if (!db.products || db.products.length === 0) {
+        db.products = generateInitialProducts();
+        fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2));
+    }
+    return db;
+};
+
+const writeDB = (data) => fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
+
 function generateInitialProducts() {
     const productData = [
         { name: "Matte Lipstick", category: "Makiyaj", basePrice: 12, img: "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d" },
@@ -32,39 +47,14 @@ function generateInitialProducts() {
             price: p,
             oldPrice: p + 5,
             category: base.category,
-            description: "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi. 100% original va sifatli.",
+            description: "Premium mahsulot.",
             image: `${base.img}?w=500&sig=${i}`
         });
     }
     return products;
 }
 
-const readDB = () => {
-    let db = { products: [], orders: [], users: [] };
-    if (fs.existsSync(DB_PATH)) {
-        try {
-            db = JSON.parse(fs.readFileSync(DB_PATH));
-        } catch (e) { console.error("JSON Error"); }
-    }
-    
-    // Agar mahsulotlar ro'yxati bo'sh bo'lsa, avtomatik to'ldiramiz
-    if (!db.products || db.products.length === 0) {
-        db.products = generateInitialProducts();
-        fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2));
-    }
-    return db;
-};
-
-const writeDB = (data) => {
-    fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2));
-};
-
-// --- API ---
-
-app.get('/api/products', (req, res) => {
-    const db = readDB();
-    res.json(db.products);
-});
+app.get('/api/products', (req, res) => res.json(readDB().products));
 
 app.post('/api/products', (req, res) => {
     const db = readDB();
@@ -89,9 +79,7 @@ app.delete('/api/products/:id', (req, res) => {
 
 app.get('/api/orders', (req, res) => {
     const db = readDB();
-    if (req.query.email) {
-        return res.json(db.orders.filter(o => o.customer.email === req.query.email));
-    }
+    if (req.query.email) return res.json(db.orders.filter(o => o.customer.email === req.query.email));
     res.json(db.orders);
 });
 
@@ -110,7 +98,7 @@ app.post('/api/orders', (req, res) => {
         };
         db.orders.unshift(newOrder);
         writeDB(db);
-        return res.json({ message: "Qabul qilindi", orders: db.orders });
+        return res.json({ message: "Qabul qilindi", order: newOrder, orders: db.orders });
     }
     writeDB(db);
     res.json({ message: "Yangilandi", orders: db.orders });

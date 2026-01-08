@@ -13,57 +13,32 @@
 <body class="checkout-page">
     <div class="checkout-container-custom">
         <h1 class="logo" style="text-align: center; margin-bottom: 30px; font-size: 32px;">Krist</h1>
-        
         <div class="checkout-grid">
             <div class="checkout-card">
                 <h2 class="checkout-title">Yetkazib berish ma'lumotlari</h2>
                 <form id="orderForm">
-                    <div class="form-group">
-                        <label>To'liq ismingiz</label>
-                        <input type="text" id="fullName" class="form-input" required>
-                    </div>
-
+                    <div class="form-group"><label>To'liq ismingiz</label><input type="text" id="fullName" class="form-input" required></div>
                     <h4 style="margin: 25px 0 15px; font-size: 15px;">To'lov usuli</h4>
                     <div class="payment-grid">
-                        <div class="method-item active" id="payCash" onclick="selectPayment('cash')">
-                            <i class="fas fa-money-bill-wave"></i> <span>Naqd pul</span>
-                        </div>
-                        <div class="method-item" id="payCard" onclick="selectPayment('card')">
-                            <i class="fas fa-credit-card"></i> <span>Bank kartasi</span>
-                        </div>
+                        <div class="method-item active" id="payCash" onclick="selectPayment('cash')"><i class="fas fa-money-bill-wave"></i> <span>Naqd pul</span></div>
+                        <div class="method-item" id="payCard" onclick="selectPayment('card')"><i class="fas fa-credit-card"></i> <span>Bank kartasi</span></div>
                     </div>
                     <input type="hidden" id="paymentMethod" value="cash">
-
                     <div id="cardDetails" class="card-details-box" style="display: none;">
                         <input type="text" class="form-input" placeholder="Karta raqami" style="margin-bottom:10px;">
-                        <div style="display:flex; gap:10px;">
-                            <input type="text" class="form-input" placeholder="MM/YY">
-                            <input type="password" class="form-input" placeholder="CVV">
-                        </div>
+                        <div style="display:flex; gap:10px;"><input type="text" class="form-input" placeholder="MM/YY"><input type="password" class="form-input" placeholder="CVV"></div>
                     </div>
-
-                    <div class="form-group">
-                        <label>Telefon</label>
-                        <input type="tel" id="phone" class="form-input" required placeholder="+998">
-                    </div>
-                    <div class="form-group">
-                        <label>Manzil</label>
-                        <input type="text" id="address" class="form-input" required>
-                    </div>
-                    
+                    <div class="form-group"><label>Telefon</label><input type="tel" id="phone" class="form-input" required placeholder="+998"></div>
+                    <div class="form-group"><label>Manzil</label><input type="text" id="address" class="form-input" required></div>
                     <button type="submit" id="submitBtn" class="btn-primary-krist" style="margin-top: 20px;">Buyurtmani tasdiqlash</button>
                 </form>
             </div>
-
-            <div class="checkout-card">
-                <h3>Xulosa</h3>
-                <div class="summary-box" id="summaryBox"></div>
-            </div>
+            <div class="checkout-card"><h3>Xulosa</h3><div class="summary-box" id="summaryBox"></div></div>
         </div>
     </div>
-
     <script>
-        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+        const user = JSON.parse(localStorage.getItem('krist_user'));
+        if (!user) window.location.href = 'register.html';
 
         const cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
         if (cart.length === 0) window.location.href = 'index.html';
@@ -71,8 +46,8 @@
         const summaryBox = document.getElementById('summaryBox');
         let total = 0;
         cart.forEach(item => {
-            total += item.price;
-            summaryBox.innerHTML += `<div class="summary-item" style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>${item.name}</span> <span>$${item.price.toFixed(2)}</span></div>`;
+            total += parseFloat(item.price);
+            summaryBox.innerHTML += `<div class="summary-item" style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>${item.name}</span> <span>$${parseFloat(item.price).toFixed(2)}</span></div>`;
         });
         summaryBox.innerHTML += `<div class="summary-total-row" style="margin-top:15px; border-top:1px solid #ddd; padding-top:10px; font-weight:bold;">Jami: $${total.toFixed(2)}</div>`;
 
@@ -85,14 +60,13 @@
 
         document.getElementById('orderForm').onsubmit = async function(e) {
             e.preventDefault();
-            
             const btn = document.getElementById('submitBtn');
-            btn.disabled = true;
-            btn.innerText = "Yuborilmoqda...";
+            btn.disabled = true; btn.innerText = "Yuborilmoqda...";
 
             const orderData = {
                 customer: {
                     name: document.getElementById('fullName').value,
+                    email: user.email, // Muhim: Email qo'shildi!
                     phone: document.getElementById('phone').value,
                     address: document.getElementById('address').value
                 },
@@ -102,7 +76,6 @@
             };
 
             try {
-                // 1. Serverga yuborishga harakat qilamiz
                 const response = await fetch('http://localhost:3000/api/orders', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -110,51 +83,26 @@
                 });
                 
                 const result = await response.json();
-                // Serverdan kelgan buyurtmalardan oxirgisini olamiz
-                const serverOrders = result.orders;
-                const savedOrder = serverOrders[0]; 
+                const savedOrder = result.order;
 
-                // 2. Har doim lokal bazaga ham saqlaymiz (zaxira)
                 const allOrders = JSON.parse(localStorage.getItem('krist_orders')) || [];
                 allOrders.push(savedOrder);
                 localStorage.setItem('krist_orders', JSON.stringify(allOrders));
-
-                // 3. SAVATCHANI TOZALASH (DARHOL)
                 localStorage.removeItem('krist_cart');
 
-                // 4. MUVAFFAQIYATLI XABAR VA O'TISH
-                Swal.fire({
-                    title: 'Muvaffaqiyatli!',
-                    text: 'Buyurtma berildi! Tez orada bog\'lanamiz.',
-                    icon: 'success',
-                    confirmButtonColor: '#131118'
-                }).then(() => {
-                    window.location.href = 'index.html';
-                });
-
+                Swal.fire({ title: 'Muvaffaqiyatli!', text: 'Buyurtma berildi!', icon: 'success' }).then(() => { window.location.href = 'index.html'; });
             } catch (err) {
-                // Server yopiq bo'lsa ham buyurtmani lokal saqlab, davom etamiz
-                console.warn("Server ulanmagan, lekin buyurtma lokal saqlandi.");
-                
-                const backupOrder = { ...orderData, id: Date.now().toString(), status: 'pending' };
-                const allOrders = JSON.parse(localStorage.getItem('krist_orders')) || [];
-                allOrders.push(backupOrder);
-                localStorage.setItem('krist_orders', JSON.stringify(allOrders));
-                
-                localStorage.removeItem('krist_cart'); // Savatchani tozalash
-
-                Swal.fire({
-                    title: 'Buyurtma qabul qilindi!',
-                    text: 'Lokal rejimda saqlandi (Server o\'chiqligi sababli).',
-                    icon: 'info'
-                }).then(() => {
+                console.error(err);
+                Swal.fire({ title: 'Xatolik!', text: 'Serverga ulanib bo\'lmadi.', icon: 'error' }).then(() => {
+                    // Fail-safe: Baribir davom etamiz
+                    localStorage.removeItem('krist_cart');
                     window.location.href = 'index.html';
                 });
             }
         };
 
-        const user = JSON.parse(localStorage.getItem('krist_user'));
         if (user) document.getElementById('fullName').value = user.name;
+        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
     </script>
 </body>
 </html>

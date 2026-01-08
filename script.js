@@ -46,7 +46,6 @@ async function loadProductsFromServer() {
         const res = await fetch(`${API_URL}/products`);
         if (!res.ok) throw new Error("Server xatosi");
         allProducts = await res.json();
-        // Zaxira: LocalStorage'ga keshlab qo'yamiz (detail sahifasi uchun)
         localStorage.setItem('krist_products', JSON.stringify(allProducts));
         filteredProducts = [...allProducts];
         renderPage(1);
@@ -123,7 +122,8 @@ window.toggleWishlist = (id) => {
 };
 
 function updateWishCount() {
-    if (document.getElementById('wishCount')) document.getElementById('wishCount').innerText = wishlist.length;
+    const el = document.getElementById('wishCount');
+    if (el) el.innerText = wishlist.length;
     localStorage.setItem('krist_wishlist', JSON.stringify(wishlist));
 }
 
@@ -155,8 +155,10 @@ window.addToCart = (id) => {
 };
 
 function updateCart() {
-    if (document.getElementById('cartCount')) document.getElementById('cartCount').innerText = cart.length;
+    const countEl = document.getElementById('cartCount');
+    if (countEl) countEl.innerText = cart.length;
     localStorage.setItem('krist_cart', JSON.stringify(cart));
+    
     const itemsDiv = document.getElementById('cartItems');
     if (itemsDiv) {
         if (cart.length === 0) {
@@ -174,7 +176,8 @@ function updateCart() {
                     <i class="fas fa-times" style="color:#ccc; cursor:pointer;" onclick="removeFromCart(${i})"></i>
                 </div>`).join('');
         }
-        if (document.getElementById('cartTotalSum')) document.getElementById('cartTotalSum').innerText = cart.reduce((s, p) => s + parseFloat(p.price), 0).toFixed(2);
+        const totalEl = document.getElementById('cartTotalSum');
+        if (totalEl) totalEl.innerText = cart.reduce((s, p) => s + parseFloat(p.price), 0).toFixed(2);
     }
 }
 
@@ -221,6 +224,27 @@ document.addEventListener('DOMContentLoaded', () => {
     loadProductsFromServer();
     updateCart();
     updateWishCount();
+
+    const searchInp = document.getElementById('searchInput');
+    const autoDiv = document.getElementById('searchAutocomplete');
+    if (searchInp) {
+        searchInp.addEventListener('input', (e) => {
+            const term = e.target.value.toLowerCase();
+            filteredProducts = allProducts.filter(p => p.name.toLowerCase().includes(term));
+            renderPage(1);
+            if (term.length > 0) {
+                const matches = allProducts.filter(p => p.name.toLowerCase().includes(term)).slice(0, 5);
+                if (autoDiv) {
+                    autoDiv.style.display = matches.length ? 'block' : 'none';
+                    autoDiv.innerHTML = matches.map(p => `
+                        <div onclick="window.location.href='product-detail.html?id=${p.id}'" style="display:flex; align-items:center; gap:10px; padding:10px; cursor:pointer; border-bottom:1px solid #eee;">
+                            <img src="${p.image}" style="width:30px; height:30px; object-fit:cover; border-radius:3px;">
+                            <span style="font-size:12px; color:var(--text-color);">${p.name}</span>
+                        </div>`).join('');
+                }
+            } else if (autoDiv) { autoDiv.style.display = 'none'; }
+        });
+    }
 
     window.onclick = (e) => { 
         if (e.target.classList.contains('modal')) e.target.style.display = "none";

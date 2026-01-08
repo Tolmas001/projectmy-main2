@@ -24,6 +24,8 @@
         .tab-btn.active { color: #131118; border-bottom: 3px solid #131118; }
         [data-theme="dark"] .order-card, [data-theme="dark"] .stat-card { background: #1a1921; border-color: #333; }
         .error-box { background: #fee2e2; color: #b91c1c; padding: 15px; border-radius: 10px; text-align: center; margin-bottom: 20px; display: none; }
+        .admin-product-card { background: white; padding: 15px; border-radius: 15px; border: 1px solid #eee; text-align: center; }
+        .image-preview { width: 100px; height: 100px; object-fit: cover; border-radius: 10px; display: none; margin: 10px auto; border: 1px solid #ddd; }
     </style>
 </head>
 <body>
@@ -38,38 +40,62 @@
     </div>
 
     <div class="admin-container" id="adminContent" style="display: none;">
-        <div id="serverError" class="error-box">
-            <i class="fas fa-exclamation-triangle"></i> Serverga ulanib bo'lmadi! Iltimos, terminalda <b>node server.js</b> yoniq ekanligini tekshiring.
-        </div>
-
+        <div id="serverError" class="error-box"><i class="fas fa-exclamation-triangle"></i> Server bilan aloqa yo'q! node server.js yoniqligini tekshiring.</div>
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: 30px;">
             <h1 class="logo">Krist Admin</h1>
             <button onclick="logoutAdmin()" style="background:#eee; border:none; padding:8px 15px; border-radius:5px; cursor:pointer;">Chiqish</button>
         </div>
-
         <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:20px;">
-            <div class="stat-card"><span>Jami Buyurtmalar</span><h2 id="statOrders">0</h2></div>
-            <div class="stat-card"><span>Jami Tushum</span><h2 id="statSales" style="color:#27ae60;">$0</h2></div>
-            <div class="stat-card"><span>Mahsulotlar</span><h2 id="statProducts" style="color:#d4a373;">0</h2></div>
+            <div class="stat-card"><span>Buyurtmalar</span><h2 id="statOrders">0</h2></div>
+            <div class="stat-card"><span>Tushum</span><h2 id="statSales" style="color:#27ae60;">$0</h2></div>
+            <div class="stat-card"><span>Mahsulotlar</span><h2 id="statProducts">0</h2></div>
         </div>
-
         <div class="tab-menu">
             <div class="tab-btn active" id="tabOrders" onclick="showTab('orders')">Buyurtmalar</div>
             <div class="tab-btn" id="tabProducts" onclick="showTab('products')">Mahsulotlar</div>
         </div>
-
-        <div id="ordersTab">
-            <div id="adminOrdersList">Yuklanmoqda...</div>
-        </div>
-
+        <div id="ordersTab"><div id="adminOrdersList">Yuklanmoqda...</div></div>
         <div id="productsTab" style="display:none;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+                <h2>Mahsulotlar</h2><button onclick="openProductModal()" class="btn-primary-krist" style="width:auto; padding:8px 20px;">+ Yangi</button>
+            </div>
             <div id="adminProductsList" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:20px;"></div>
+        </div>
+    </div>
+
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeProductModal()">&times;</span>
+            <h2 id="modalTitle">Yangi mahsulot</h2>
+            <div style="text-align:center;">
+                <img id="pImgPreview" class="image-preview" src=""><input type="file" id="pImgInput" accept="image/*" style="display:none;">
+                <button onclick="document.getElementById('pImgInput').click()" style="padding:5px 15px; border:1px solid #ddd; background:none; cursor:pointer; border-radius:5px; font-size:12px; margin-bottom:15px;">Rasm tanlash</button>
+            </div>
+            <input type="text" id="pName" placeholder="Nomi" style="width:100%; padding:10px; margin-bottom:10px; border-radius:5px; border:1px solid #ddd;">
+            <input type="number" id="pPrice" placeholder="Narxi ($)" style="width:100%; padding:10px; margin-bottom:10px; border-radius:5px; border:1px solid #ddd;">
+            <select id="pCategory" style="width:100%; padding:10px; margin-bottom:10px; border-radius:5px; border:1px solid #ddd;">
+                <option value="Makiyaj">Makiyaj</option><option value="Yuz parvarishi">Yuz parvarishi</option><option value="Atirlar">Atirlar</option><option value="Soch parvarishi">Soch parvarishi</option>
+            </select>
+            <textarea id="pDescription" placeholder="Tarif" style="width:100%; padding:10px; margin-bottom:10px; border-radius:5px; border:1px solid #ddd; height:80px;"></textarea>
+            <button onclick="saveProduct()" class="btn-primary-krist">Saqlash</button>
         </div>
     </div>
 
     <script>
         const API_URL = "http://localhost:3000/api";
         const SECRET_CODE = "2026";
+        let currentEditId = null;
+        let uploadedImgBase64 = "";
+
+        document.getElementById('pImgInput').onchange = (e) => {
+            const reader = new FileReader();
+            reader.onload = () => {
+                uploadedImgBase64 = reader.result;
+                document.getElementById('pImgPreview').src = uploadedImgBase64;
+                document.getElementById('pImgPreview').style.display = "block";
+            };
+            reader.readAsDataURL(e.target.files[0]);
+        };
 
         window.checkAdminCode = () => {
             if (document.getElementById('adminCode').value === SECRET_CODE) {
@@ -94,57 +120,43 @@
             const errorBox = document.getElementById('serverError');
             try {
                 const resO = await fetch(`${API_URL}/orders`);
-                if (!resO.ok) throw new Error();
                 const orders = await resO.json();
-                
                 const resP = await fetch(`${API_URL}/products`);
                 const products = await resP.json();
-
                 errorBox.style.display = 'none';
-                updateStats(orders, products);
+                document.getElementById('statOrders').innerText = orders.length;
+                document.getElementById('statProducts').innerText = products.length;
+                document.getElementById('statSales').innerText = `$${orders.reduce((s, o) => s + parseFloat(o.total), 0).toFixed(2)}`;
                 renderOrders(orders);
                 renderAdminProducts(products);
-            } catch (e) {
-                errorBox.style.display = 'block';
-                document.getElementById('adminOrdersList').innerHTML = "Server bilan aloqa yo'q.";
-            }
-        }
-
-        function updateStats(orders, products) {
-            document.getElementById('statOrders').innerText = orders.length;
-            document.getElementById('statProducts').innerText = products.length;
-            const total = orders.reduce((s, o) => s + o.total, 0);
-            document.getElementById('statSales').innerText = `$${total.toFixed(2)}`;
+            } catch (e) { errorBox.style.display = 'block'; }
         }
 
         function renderOrders(orders) {
             const list = document.getElementById('adminOrdersList');
-            if (orders.length === 0) { list.innerHTML = "<p>Buyurtmalar yo'q.</p>"; return; }
-            list.innerHTML = '';
-            orders.reverse().forEach(o => {
-                const status = o.status || 'pending';
-                list.innerHTML += `
-                    <div class="order-card">
-                        <i class="fas fa-trash delete-btn" onclick="deleteOrder('${o.id}')"></i>
-                        <strong>Order #${o.id.toString().substring(0,6)}</strong>
-                        <span class="status-badge status-${status}">${status}</span>
-                        <p style="margin-top:10px;">Mijoz: ${o.customer.name} (${o.customer.phone})</p>
-                        <p>Jami: $${o.total.toFixed(2)}</p>
-                        <div style="margin-top:15px; display:flex; gap:10px;">
-                            <button onclick="updateStatus('${o.id}', 'processing')" style="padding:5px 10px; cursor:pointer; font-size:10px;">Tayyorlanmoqda</button>
-                            <button onclick="updateStatus('${o.id}', 'delivered')" style="padding:5px 10px; cursor:pointer; font-size:10px;">Yetkazildi</button>
-                        </div>
-                    </div>`;
-            });
+            list.innerHTML = orders.length === 0 ? '<p>Yo\'q</p>' : orders.reverse().map(o => `
+                <div class="order-card">
+                    <i class="fas fa-trash delete-btn" onclick="deleteOrder('${o.id}')"></i>
+                    <strong>#${o.id}</strong> <span class="status-badge status-${o.status}">${o.status}</span>
+                    <p style="margin-top:10px;">${o.customer.name} (${o.customer.phone})</p>
+                    <p><b>$${parseFloat(o.total).toFixed(2)}</b></p>
+                    <div style="margin-top:15px; display:flex; gap:10px;">
+                        <button onclick="updateStatus('${o.id}', 'processing')" style="padding:5px 10px; cursor:pointer;">Tayyorlanmoqda</button>
+                        <button onclick="updateStatus('${o.id}', 'delivered')" style="padding:5px 10px; cursor:pointer;">Yetkazildi</button>
+                    </div>
+                </div>`).join('');
         }
 
         function renderAdminProducts(products) {
-            const list = document.getElementById('adminProductsList');
-            list.innerHTML = products.map(p => `
+            document.getElementById('adminProductsList').innerHTML = products.map(p => `
                 <div class="admin-product-card">
                     <img src="${p.image}" style="width:100%; height:80px; object-fit:contain;">
-                    <h4 style="font-size:11px;">${p.name}</h4>
-                    <p>$${p.price}</p>
+                    <h4 style="font-size:11px; height:28px; overflow:hidden;">${p.name}</h4>
+                    <p>$${parseFloat(p.price).toFixed(2)}</p>
+                    <div style="display:flex; gap:5px; margin-top:5px;">
+                        <button onclick="editProduct('${p.id}')" style="flex:1;">✍️</button>
+                        <button onclick="deleteProduct('${p.id}')" style="flex:1; background:red; color:white;">🗑️</button>
+                    </div>
                 </div>`).join('');
         }
 
@@ -158,10 +170,48 @@
         }
 
         window.deleteOrder = async (id) => {
-            if(confirm("O'chirilsinmi?")) {
-                await fetch(`${API_URL}/orders/${id}`, { method: 'DELETE' });
-                refreshData();
+            if(confirm("O'chirish?")) { await fetch(`${API_URL}/orders/${id}`, { method: 'DELETE' }); refreshData(); }
+        }
+
+        window.deleteProduct = async (id) => {
+            if(confirm("O'chirish?")) { await fetch(`${API_URL}/products/${id}`, { method: 'DELETE' }); refreshData(); }
+        }
+
+        window.openProductModal = () => {
+            currentEditId = null; uploadedImgBase64 = "";
+            document.getElementById('modalTitle').innerText = "Yangi";
+            document.getElementById('pName').value = ''; document.getElementById('pPrice').value = '';
+            document.getElementById('pDescription').value = ''; document.getElementById('pImgPreview').style.display = "none";
+            document.getElementById('productModal').style.display = 'block';
+        }
+
+        window.closeProductModal = () => { document.getElementById('productModal').style.display = 'none'; }
+
+        window.editProduct = async (id) => {
+            const res = await fetch(`${API_URL}/products`);
+            const products = await res.json();
+            const p = products.find(item => item.id == id);
+            if(p) {
+                currentEditId = id; uploadedImgBase64 = p.image;
+                document.getElementById('modalTitle').innerText = "Tahrirlash";
+                document.getElementById('pName').value = p.name; document.getElementById('pPrice').value = p.price;
+                document.getElementById('pCategory').value = p.category; document.getElementById('pDescription').value = p.description || "";
+                document.getElementById('pImgPreview').src = p.image; document.getElementById('pImgPreview').style.display = "block";
+                document.getElementById('productModal').style.display = 'block';
             }
+        }
+
+        window.saveProduct = async () => {
+            const p = {
+                id: currentEditId,
+                name: document.getElementById('pName').value,
+                price: parseFloat(document.getElementById('pPrice').value),
+                category: document.getElementById('pCategory').value,
+                description: document.getElementById('pDescription').value,
+                image: uploadedImgBase64 || "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d"
+            };
+            await fetch(`${API_URL}/products`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(p) });
+            closeProductModal(); refreshData();
         }
 
         document.addEventListener('DOMContentLoaded', () => {
