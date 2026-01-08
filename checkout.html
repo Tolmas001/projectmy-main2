@@ -13,34 +13,156 @@
 <body class="checkout-page">
     <div class="checkout-container-custom">
         <h1 class="logo" style="text-align: center; margin-bottom: 30px; font-size: 32px;">Krist</h1>
+        
         <div class="checkout-grid">
+            <!-- Chap tomon: Ma'lumotlar formasi -->
             <div class="checkout-card">
-                <h2 class="checkout-title">Yetkazib berish</h2>
+                <h2 class="checkout-title">Yetkazib berish ma'lumotlari</h2>
                 <form id="orderForm">
-                    <div class="form-group"><label>To'liq ism</label><input type="text" id="fullName" class="form-input" required></div>
-                    <div class="form-group"><label>Telefon</label><input type="tel" id="phone" class="form-input" required></div>
-                    <div class="form-group"><label>Manzil</label><input type="text" id="address" class="form-input" required></div>
-                    <button type="submit" class="btn-primary-krist">Buyurtmani tasdiqlash</button>
+                    <div class="form-group">
+                        <label>To'liq ismingiz</label>
+                        <input type="text" id="fullName" class="form-input" required placeholder="Ism va familiya">
+                    </div>
+
+                    <h4 style="margin: 25px 0 15px; font-size: 15px;">To'lov usulini tanlang</h4>
+                    <div class="payment-grid">
+                        <div class="method-item active" id="payCash" onclick="selectPayment('cash')">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Naqd pul</span>
+                        </div>
+                        <div class="method-item" id="payCard" onclick="selectPayment('card')">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Bank kartasi</span>
+                        </div>
+                    </div>
+                    <input type="hidden" id="paymentMethod" value="cash">
+
+                    <div id="cardDetails" class="card-details-box" style="display: none;">
+                        <div class="form-group">
+                            <label>Karta raqami</label>
+                            <input type="text" id="cardNumber" class="form-input" placeholder="0000 0000 0000 0000" maxlength="19">
+                        </div>
+                        <div style="display: flex; gap: 15px;">
+                            <div class="form-group" style="flex: 1;">
+                                <label>Muddati</label>
+                                <input type="text" id="cardExpiry" class="form-input" placeholder="MM/YY" maxlength="5">
+                            </div>
+                            <div class="form-group" style="flex: 1;">
+                                <label>CVV</label>
+                                <input type="password" id="cardCvv" class="form-input" placeholder="***" maxlength="3">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Telefon raqamingiz</label>
+                        <input type="tel" id="phone" class="form-input" required placeholder="+998 90 123 45 67">
+                    </div>
+                    <div class="form-group">
+                        <label>Manzil</label>
+                        <input type="text" id="address" class="form-input" required placeholder="Shahar, tuman, ko'cha, uy">
+                    </div>
+                    
+                    <button type="submit" id="submitBtn" class="btn-primary-krist" style="margin-top: 20px;">Buyurtmani tasdiqlash</button>
+                    <a href="index.html" style="display: block; text-align: center; margin-top: 15px; color: #666; text-decoration: none; font-size: 14px;">Savatchaga qaytish</a>
                 </form>
             </div>
+
+            <!-- O'ng tomon: Buyurtma xulosasi -->
             <div class="checkout-card">
-                <h3>Xulosa</h3>
-                <div class="summary-box" id="summaryBox"></div>
+                <h3 style="margin-bottom: 20px; font-size: 18px;">Buyurtma xulosasi</h3>
+                <div class="summary-box">
+                    <div id="summaryItems"></div>
+                    
+                    <div class="promo-group">
+                        <input type="text" id="promoInput" class="promo-input" placeholder="Promo-kod">
+                        <button type="button" onclick="applyPromo()" class="promo-btn">Qo'llash</button>
+                    </div>
+                    <p id="promoMessage" style="font-size: 12px; margin-top: 5px;"></p>
+
+                    <div id="summaryTotal" class="summary-total-row"></div>
+                </div>
             </div>
         </div>
     </div>
-    <script>
-        const cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
-        const summaryBox = document.getElementById('summaryBox');
-        let total = 0;
-        cart.forEach(item => {
-            total += item.price;
-            summaryBox.innerHTML += `<div class="summary-item"><span>${item.name}</span> <span>$${item.price.toFixed(2)}</span></div>`;
-        });
-        summaryBox.innerHTML += `<div class="summary-total-row">Jami: $${total.toFixed(2)}</div>`;
 
-        document.getElementById('orderForm').onsubmit = async function(e) {
+    <script>
+        // Mavzuni qo'llash
+        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+
+        let total = 0;
+        let discount = 0;
+        const cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
+
+        if (cart.length === 0) {
+            window.location.href = 'index.html';
+        }
+
+        window.selectPayment = (method) => {
+            document.getElementById('paymentMethod').value = method;
+            document.getElementById('payCash').classList.toggle('active', method === 'cash');
+            document.getElementById('payCard').classList.toggle('active', method === 'card');
+            document.getElementById('cardDetails').style.display = method === 'card' ? 'block' : 'none';
+        };
+
+        function updateDisplay() {
+            const itemsDiv = document.getElementById('summaryItems');
+            const totalDiv = document.getElementById('summaryTotal');
+            itemsDiv.innerHTML = '';
+            total = 0;
+
+            cart.forEach(item => {
+                total += item.price;
+                itemsDiv.innerHTML += `
+                    <div class="summary-item" style="display:flex; justify-content:space-between; margin-bottom:8px;">
+                        <span>${item.name}</span>
+                        <span>$${item.price.toFixed(2)}</span>
+                    </div>`;
+            });
+
+            const finalTotal = total - (total * discount);
+            totalDiv.innerHTML = `
+                <div class="summary-item" style="display:flex; justify-content:space-between;"><span>Subtotal:</span> <span>$${total.toFixed(2)}</span></div>
+                ${discount > 0 ? `<div class="summary-item" style="display:flex; justify-content:space-between; color: #27ae60;"><span>Chegirma:</span> <span>-$${(total * discount).toFixed(2)}</span></div>` : ''}
+                <div class="summary-item" style="display:flex; justify-content:space-between; margin-top:10px; font-size: 1.2em; font-weight:bold;"><span>Jami:</span> <span>$${finalTotal.toFixed(2)}</span></div>
+            `;
+        }
+
+        const validPromos = { "KRIST10": 0.10, "GLOW20": 0.20, "YANGIYIL": 0.30 };
+
+        window.applyPromo = () => {
+            const input = document.getElementById('promoInput').value.toUpperCase();
+            const msg = document.getElementById('promoMessage');
+            if (validPromos[input]) {
+                discount = validPromos[input];
+                msg.innerText = "Promo-kod qo'llanildi!";
+                msg.style.color = "#27ae60";
+            } else {
+                discount = 0;
+                msg.innerText = "Xato promo-kod!";
+                msg.style.color = "#e74c3c";
+            }
+            updateDisplay();
+        };
+
+        // Karta formatlash
+        document.getElementById('cardNumber').addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim();
+        });
+        document.getElementById('cardExpiry').addEventListener('input', (e) => {
+            let v = e.target.value.replace(/\D/g, '');
+            if (v.length > 2) v = v.substring(0,2) + '/' + v.substring(2,4);
+            e.target.value = v;
+        });
+
+        // Formani topshirish
+        document.getElementById('orderForm').onsubmit = async (e) => {
             e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            submitBtn.disabled = true;
+            submitBtn.innerText = "Yuborilmoqda...";
+
             const orderData = {
                 customer: {
                     name: document.getElementById('fullName').value,
@@ -48,7 +170,10 @@
                     address: document.getElementById('address').value
                 },
                 items: cart,
-                total: total
+                total: total - (total * discount),
+                paymentMethod: document.getElementById('paymentMethod').value,
+                date: new Date().toISOString(),
+                status: 'pending'
             };
 
             try {
@@ -57,17 +182,45 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify(orderData)
                 });
+
                 if (res.ok) {
-                    Swal.fire('Muvaffaqiyatli!', 'Buyurtma qabul qilindi', 'success').then(() => {
+                    // Lokal orders'ga ham qo'shib qo'yamiz (profil uchun)
+                    const allOrders = JSON.parse(localStorage.getItem('krist_orders')) || [];
+                    const result = await res.json();
+                    orderData.id = result.orderId || Date.now();
+                    allOrders.push(orderData);
+                    localStorage.setItem('krist_orders', JSON.stringify(allOrders));
+
+                    Swal.fire({
+                        title: 'Muvaffaqiyatli!',
+                        text: 'Buyurtmangiz qabul qilindi! Admin panelda ko\'rishingiz mumkin.',
+                        icon: 'success',
+                        confirmButtonColor: '#131118'
+                    }).then(() => {
                         localStorage.removeItem('krist_cart');
                         window.location.href = 'index.html';
                     });
+                } else {
+                    throw new Error("Server xatosi");
                 }
             } catch (err) {
-                alert("Serverga ulanib bo'lmadi! node server.js yoqilganini tekshiring.");
+                console.error(err);
+                Swal.fire({
+                    title: 'Xatolik!',
+                    text: 'Serverga ulanib bo\'lmadi. node server.js yoqilganini tekshiring.',
+                    icon: 'error'
+                });
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = "Buyurtmani tasdiqlash";
             }
         };
-        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
+
+        // Avtomatik to'ldirish
+        const user = JSON.parse(localStorage.getItem('krist_user'));
+        if (user) document.getElementById('fullName').value = user.name;
+        
+        updateDisplay();
     </script>
 </body>
 </html>
