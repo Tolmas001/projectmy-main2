@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="checkout.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <!-- SweetAlert2 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 <body class="checkout-page">
@@ -15,6 +16,7 @@
         <h1 class="logo" style="text-align: center; margin-bottom: 30px; font-size: 32px;">Krist</h1>
         
         <div class="checkout-grid">
+            <!-- Chap tomon -->
             <div class="checkout-card">
                 <h2 class="checkout-title">Yetkazib berish ma'lumotlari</h2>
                 <form id="orderForm">
@@ -23,33 +25,22 @@
                         <input type="text" id="fullName" class="form-input" required placeholder="Ism va familiya">
                     </div>
 
-                    <h4 style="margin: 25px 0 15px; font-size: 15px;">To'lov usulini tanlang</h4>
+                    <h4 style="margin: 25px 0 15px; font-size: 15px;">To'lov usuli</h4>
                     <div class="payment-grid">
                         <div class="method-item active" id="payCash" onclick="selectPayment('cash')">
-                            <i class="fas fa-money-bill-wave"></i>
-                            <span>Naqd pul</span>
+                            <i class="fas fa-money-bill-wave"></i> <span>Naqd pul</span>
                         </div>
                         <div class="method-item" id="payCard" onclick="selectPayment('card')">
-                            <i class="fas fa-credit-card"></i>
-                            <span>Bank kartasi</span>
+                            <i class="fas fa-credit-card"></i> <span>Bank kartasi</span>
                         </div>
                     </div>
                     <input type="hidden" id="paymentMethod" value="cash">
 
                     <div id="cardDetails" class="card-details-box" style="display: none;">
-                        <div class="form-group">
-                            <label>Karta raqami</label>
-                            <input type="text" id="cardNumber" class="form-input" placeholder="0000 0000 0000 0000" maxlength="19">
-                        </div>
-                        <div style="display: flex; gap: 15px;">
-                            <div class="form-group" style="flex: 1;">
-                                <label>Muddati</label>
-                                <input type="text" id="cardExpiry" class="form-input" placeholder="MM/YY" maxlength="5">
-                            </div>
-                            <div class="form-group" style="flex: 1;">
-                                <label>CVV</label>
-                                <input type="password" id="cardCvv" class="form-input" placeholder="***" maxlength="3">
-                            </div>
+                        <input type="text" class="form-input" placeholder="Karta raqami" style="margin-bottom:10px;">
+                        <div style="display:flex; gap:10px;">
+                            <input type="text" class="form-input" placeholder="MM/YY">
+                            <input type="password" class="form-input" placeholder="CVV">
                         </div>
                     </div>
 
@@ -62,42 +53,26 @@
                         <input type="text" id="address" class="form-input" required placeholder="Shahar, tuman, ko'cha, uy">
                     </div>
                     
-                    <button type="submit" class="btn-primary-krist" style="margin-top: 20px;">Buyurtmani tasdiqlash</button>
-                    <a href="index.html" style="display: block; text-align: center; margin-top: 15px; color: #666; text-decoration: none; font-size: 14px;">Savatchaga qaytish</a>
+                    <button type="submit" class="btn-primary-krist" style="margin-top: 20px;">Tasdiqlash va Buyurtma berish</button>
                 </form>
             </div>
 
+            <!-- O'ng tomon -->
             <div class="checkout-card">
-                <h3 style="margin-bottom: 20px; font-size: 18px;">Buyurtma xulosasi</h3>
-                <div class="summary-box">
-                    <div id="summaryItems"></div>
-                    
-                    <div class="promo-group">
-                        <input type="text" id="promoInput" class="promo-input" placeholder="Promo-kod">
-                        <button type="button" id="applyPromoBtn" class="promo-btn">Qo'llash</button>
-                    </div>
-                    <p id="promoMessage" style="font-size: 12px; margin-top: 5px;"></p>
-
-                    <div id="summaryTotal" class="summary-total-row"></div>
+                <h3>Buyurtma xulosasi</h3>
+                <div class="summary-box" id="summaryBox">
+                    <!-- Mahsulotlar JS orqali -->
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Firebase SDK va Mantiq -->
-    <script type="module">
-        import { db, collection, addDoc } from './firebase-config.js';
-
-        // Global o'zgaruvchilar
-        let total = 0;
-        let discount = 0;
+    <script>
+        // 1. Ma'lumotlarni yuklash
         const cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
+        if (cart.length === 0) window.location.href = 'index.html';
 
-        if (cart.length === 0) {
-            window.location.href = 'index.html';
-        }
-
-        // To'lov usulini tanlash (Global funksiya sifatida window'ga biriktiramiz)
+        // 2. To'lov usuli
         window.selectPayment = (method) => {
             document.getElementById('paymentMethod').value = method;
             document.getElementById('payCash').classList.toggle('active', method === 'cash');
@@ -105,95 +80,51 @@
             document.getElementById('cardDetails').style.display = method === 'card' ? 'block' : 'none';
         };
 
-        // Ekranni yangilash
-        function updateDisplay() {
-            const itemsDiv = document.getElementById('summaryItems');
-            const totalDiv = document.getElementById('summaryTotal');
-            itemsDiv.innerHTML = '';
-            total = 0;
+        // 3. Ekranni yangilash
+        const summaryBox = document.getElementById('summaryBox');
+        let total = 0;
+        cart.forEach(item => {
+            total += item.price;
+            summaryBox.innerHTML += `<div class="summary-item"><span>${item.name}</span> <span>$${item.price.toFixed(2)}</span></div>`;
+        });
+        summaryBox.innerHTML += `<div class="summary-total-row">Jami: $${total.toFixed(2)}</div>`;
 
-            cart.forEach(item => {
-                total += item.price;
-                itemsDiv.innerHTML += `
-                    <div class="summary-item">
-                        <span>${item.name}</span>
-                        <span>$${item.price.toFixed(2)}</span>
-                    </div>`;
-            });
-
-            const finalTotal = total - (total * discount);
-            totalDiv.innerHTML = `
-                <div class="summary-item"><span>Subtotal:</span> <span>$${total.toFixed(2)}</span></div>
-                ${discount > 0 ? `<div class="summary-item" style="color: #27ae60;"><span>Chegirma:</span> <span>-$${(total * discount).toFixed(2)}</span></div>` : ''}
-                <div class="summary-item" style="margin-top:10px; font-size: 1.2em;"><span>Jami:</span> <span>$${finalTotal.toFixed(2)}</span></div>
-            `;
-        }
-
-        // Promo-kod qo'llash
-        document.getElementById('applyPromoBtn').onclick = () => {
-            const input = document.getElementById('promoInput').value.toUpperCase();
-            const msg = document.getElementById('promoMessage');
-            const validPromos = { "KRIST10": 0.10, "GLOW20": 0.20, "YANGIYIL": 0.30 };
-
-            if (validPromos[input]) {
-                discount = validPromos[input];
-                msg.innerText = "Promo-kod qo'llanildi!";
-                msg.style.color = "#27ae60";
-            } else {
-                discount = 0;
-                msg.innerText = "Xato promo-kod!";
-                msg.style.color = "#e74c3c";
-            }
-            updateDisplay();
-        };
-
-        // Formani topshirish
-        document.getElementById('orderForm').onsubmit = async (e) => {
+        // 4. FORM TOPSHIRISH (ASOSIY QISM)
+        document.getElementById('orderForm').onsubmit = function(e) {
             e.preventDefault();
             
             const orderData = {
-                id: Date.now(),
+                id: Math.floor(Math.random() * 1000000),
                 customer: {
                     name: document.getElementById('fullName').value,
                     phone: document.getElementById('phone').value,
                     address: document.getElementById('address').value
                 },
                 items: cart,
-                total: total - (total * discount),
-                paymentMethod: document.getElementById('paymentMethod').value,
+                total: total,
                 date: new Date().toISOString()
             };
 
-            try {
-                // 1. Firebase-ga yuborish (apiKey to'g'ri bo'lsa)
-                await addDoc(collection(db, "orders"), orderData);
-                console.log("Firebase success");
-            } catch (err) {
-                console.warn("Firebase ulanmagan yoki xato, lokal saqlanmoqda.");
-            }
-
-            // 2. Har doim lokal saqlash (zaxira va profil uchun)
+            // Ma'lumotni lokal saqlash (Firebase ulanmagan bo'lsa ham ishlaydi)
             const allOrders = JSON.parse(localStorage.getItem('krist_orders')) || [];
             allOrders.push(orderData);
             localStorage.setItem('krist_orders', JSON.stringify(allOrders));
 
-            // 3. Muvaffaqiyatli xabar
+            // MUVAFFAQIYATLI XABAR
             Swal.fire({
-                title: 'Rahmat!',
-                text: 'Buyurtmangiz muvaffaqiyatli qabul qilindi!',
+                title: 'Muvaffaqiyatli!',
+                text: 'Buyurtma berildi! Tez orada siz bilan bog\'lanamiz.',
                 icon: 'success',
-                confirmButtonColor: '#131118'
+                confirmButtonColor: '#131118',
+                confirmButtonText: 'OK'
             }).then(() => {
-                localStorage.removeItem('krist_cart');
-                window.location.href = 'index.html';
+                localStorage.removeItem('krist_cart'); // Savatchani tozalash
+                window.location.href = 'index.html'; // Bosh sahifaga qaytish
             });
         };
 
-        // Boshlang'ich sozlamalar
-        const user = JSON.parse(localStorage.getItem('krist_user'));
-        if (user) document.getElementById('fullName').value = user.name;
-        
-        updateDisplay();
+        // Mavzuni yuklash
+        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
     </script>
 </body>
 </html>
