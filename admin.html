@@ -17,6 +17,7 @@
         .tab-menu { display: flex; gap: 20px; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
         .tab-btn { cursor: pointer; font-weight: 600; color: #666; }
         .tab-btn.active { color: var(--black); border-bottom: 2px solid var(--black); }
+        [data-theme="dark"] .order-card { background: #1a1921; border-color: #333; }
     </style>
 </head>
 <body>
@@ -24,7 +25,7 @@
     <div id="adminLogin" style="height: 100vh; display: flex; justify-content: center; align-items: center; background: #f3f4f6; position: fixed; width: 100%; top: 0; left: 0; z-index: 9999;">
         <div style="background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); text-align: center; width: 350px;">
             <h1 class="logo">Krist Admin</h1>
-            <p style="margin: 20px 0; color: #666;">Boshqaruv paneliga kirish uchun kodni kiriting:</p>
+            <p style="margin: 20px 0; color: #666;">Boshqaruv paneliga kirish (Kod: 2026):</p>
             <input type="password" id="adminCode" placeholder="Kirish kodi" style="width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 10px; text-align: center; font-size: 18px; outline: none; margin-bottom: 20px;">
             <button onclick="checkAdminCode()" class="btn-primary-krist">Kirish</button>
             <p id="errorMsg" style="color: red; margin-top: 15px; font-size: 14px; display: none;">Xato kod kiritildi!</p>
@@ -39,25 +40,18 @@
         
         <div class="tab-menu">
             <div class="tab-btn active" onclick="showTab('orders')">Buyurtmalar</div>
-            <div class="tab-btn" onclick="showTab('products')">Mahsulotlar</div>
         </div>
 
         <div id="ordersTab">
             <h2>Kelib tushgan buyurtmalar</h2>
             <div id="adminOrdersList">Yuklanmoqda...</div>
         </div>
-
-        <div id="productsTab" style="display:none;">
-            <h2>Mahsulotlarni boshqarish</h2>
-            <p>Yaqinda qo'shiladi...</p>
-        </div>
     </div>
 
-    <script type="module">
-        import { db, collection, getDocs, query, orderBy, deleteDoc, doc } from './firebase-config.js';
-
+    <script>
         const SECRET_CODE = "2026";
 
+        // 1. Kirishni tekshirish
         window.checkAdminCode = () => {
             const input = document.getElementById('adminCode').value;
             if (input === SECRET_CODE) {
@@ -75,74 +69,65 @@
             window.location.reload();
         }
 
-        window.showTab = (tab) => {
-            document.getElementById('ordersTab').style.display = tab === 'orders' ? 'block' : 'none';
-            document.getElementById('productsTab').style.display = tab === 'products' ? 'block' : 'none';
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            if(event) event.target.classList.add('active');
-        }
-
-        async function loadOrders() {
+        // 2. Buyurtmalarni yuklash (LOKAL XOTIRADAN)
+        function loadOrders() {
             const list = document.getElementById('adminOrdersList');
-            try {
-                const q = query(collection(db, "orders"), orderBy("date", "desc"));
-                const querySnapshot = await getDocs(q);
-                
-                list.innerHTML = querySnapshot.empty ? '<p>Hozircha buyurtmalar yo\'q.</p>' : '';
-                
-                querySnapshot.forEach((orderDoc) => {
-                    const order = orderDoc.data();
-                    const orderId = orderDoc.id;
-                    list.innerHTML += `
-                        <div class="order-card">
-                            <i class="fas fa-trash delete-btn" onclick="deleteOrder('${orderId}')" title="O'chirish"></i>
-                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                                <strong>Buyurtma ID: ${orderId.substring(0,8)}...</strong>
-                                <span class="status-badge">YANGI</span>
-                            </div>
-                            <p><strong>Mijoz:</strong> ${order.customer.name}</p>
-                            <p><strong>Tel:</strong> ${order.customer.phone}</p>
-                            <p><strong>Manzil:</strong> ${order.customer.address}</p>
-                            <hr style="margin:10px 0; border:0; border-top:1px solid #eee;">
-                            <p><strong>Mahsulotlar:</strong> ${order.items.map(i => i.name).join(', ')}</p>
-                            <p style="margin-top:10px; font-weight:bold;">Jami: $${order.total.toFixed(2)}</p>
-                            <p style="font-size:12px; color:#999; margin-top:10px;">Vaqt: ${new Date(order.date).toLocaleString()}</p>
-                        </div>
-                    `;
-                });
-            } catch (err) {
-                console.error("Xato:", err);
-                list.innerHTML = "<p style='color:red;'>Ma'lumotlarni yuklashda xatolik yuz berdi!</p>";
+            const orders = JSON.parse(localStorage.getItem('krist_orders')) || [];
+            
+            if (orders.length === 0) {
+                list.innerHTML = '<p style="text-align:center; padding:20px;">Hozircha buyurtmalar yo\'q.</p>';
+                return;
             }
+
+            list.innerHTML = '';
+            orders.reverse().forEach((order) => {
+                list.innerHTML += `
+                    <div class="order-card">
+                        <i class="fas fa-trash delete-btn" onclick="deleteOrder(${order.id})" title="O'chirish"></i>
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                            <strong>Buyurtma #${order.id}</strong>
+                            <span class="status-badge">YANGI</span>
+                        </div>
+                        <p><strong>Mijoz:</strong> ${order.customer.name}</p>
+                        <p><strong>Tel:</strong> ${order.customer.phone}</p>
+                        <p><strong>Manzil:</strong> ${order.customer.address}</p>
+                        <hr style="margin:10px 0; border:0; border-top:1px solid #eee;">
+                        <p><strong>Mahsulotlar:</strong> ${order.items.map(i => i.name).join(', ')}</p>
+                        <p style="margin-top:10px; font-weight:bold; color: #d4a373;">Jami: $${order.total.toFixed(2)}</p>
+                        <p style="font-size:12px; color:#999; margin-top:10px;">Vaqt: ${new Date(order.date).toLocaleString()}</p>
+                    </div>
+                `;
+            });
         }
 
-        window.deleteOrder = async (orderDocId) => {
-            const result = await Swal.fire({
+        // 3. Buyurtmani o'chirish
+        window.deleteOrder = (orderId) => {
+            Swal.fire({
                 title: 'Ishonchingiz komilmi?',
-                text: "Bu buyurtma Firebase bazasidan o'chiriladi!",
+                text: "Bu buyurtma o'chiriladi!",
                 icon: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#131118',
                 confirmButtonText: 'Ha, o\'chirish!'
-            });
-
-            if (result.isConfirmed) {
-                try {
-                    await deleteDoc(doc(db, "orders", orderDocId));
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    let orders = JSON.parse(localStorage.getItem('krist_orders')) || [];
+                    orders = orders.filter(o => o.id !== orderId);
+                    localStorage.setItem('krist_orders', JSON.stringify(orders));
                     loadOrders();
                     Swal.fire('O\'chirildi!', '', 'success');
-                } catch (err) {
-                    alert("O'chirishda xatolik!");
                 }
-            }
+            });
         }
 
+        // 4. Init
         document.addEventListener('DOMContentLoaded', () => {
             if (sessionStorage.getItem('admin_access') === 'true') {
                 document.getElementById('adminLogin').style.display = 'none';
                 document.getElementById('adminContent').style.display = 'block';
                 loadOrders();
             }
+            document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
         });
     </script>
 </body>
