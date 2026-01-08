@@ -59,81 +59,8 @@ function renderProducts(data) {
     });
 }
 
-// 5. SAVATCHA (Eng muhim qism)
-window.addToCart = (id) => {
-    // 1. Mahsulotni topamiz
-    const p = allProducts.find(prod => prod.id.toString() === id.toString());
-    
-    if (p) {
-        // 2. Savatchaga qo'shamiz
-        cart.push({...p, uniqueKey: Date.now()});
-        
-        // 3. Bazani va UI ni yangilaymiz
-        updateCart();
-        
-        // 4. Xabar chiqaramiz
-        Swal.fire({
-            toast: true,
-            position: 'top-end',
-            icon: 'success',
-            title: 'Savatchaga qo\'shildi!',
-            showConfirmButton: false,
-            timer: 1500
-        });
-    } else {
-        console.error("Mahsulot topilmadi: ID", id);
-    }
-};
-
-function updateCart() {
-    // LocalStorage-ga saqlash
-    localStorage.setItem('krist_cart', JSON.stringify(cart));
-    
-    // Savatchadagi sonni yangilash (Header)
-    const countEl = document.getElementById('cartCount');
-    if (countEl) countEl.innerText = cart.length;
-    
-    // Modal ichidagi ro'yxatni yangilash
-    const itemsDiv = document.getElementById('cartItems');
-    const totalEl = document.getElementById('cartTotalSum');
-    
-    if (itemsDiv) {
-        if (cart.length === 0) {
-            itemsDiv.innerHTML = '<p style="text-align:center; padding:20px; color:#888;">Savatchangiz bo\'sh.</p>';
-        } else {
-            itemsDiv.innerHTML = cart.map((item, index) => `
-                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid #eee; padding-bottom:10px;">
-                    <div style="display:flex; align-items:center; gap:12px;">
-                        <img src="${item.image}" style="width:45px; height:45px; object-fit:cover; border-radius:8px;">
-                        <div>
-                            <h5 style="margin:0; font-size:13px; color:var(--text-color);">${item.name}</h5>
-                            <span style="font-size:12px; color:var(--primary-color);">$${parseFloat(item.price).toFixed(2)}</span>
-                        </div>
-                    </div>
-                    <i class="fas fa-trash-alt" style="color:#ff4757; cursor:pointer; font-size:14px;" onclick="removeFromCart(${index})"></i>
-                </div>
-            `).join('');
-        }
-    }
-    
-    if (totalEl) {
-        const total = cart.reduce((sum, item) => sum + parseFloat(item.price), 0);
-        totalEl.innerText = total.toFixed(2);
-    }
-}
-
-window.removeFromCart = (index) => {
-    cart.splice(index, 1);
-    updateCart();
-};
-
-window.toggleCartModal = (show) => {
-    const modal = document.getElementById('cartModal');
-    if (modal) {
-        modal.style.display = show ? "block" : "none";
-        if (show) updateCart(); // Oynani ochganda har doim yangilash
-    }
-};
+// 5. SAVATCHA - BU QISM cart.js'ga ko'chirildi
+// Faqat renderPage va boshqa katalog mantiqlari qoladi
 
 // 6. Pagination va boshqalar
 window.renderPage = (page) => {
