@@ -57,11 +57,66 @@
             </div>
             <div id="adminProductsList" style="display:grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap:20px;"></div>
         </div>
+
+        <!-- Product Modal -->
+        <div id="productModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeProductModal()">&times;</span>
+                <h2 id="modalTitle">Yangi mahsulot</h2>
+                <div style="margin-bottom:10px;">
+                    <label>Nomi</label>
+                    <input type="text" id="pName" style="width:100%; padding:10px; border-radius:5px; border:1px solid #ddd;">
+                </div>
+                <div style="margin-bottom:10px;">
+                    <label>Narxi ($)</label>
+                    <input type="number" id="pPrice" style="width:100%; padding:10px; border-radius:5px; border:1px solid #ddd;">
+                </div>
+                <div style="margin-bottom:10px;">
+                    <label>Kategoriya</label>
+                    <select id="pCategory" style="width:100%; padding:10px; border-radius:5px; border:1px solid #ddd;">
+                        <option value="Makiyaj">Makiyaj</option>
+                        <option value="Yuz parvarishi">Yuz parvarishi</option>
+                        <option value="Atirlar">Atirlar</option>
+                        <option value="Soch parvarishi">Soch parvarishi</option>
+                    </select>
+                </div>
+                <div style="margin-bottom:10px;">
+                    <label>Tarif (Tavsif)</label>
+                    <textarea id="pDescription" style="width:100%; padding:10px; border-radius:5px; border:1px solid #ddd; height:80px;"></textarea>
+                </div>
+                <div style="margin-bottom:10px;">
+                    <label>Rasm yuklash</label>
+                    <input type="file" id="pImgInput" accept="image/*" style="width:100%; padding:10px;">
+                    <img id="pImgPreview" style="width:100px; height:100px; object-fit:cover; display:none; margin-top:10px; border-radius:5px;">
+                </div>
+                <button onclick="saveProduct()" class="btn-primary-krist">Saqlash</button>
+            </div>
+        </div>
     </div>
 
     <script>
         const API_URL = "http://localhost:3000/api";
         const SECRET_CODE = "2026";
+        let currentEditId = null;
+        let uploadedImgBase64 = "";
+
+        // Rasm yuklash mantiqi
+        document.addEventListener('DOMContentLoaded', () => {
+            const fileInput = document.getElementById('pImgInput');
+            if (fileInput) {
+                fileInput.onchange = (e) => {
+                    const file = e.target.files[0];
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        uploadedImgBase64 = reader.result;
+                        const preview = document.getElementById('pImgPreview');
+                        preview.src = uploadedImgBase64;
+                        preview.style.display = "block";
+                    };
+                    if (file) reader.readAsDataURL(file);
+                };
+            }
+        });
 
         window.checkAdminCode = () => {
             if (document.getElementById('adminCode').value === SECRET_CODE) {
@@ -97,6 +152,7 @@
                             <strong>Buyurtma #${order.id}</strong>
                             <p>Mijoz: ${order.customer.name} (${order.customer.phone})</p>
                             <p>Jami: $${order.total.toFixed(2)}</p>
+                            <p>Vaqt: ${new Date(order.date).toLocaleString()}</p>
                         </div>`;
                 });
             } catch (e) { list.innerHTML = "Xatolik!"; }
@@ -118,10 +174,69 @@
                 list.innerHTML += `
                     <div class="admin-product-card">
                         <img src="${p.image}" style="width:100%; height:100px; object-fit:contain;">
-                        <h4>${p.name}</h4>
-                        <button onclick="deleteProduct('${p.id}')">O'chirish</button>
+                        <h4 style="font-size:12px; height:30px; overflow:hidden;">${p.name}</h4>
+                        <p>$${p.price}</p>
+                        <div style="display:flex; gap:5px; margin-top:5px;">
+                            <button onclick="editProduct('${p.id}')" style="flex:1; font-size:10px;">✍️</button>
+                            <button onclick="deleteProduct('${p.id}')" style="flex:1; font-size:10px; background:red; color:white;">🗑️</button>
+                        </div>
                     </div>`;
             });
+        }
+
+        window.openProductModal = () => {
+            currentEditId = null;
+            uploadedImgBase64 = "";
+            document.getElementById('modalTitle').innerText = "Yangi mahsulot";
+            document.getElementById('pName').value = '';
+            document.getElementById('pPrice').value = '';
+            document.getElementById('pDescription').value = '';
+            document.getElementById('pImgPreview').style.display = "none";
+            document.getElementById('productModal').style.display = 'block';
+        }
+
+        window.closeProductModal = () => { document.getElementById('productModal').style.display = 'none'; }
+
+        window.editProduct = async (id) => {
+            const res = await fetch(`${API_URL}/products`);
+            const products = await res.json();
+            const p = products.find(item => item.id == id);
+            if(p) {
+                currentEditId = id;
+                uploadedImgBase64 = p.image;
+                document.getElementById('modalTitle').innerText = "Tahrirlash";
+                document.getElementById('pName').value = p.name;
+                document.getElementById('pPrice').value = p.price;
+                document.getElementById('pCategory').value = p.category;
+                document.getElementById('pDescription').value = p.description || "";
+                const preview = document.getElementById('pImgPreview');
+                preview.src = p.image;
+                preview.style.display = "block";
+                document.getElementById('productModal').style.display = 'block';
+            }
+        }
+
+        window.saveProduct = async () => {
+            const name = document.getElementById('pName').value;
+            const price = parseFloat(document.getElementById('pPrice').value);
+            if(!name || isNaN(price)) return alert("Ism va narxni to'ldiring!");
+
+            const p = {
+                id: currentEditId,
+                name: name,
+                price: price,
+                category: document.getElementById('pCategory').value,
+                description: document.getElementById('pDescription').value,
+                image: uploadedImgBase64 || "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d"
+            };
+            await fetch(`${API_URL}/products`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(p)
+            });
+            closeProductModal();
+            loadAdminProducts();
+            Swal.fire('Saqlandi!', '', 'success');
         }
 
         window.deleteProduct = async (id) => {

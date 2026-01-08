@@ -14,7 +14,13 @@ const DB_PATH = path.join(__dirname, 'database.json');
 
 // Bazani o'qish va dastlabki mahsulotlarni yaratish
 const readDB = () => {
-    if (!fs.existsSync(DB_PATH)) {
+    let db = { products: [], orders: [], users: [] };
+    if (fs.existsSync(DB_PATH)) {
+        db = JSON.parse(fs.readFileSync(DB_PATH));
+    }
+    
+    // Agar mahsulotlar bo'sh bo'lsa, ularni to'ldirish
+    if (!db.products || db.products.length === 0) {
         const productData = [
             { name: "Matte Lipstick", category: "Makiyaj", basePrice: 12, img: "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d" },
             { name: "Vitamin C Serum", category: "Yuz parvarishi", basePrice: 35, img: "https://images.unsplash.com/photo-1599733594230-6b823276abcc" },
@@ -38,11 +44,10 @@ const readDB = () => {
                 image: `${base.img}?w=500&sig=${i}`
             });
         }
-        const initialDB = { products, orders: [], users: [] };
-        fs.writeFileSync(DB_PATH, JSON.stringify(initialDB, null, 2));
-        return initialDB;
+        db.products = products;
+        fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2));
     }
-    return JSON.parse(fs.readFileSync(DB_PATH));
+    return db;
 };
 
 const writeDB = (data) => {
