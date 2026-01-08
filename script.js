@@ -17,21 +17,34 @@ const translations = {
         "nav-home": "Bosh sahifa", "nav-shop": "Katalog", "nav-story": "Biz haqimizda", "nav-blog": "Maslahatlar", "nav-contact": "Aloqa",
         "hero-sub": "Tabiiy va Nafis", "hero-title": "Go'zallik siri sizning qo'lingizda", "hero-off": "HAMMA MAHSULOTLARGA -30%",
         "shop-now": "Sotib olish", "category-title": "Toifalar bo'yicha saralash", "bestseller-title": "Eng ko'p sotilganlar",
-        "footer-info": "Ma'lumotlar", "footer-service": "Xizmatlar", "footer-subscribe": "Yangi mahsulotlardan xabardor bo'ling"
+        "footer-info": "Ma'lumotlar", "footer-service": "Xizmatlar", "footer-subscribe": "Yangi mahsulotlardan xabardor bo'ling",
+        "sort-title": "Saralash", "sort-low": "Arzonroq", "sort-high": "Qimmatroq", "sort-new": "Yangi qo'shilganlar"
     },
     en: {
         "nav-home": "Home", "nav-shop": "Shop", "nav-story": "About Us", "nav-blog": "Beauty Blog", "nav-contact": "Contact Us",
         "hero-sub": "Natural & Elegant", "hero-title": "Unveil Your Natural Beauty", "hero-off": "UPTO 30% OFF ALL PRODUCTS",
         "shop-now": "Shop Now", "category-title": "Shop by Categories", "bestseller-title": "Our Bestsellers",
-        "footer-info": "Information", "footer-service": "Service", "footer-subscribe": "Subscribe to Updates"
+        "footer-info": "Information", "footer-service": "Service", "footer-subscribe": "Subscribe to Updates",
+        "sort-title": "Sort by", "sort-low": "Price: Low to High", "sort-high": "Price: High to Low", "sort-new": "Newest First"
     },
     ru: {
         "nav-home": "Главная", "nav-shop": "Каталог", "nav-story": "О нас", "nav-blog": "Советы", "nav-contact": "Контакты",
         "hero-sub": "Натурально и Изящно", "hero-title": "Секрет красоты в ваших руках", "hero-off": "СКИДКА -30% НА ВСЁ",
         "shop-now": "Купить", "category-title": "Сортировка по категориям", "bestseller-title": "Хиты продаж",
-        "footer-info": "Информация", "footer-service": "Услуги", "footer-subscribe": "Подпишитесь на новости"
+        "footer-info": "Информация", "footer-service": "Услуги", "footer-subscribe": "Подпишитесь на новости",
+        "sort-title": "Сортировка", "sort-low": "Сначала дешевле", "sort-high": "Сначала дороже", "sort-new": "Новинки"
     }
 };
+
+// ... (loadProducts va boshqa funksiyalar)
+
+window.sortProducts = (type) => {
+    if (type === 'low') filteredProducts.sort((a, b) => a.price - b.price);
+    else if (type === 'high') filteredProducts.sort((a, b) => b.price - a.price);
+    else if (type === 'new') filteredProducts.sort((a, b) => b.id - a.id);
+    renderPage(1);
+};
+
 
 let allProducts = [];
 let filteredProducts = [];

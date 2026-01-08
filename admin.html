@@ -9,6 +9,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .admin-container { padding: 40px 5%; max-width: 1200px; margin: 0 auto; }
         .order-card { background: white; border: 1px solid #eee; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; }
@@ -53,6 +54,11 @@
             <div class="stat-card"><span>Jami Buyurtmalar</span><span id="statOrders" class="stat-val">0</span></div>
             <div class="stat-card"><span>Jami Tushum</span><span id="statSales" class="stat-val" style="color:#27ae60;">$0</span></div>
             <div class="stat-card"><span>Mahsulotlar</span><span id="statProducts" class="stat-val" style="color:#d4a373;">0</span></div>
+        </div>
+
+        <!-- Sales Chart -->
+        <div style="background:white; padding:20px; border-radius:15px; margin-top:30px; border:1px solid #eee;">
+            <canvas id="salesChart" height="100"></canvas>
         </div>
         
         <div class="tab-menu">
@@ -141,6 +147,30 @@
             document.getElementById('statProducts').innerText = products.length;
             const totalSales = orders.reduce((s, o) => s + o.total, 0);
             document.getElementById('statSales').innerText = `$${totalSales.toFixed(2)}`;
+            renderChart(orders);
+        }
+
+        function renderChart(orders) {
+            const ctx = document.getElementById('salesChart').getContext('2d');
+            const dates = [...new Set(orders.map(o => new Date(o.date).toLocaleDateString()))].sort().slice(-7);
+            const data = dates.map(d => orders.filter(o => new Date(o.date).toLocaleDateString() === d).reduce((s, o) => s + o.total, 0));
+
+            if (window.myChart) window.myChart.destroy();
+            window.myChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Savdo hajmi ($)',
+                        data: data,
+                        borderColor: '#d4a373',
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: 'rgba(212, 163, 115, 0.1)'
+                    }]
+                },
+                options: { responsive: true, plugins: { legend: { display: false } } }
+            });
         }
 
         async function loadOrders() {
