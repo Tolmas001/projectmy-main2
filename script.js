@@ -1,4 +1,4 @@
-// 1. O'zgaruvchilar
+// script.js - Katalog va umumiy mantiq
 let currentPage = 1;
 const itemsPerPage = 12;
 let allProducts = [];
@@ -6,40 +6,35 @@ let filteredProducts = [];
 
 const API_URL = "http://localhost:3000/api";
 
-// 2. Kirishni tekshirish
+// 1. Kirish tekshiruvi
 function checkAuth() {
     const user = JSON.parse(localStorage.getItem('krist_user'));
-    if (!user && !window.location.pathname.includes('register.html')) {
-        window.location.href = 'register.html';
-    }
+    if (!user && !window.location.pathname.includes('register.html')) window.location.href = 'register.html';
 }
 checkAuth();
 
-// 3. Ma'lumotlarni yuklash
+// 2. Ma'lumotlarni yuklash
 async function loadProductsFromServer() {
     try {
         const res = await fetch(`${API_URL}/products`);
-        if (!res.ok) throw new Error();
         allProducts = await res.json();
         localStorage.setItem('krist_products', JSON.stringify(allProducts));
         filteredProducts = [...allProducts];
         renderPage(1);
     } catch (err) {
-        console.warn("Server ulanmadi, kesh ishlatiladi.");
         allProducts = JSON.parse(localStorage.getItem('krist_products')) || [];
         filteredProducts = [...allProducts];
         renderPage(1);
     }
 }
 
-// 4. Mahsulotlarni chiqarish
 function renderProducts(data) {
     const grid = document.getElementById('productGrid');
     if (!grid) return;
-    grid.innerHTML = data.length === 0 ? '<div style="grid-column: 1/-1; text-align: center; padding: 50px;"><h3>Mahsulotlar topilmadi</h3></div>' : '';
+    grid.innerHTML = data.length === 0 ? '<div style="grid-column: 1/-1; text-align: center; padding: 50px;"><h3>Hech narsa topilmadi</h3></div>' : '';
 
+    const wishlist = JSON.parse(localStorage.getItem('krist_wishlist')) || [];
     data.forEach(p => {
-        const wishlist = JSON.parse(localStorage.getItem('krist_wishlist')) || [];
         const isWished = wishlist.some(item => item.id.toString() === p.id.toString());
         grid.innerHTML += `
             <div class="product-card-krist" data-aos="fade-up">
@@ -58,31 +53,49 @@ function renderProducts(data) {
     });
 }
 
-// 5. Pagination
+// 3. Pagination & Filters
 window.renderPage = (page) => {
     currentPage = page;
     const start = (page - 1) * itemsPerPage;
-    const end = start + itemsPerPage;
-    renderProducts(filteredProducts.slice(start, end));
-    renderPagination();
-};
-
-function renderPagination() {
+    renderProducts(filteredProducts.slice(start, start + itemsPerPage));
     const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
     const container = document.getElementById('pagination');
-    if (!container) return;
-    container.innerHTML = '';
-    if (totalPages <= 1) return;
-    for (let i = 1; i <= totalPages; i++) {
-        container.innerHTML += `<button onclick="renderPage(${i})" style="padding:6px 14px; margin:0 3px; border:1px solid #ddd; background:${i === currentPage ? '#000' : '#fff'}; color:${i === currentPage ? '#fff' : '#000'}; border-radius:8px; cursor:pointer;">${i}</button>`;
+    if (container) {
+        container.innerHTML = totalPages > 1 ? Array.from({length: totalPages}, (_, i) => `
+            <button onclick="renderPage(${i+1})" style="padding:6px 14px; margin:0 3px; border:1px solid #ddd; background:${(i+1) === currentPage ? '#000' : '#fff'}; color:${(i+1) === currentPage ? '#fff' : '#000'}; border-radius:8px; cursor:pointer;">${i+1}</button>
+        `).join('') : '';
     }
-}
+};
 
-// 6. Qidiruv va Saralash
+window.sortProducts = (type) => {
+    if (type === 'low') filteredProducts.sort((a, b) => a.price - b.price);
+    else if (type === 'high') filteredProducts.sort((a, b) => b.price - a.price);
+    else if (type === 'new') filteredProducts.sort((a, b) => b.id.toString().localeCompare(a.id.toString()));
+    renderPage(1);
+};
+
+window.filterByCategory = (cat) => {
+    filteredProducts = allProducts.filter(p => p.category === cat);
+    renderPage(1);
+    document.getElementById('products')?.scrollIntoView({ behavior: 'smooth' });
+};
+
+// 4. Wishlist
+window.toggleWishlist = (id) => {
+    let wishlist = JSON.parse(localStorage.getItem('krist_wishlist')) || [];
+    const idx = wishlist.findIndex(p => p.id.toString() === id.toString());
+    if (idx > -1) wishlist.splice(idx, 1);
+    else wishlist.push(allProducts.find(item => item.id.toString() === id.toString()));
+    localStorage.setItem('krist_wishlist', JSON.stringify(wishlist));
+    document.getElementById('wishCount').innerText = wishlist.length;
+    renderPage(currentPage);
+};
+
+// 5. Init
 document.addEventListener('DOMContentLoaded', () => {
     loadProductsFromServer();
+    document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
     
-    // Headerdagi qidiruv
     const sInput = document.getElementById('searchInput');
     if (sInput) {
         sInput.addEventListener('input', (e) => {
@@ -92,26 +105,5 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Mavzu
-    const theme = localStorage.getItem('theme') || 'light';
-    document.documentElement.setAttribute('data-theme', theme);
-    if(document.getElementById('themeIcon')) document.getElementById('themeIcon').className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
-
-    // Savatcha hisobini yangilab qo'yamiz (agar cart.js yuklangan bo'lsa)
-    if (window.updateCartCount) window.updateCartCount();
+    window.onclick = (e) => { if (e.target.classList.contains('modal')) e.target.style.display = "none"; };
 });
-
-// Wishlist
-window.toggleWishlist = (id) => {
-    let wishlist = JSON.parse(localStorage.getItem('krist_wishlist')) || [];
-    const idx = wishlist.findIndex(p => p.id.toString() === id.toString());
-    if (idx > -1) {
-        wishlist.splice(idx, 1);
-    } else {
-        const prod = allProducts.find(item => item.id.toString() === id.toString());
-        if (prod) wishlist.push(prod);
-    }
-    localStorage.setItem('krist_wishlist', JSON.stringify(wishlist));
-    if(window.updateWishCount) window.updateWishCount();
-    renderPage(currentPage);
-};
