@@ -4,123 +4,57 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Krist - Shaxsiy Kabinet</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="profile.css">
+    <link rel="stylesheet" href="style.css"><link rel="stylesheet" href="profile.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    <!-- jsPDF CDN -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
-    <header class="main-header">
-        <div class="header-container">
-            <div class="logo"><a href="index.html" style="text-decoration:none; color:var(--text-color);">Krist</a></div>
-            <a href="index.html" style="text-decoration:none; color:var(--dark-gray);"><i class="fas fa-home"></i></a>
-        </div>
-    </header>
-
-    <div class="profile-header">
-        <img id="userAvatar" src="" alt="Avatar" class="user-avatar-big">
-        <h2 id="userName"></h2>
-        <p id="userEmail"></p>
-    </div>
-
+    <header class="main-header"><div class="header-container"><div class="logo"><a href="index.html" style="text-decoration:none; color:var(--text-color);">Krist</a></div><a href="index.html" style="color:var(--dark-gray);"><i class="fas fa-home"></i></a></div></header>
+    <div class="profile-header"><img id="userAvatar" src="" class="user-avatar-big"><h2 id="userName"></h2><p id="userEmail"></p></div>
     <div class="profile-grid">
-        <div class="info-card">
-            <h3>Profil ma'lumotlari</h3>
-            <hr style="margin:20px 0; border:0; border-top:1px solid #eee;">
-            <p><strong>A'zo bo'lgan sana:</strong> <span id="joinedDate"></span></p>
-            <p><strong>Status:</strong> VIP Mijoz</p>
-            <button onclick="logout()" class="btn-primary-krist" style="margin-top:30px; background:#ff4757;">Chiqish</button>
-        </div>
-
-        <div class="orders-card">
-            <h3>Buyurtmalar tarixi</h3>
-            <div id="userOrdersList" style="margin-top:20px;"></div>
-        </div>
+        <div class="info-card"><h3>Profil</h3><hr style="margin:20px 0; border:0; border-top:1px solid #eee;"><p><strong>Status:</strong> VIP</p><button onclick="logout()" class="btn-primary-krist" style="margin-top:30px; background:#ff4757;">Chiqish</button></div>
+        <div class="orders-card"><h3>Buyurtmalarim</h3><div id="userOrdersList" style="margin-top:20px;">Yuklanmoqda...</div></div>
     </div>
 
     <script>
-        const { jsPDF } = window.jspdf;
         const user = JSON.parse(localStorage.getItem('krist_user'));
         if (!user) window.location.href = 'register.html';
 
         document.getElementById('userAvatar').src = user.avatar;
         document.getElementById('userName').innerText = user.name;
         document.getElementById('userEmail').innerText = user.email;
-        document.getElementById('joinedDate').innerText = new Date(user.joinedDate).toLocaleDateString();
 
-        const orders = JSON.parse(localStorage.getItem('krist_orders')) || [];
-        const list = document.getElementById('userOrdersList');
+        async function loadMyOrders() {
+            const list = document.getElementById('userOrdersList');
+            try {
+                // Serverdan faqat shu foydalanuvchining buyurtmalarini olamiz
+                const res = await fetch(`http://localhost:3000/api/orders?email=${user.email}`);
+                const orders = await res.json();
+                
+                if (orders.length === 0) {
+                    list.innerHTML = '<p>Buyurtmalar yo\'q.</p>';
+                    return;
+                }
 
-        if (orders.length === 0) {
-            list.innerHTML = '<p>Sizda hali buyurtmalar yo\'q.</p>';
-        } else {
-            orders.reverse().forEach(order => {
-                list.innerHTML += `
-                    <div class="order-row">
-                        <div>
-                            <strong>Order #${order.id.toString().substring(0,6)}</strong>
-                            <p style="font-size:12px; color:#999;">${new Date(order.date).toLocaleDateString()}</p>
-                        </div>
+                list.innerHTML = orders.map(o => `
+                    <div class="order-row" style="display:flex; justify-content:space-between; padding:15px 0; border-bottom:1px solid #eee;">
+                        <div><strong>#${o.id}</strong><p style="font-size:12px; color:#999;">${new Date(o.date).toLocaleDateString()}</p></div>
                         <div style="text-align:right;">
-                            <p style="font-weight:700;">$${order.total.toFixed(2)}</p>
-                            <span class="status-badge" style="font-size:11px; padding:3px 8px; border-radius:5px; background:${getStatusColor(order.status)}; color:white;">
-                                ${getStatusText(order.status)}
-                            </span>
-                            <br>
-                            <button onclick="downloadPDF(${order.id})" style="font-size:10px; border:1px solid #ddd; background:none; padding:2px 5px; cursor:pointer; margin-top:5px; border-radius:30px;">PDF Chek</button>
+                            <p style="font-weight:700;">$${o.total.toFixed(2)}</p>
+                            <span style="font-size:10px; padding:3px 8px; border-radius:50px; background:${getStatusColor(o.status)}; color:white;">${o.status}</span>
                         </div>
-                    </div>
-                `;
-            });
+                    </div>`).join('');
+            } catch (e) { list.innerHTML = "Xatolik!"; }
         }
 
-        function getStatusColor(status) {
-            if (status === 'delivered') return '#27ae60';
-            if (status === 'processing') return '#2980b9';
-            return '#f39c12';
+        function getStatusColor(s) {
+            return s === 'delivered' ? '#27ae60' : (s === 'processing' ? '#2980b9' : '#f39c12');
         }
 
-        function getStatusText(status) {
-            const lang = localStorage.getItem('selectedLang') || 'uz';
-            const texts = {
-                uz: { pending: 'Kutilmoqda', processing: 'Tayyorlanmoqda', delivered: 'Yetkazildi' },
-                en: { pending: 'Pending', processing: 'Processing', delivered: 'Delivered' },
-                ru: { pending: 'Ожидание', processing: 'В процессе', delivered: 'Доставлено' }
-            };
-            return texts[lang][status] || texts[lang].pending;
-        }
-
-        function downloadPDF(orderId) {
-            const order = orders.find(o => o.id == orderId);
-            const doc = new jsPDF();
-            
-            doc.setFontSize(22);
-            doc.text("KRIST BEAUTY STORE", 20, 20);
-            doc.setFontSize(12);
-            doc.text(`Buyurtma: #${orderId}`, 20, 30);
-            doc.text(`Sana: ${new Date(order.date).toLocaleString()}`, 20, 40);
-            doc.text(`Mijoz: ${order.customer.name}`, 20, 50);
-            doc.text("------------------------------------------", 20, 60);
-            
-            let y = 70;
-            order.items.forEach(item => {
-                doc.text(`${item.name} - $${item.price.toFixed(2)}`, 20, y);
-                y += 10;
-            });
-            
-            doc.text("------------------------------------------", 20, y);
-            doc.setFontSize(16);
-            doc.text(`JAMI: $${order.total.toFixed(2)}`, 20, y + 10);
-            doc.save(`Krist_Invoice_${orderId}.pdf`);
-        }
-
-        function logout() {
-            if (confirm("Chiqmoqchimisiz?")) {
-                localStorage.removeItem('krist_user');
-                window.location.href = 'register.html';
-            }
-        }
+        function logout() { localStorage.removeItem('krist_user'); window.location.href = 'register.html'; }
+        
+        loadMyOrders();
+        document.documentElement.setAttribute('data-theme', localStorage.getItem('theme') || 'light');
     </script>
 </body>
 </html>
