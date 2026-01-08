@@ -22,6 +22,7 @@
         .admin-product-card { background: white; padding: 15px; border-radius: 15px; text-align: center; border: 1px solid #eee; transition: 0.3s; }
         .admin-product-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
         [data-theme="dark"] .admin-product-card { background: #1a1921; border-color: #333; }
+        .image-preview { width: 100px; height: 100px; object-fit: cover; border-radius: 10px; border: 1px solid #ddd; margin-bottom: 10px; display: none; }
     </style>
 </head>
 <body>
@@ -67,6 +68,13 @@
             <div class="modal-content">
                 <span class="close" onclick="closeProductModal()">&times;</span>
                 <h2 id="modalTitle">Yangi mahsulot</h2>
+                
+                <div style="margin-bottom: 15px; text-align: center;">
+                    <img id="pImgPreview" class="image-preview" src="">
+                    <input type="file" id="pImgInput" accept="image/*" style="display:none;">
+                    <button onclick="document.getElementById('pImgInput').click()" style="padding:5px 15px; border:1px solid #ddd; background:none; cursor:pointer; border-radius:5px; font-size:12px;">Rasm yuklash</button>
+                </div>
+
                 <div style="margin-bottom: 15px; text-align: left;">
                     <label style="display:block; font-size:12px; margin-bottom:5px;">Nomi</label>
                     <input type="text" id="pNameInput" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
@@ -78,10 +86,10 @@
                 <div style="margin-bottom: 15px; text-align: left;">
                     <label style="display:block; font-size:12px; margin-bottom:5px;">Kategoriya</label>
                     <select id="pCatInput" style="width:100%; padding:10px; border-radius:8px; border:1px solid #ddd;">
-                        <option value="Skin Care">Skin Care</option>
-                        <option value="Make Up">Make Up</option>
-                        <option value="Fragrances">Fragrances</option>
-                        <option value="Hair Care">Hair Care</option>
+                        <option value="Yuz parvarishi">Yuz parvarishi</option>
+                        <option value="Makiyaj">Makiyaj</option>
+                        <option value="Atirlar">Atirlar</option>
+                        <option value="Soch parvarishi">Soch parvarishi</option>
                     </select>
                 </div>
                 <button onclick="saveProduct()" class="btn-primary-krist">Saqlash</button>
@@ -91,6 +99,20 @@
 
     <script>
         const SECRET_CODE = "2026";
+        let uploadedImgBase64 = "";
+
+        // Rasm yuklash mantiqi
+        document.getElementById('pImgInput').onchange = (e) => {
+            const file = e.target.files[0];
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                uploadedImgBase64 = reader.result;
+                const preview = document.getElementById('pImgPreview');
+                preview.src = uploadedImgBase64;
+                preview.style.display = "inline-block";
+            };
+            if (file) reader.readAsDataURL(file);
+        };
 
         window.checkAdminCode = () => {
             const input = document.getElementById('adminCode').value;
@@ -174,9 +196,11 @@
         let editingId = null;
         window.openProductModal = () => {
             editingId = null;
+            uploadedImgBase64 = "";
             document.getElementById('modalTitle').innerText = "Yangi mahsulot";
             document.getElementById('pNameInput').value = '';
             document.getElementById('pPriceInput').value = '';
+            document.getElementById('pImgPreview').style.display = "none";
             document.getElementById('productModal').style.display = 'block';
         }
         window.closeProductModal = () => { document.getElementById('productModal').style.display = 'none'; }
@@ -185,10 +209,14 @@
             const products = JSON.parse(localStorage.getItem('krist_products'));
             const p = products.find(i => i.id === id);
             editingId = id;
+            uploadedImgBase64 = p.image;
             document.getElementById('modalTitle').innerText = "Tahrirlash";
             document.getElementById('pNameInput').value = p.name;
             document.getElementById('pPriceInput').value = p.price;
             document.getElementById('pCatInput').value = p.category;
+            const preview = document.getElementById('pImgPreview');
+            preview.src = p.image;
+            preview.style.display = "inline-block";
             document.getElementById('productModal').style.display = 'block';
         }
 
@@ -199,9 +227,9 @@
             const category = document.getElementById('pCatInput').value;
 
             if (editingId) {
-                products = products.map(p => p.id === editingId ? {...p, name, price, category} : p);
+                products = products.map(p => p.id === editingId ? {...p, name, price, category, image: uploadedImgBase64} : p);
             } else {
-                products.unshift({ id: Date.now(), name, price, category, image: "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=500" });
+                products.unshift({ id: Date.now(), name, price, category, image: uploadedImgBase64 || "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=500" });
             }
             localStorage.setItem('krist_products', JSON.stringify(products));
             closeProductModal();
