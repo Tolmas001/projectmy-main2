@@ -11,7 +11,7 @@
     <style>
         .admin-container { padding: 40px 5%; max-width: 1200px; margin: 0 auto; }
         .order-card { background: white; border: 1px solid #eee; padding: 20px; border-radius: 10px; margin-bottom: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05); position: relative; }
-        .delete-btn { position: absolute; top: 20px; right: 80px; color: #ff4757; cursor: pointer; font-size: 18px; transition: 0.3s; }
+        .delete-btn { position: absolute; top: 20px; right: 20px; color: #ff4757; cursor: pointer; font-size: 18px; transition: 0.3s; }
         .delete-btn:hover { transform: scale(1.2); }
         .status-badge { background: #e3f2fd; color: #1976d2; padding: 5px 10px; border-radius: 5px; font-size: 12px; font-weight: bold; }
         .tab-menu { display: flex; gap: 20px; margin-bottom: 30px; border-bottom: 1px solid #eee; padding-bottom: 10px; }
@@ -44,7 +44,7 @@
 
         <div id="ordersTab">
             <h2>Kelib tushgan buyurtmalar</h2>
-            <div id="adminOrdersList"></div>
+            <div id="adminOrdersList">Yuklanmoqda...</div>
         </div>
 
         <div id="productsTab" style="display:none;">
@@ -53,10 +53,12 @@
         </div>
     </div>
 
-    <script>
+    <script type="module">
+        import { db, collection, getDocs, query, orderBy, deleteDoc, doc } from './firebase-config.js';
+
         const SECRET_CODE = "2026";
 
-        function checkAdminCode() {
+        window.checkAdminCode = () => {
             const input = document.getElementById('adminCode').value;
             if (input === SECRET_CODE) {
                 document.getElementById('adminLogin').style.display = 'none';
@@ -68,12 +70,73 @@
             }
         }
 
-        function logoutAdmin() {
+        window.logoutAdmin = () => {
             sessionStorage.removeItem('admin_access');
             window.location.reload();
         }
 
-        // Sahifa yuklanganda sessiyani tekshirish
+        window.showTab = (tab) => {
+            document.getElementById('ordersTab').style.display = tab === 'orders' ? 'block' : 'none';
+            document.getElementById('productsTab').style.display = tab === 'products' ? 'block' : 'none';
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            if(event) event.target.classList.add('active');
+        }
+
+        async function loadOrders() {
+            const list = document.getElementById('adminOrdersList');
+            try {
+                const q = query(collection(db, "orders"), orderBy("date", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                list.innerHTML = querySnapshot.empty ? '<p>Hozircha buyurtmalar yo\'q.</p>' : '';
+                
+                querySnapshot.forEach((orderDoc) => {
+                    const order = orderDoc.data();
+                    const orderId = orderDoc.id;
+                    list.innerHTML += `
+                        <div class="order-card">
+                            <i class="fas fa-trash delete-btn" onclick="deleteOrder('${orderId}')" title="O'chirish"></i>
+                            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+                                <strong>Buyurtma ID: ${orderId.substring(0,8)}...</strong>
+                                <span class="status-badge">YANGI</span>
+                            </div>
+                            <p><strong>Mijoz:</strong> ${order.customer.name}</p>
+                            <p><strong>Tel:</strong> ${order.customer.phone}</p>
+                            <p><strong>Manzil:</strong> ${order.customer.address}</p>
+                            <hr style="margin:10px 0; border:0; border-top:1px solid #eee;">
+                            <p><strong>Mahsulotlar:</strong> ${order.items.map(i => i.name).join(', ')}</p>
+                            <p style="margin-top:10px; font-weight:bold;">Jami: $${order.total.toFixed(2)}</p>
+                            <p style="font-size:12px; color:#999; margin-top:10px;">Vaqt: ${new Date(order.date).toLocaleString()}</p>
+                        </div>
+                    `;
+                });
+            } catch (err) {
+                console.error("Xato:", err);
+                list.innerHTML = "<p style='color:red;'>Ma'lumotlarni yuklashda xatolik yuz berdi!</p>";
+            }
+        }
+
+        window.deleteOrder = async (orderDocId) => {
+            const result = await Swal.fire({
+                title: 'Ishonchingiz komilmi?',
+                text: "Bu buyurtma Firebase bazasidan o'chiriladi!",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#131118',
+                confirmButtonText: 'Ha, o\'chirish!'
+            });
+
+            if (result.isConfirmed) {
+                try {
+                    await deleteDoc(doc(db, "orders", orderDocId));
+                    loadOrders();
+                    Swal.fire('O\'chirildi!', '', 'success');
+                } catch (err) {
+                    alert("O'chirishda xatolik!");
+                }
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             if (sessionStorage.getItem('admin_access') === 'true') {
                 document.getElementById('adminLogin').style.display = 'none';
@@ -81,65 +144,6 @@
                 loadOrders();
             }
         });
-
-        function showTab(tab) {
-            document.getElementById('ordersTab').style.display = tab === 'orders' ? 'block' : 'none';
-            document.getElementById('productsTab').style.display = tab === 'products' ? 'block' : 'none';
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-        }
-
-        function loadOrders() {
-            const orders = JSON.parse(localStorage.getItem('krist_orders')) || [];
-            const list = document.getElementById('adminOrdersList');
-            list.innerHTML = orders.length === 0 ? '<p>Hozircha buyurtmalar yo\'q.</p>' : '';
-            
-            orders.reverse().forEach((order, index) => {
-                list.innerHTML += `
-                    <div class="order-card">
-                        <i class="fas fa-trash delete-btn" onclick="deleteOrder(${order.id})" title="O'chirish"></i>
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
-                            <strong>Buyurtma #${order.id}</strong>
-                            <span class="status-badge">YANGI</span>
-                        </div>
-                        <p><strong>Mijoz:</strong> ${order.customer.name}</p>
-                        <p><strong>Tel:</strong> ${order.customer.phone}</p>
-                        <p><strong>Manzil:</strong> ${order.customer.address}</p>
-                        <hr style="margin:10px 0; border:0; border-top:1px solid #eee;">
-                        <p><strong>Mahsulotlar:</strong> ${order.items.map(i => i.name).join(', ')}</p>
-                        <p style="margin-top:10px; font-weight:bold;">Jami: $${order.total.toFixed(2)}</p>
-                        <p style="font-size:12px; color:#999; margin-top:10px;">Vaqt: ${new Date(order.date).toLocaleString()}</p>
-                    </div>
-                `;
-            });
-        }
-
-        function deleteOrder(orderId) {
-            Swal.fire({
-                title: 'Ishonchingiz komilmi?',
-                text: "Bu buyurtma butunlay o'chiriladi!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#131118',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Ha, o\'chirish!',
-                cancelButtonText: 'Bekor qilish'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    let orders = JSON.parse(localStorage.getItem('krist_orders')) || [];
-                    orders = orders.filter(order => order.id !== orderId);
-                    localStorage.setItem('krist_orders', JSON.stringify(orders));
-                    loadOrders();
-                    Swal.fire(
-                        'O\'chirildi!',
-                        'Buyurtma muvaffaqiyatli o\'chirildi.',
-                        'success'
-                    )
-                }
-            })
-        }
-
-        loadOrders();
     </script>
 </body>
 </html>
