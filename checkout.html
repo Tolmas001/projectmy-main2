@@ -15,7 +15,6 @@
         <h1 class="logo" style="text-align: center; margin-bottom: 30px; font-size: 32px;">Krist</h1>
         
         <div class="checkout-grid">
-            <!-- Chap tomon: Ma'lumotlar formasi -->
             <div class="checkout-card">
                 <h2 class="checkout-title">Yetkazib berish ma'lumotlari</h2>
                 <form id="orderForm">
@@ -26,11 +25,11 @@
 
                     <h4 style="margin: 25px 0 15px; font-size: 15px;">To'lov usulini tanlang</h4>
                     <div class="payment-grid">
-                        <div class="method-item active" onclick="selectMethod(this, 'cash')">
+                        <div class="method-item active" id="payCash" onclick="selectPayment('cash')">
                             <i class="fas fa-money-bill-wave"></i>
                             <span>Naqd pul</span>
                         </div>
-                        <div class="method-item" onclick="selectMethod(this, 'card')">
+                        <div class="method-item" id="payCard" onclick="selectPayment('card')">
                             <i class="fas fa-credit-card"></i>
                             <span>Bank kartasi</span>
                         </div>
@@ -68,7 +67,6 @@
                 </form>
             </div>
 
-            <!-- O'ng tomon: Buyurtma xulosasi -->
             <div class="checkout-card">
                 <h3 style="margin-bottom: 20px; font-size: 18px;">Buyurtma xulosasi</h3>
                 <div class="summary-box">
@@ -76,60 +74,47 @@
                     
                     <div class="promo-group">
                         <input type="text" id="promoInput" class="promo-input" placeholder="Promo-kod">
-                        <button type="button" onclick="applyPromo()" class="promo-btn">Qo'llash</button>
+                        <button type="button" id="applyPromoBtn" class="promo-btn">Qo'llash</button>
                     </div>
                     <p id="promoMessage" style="font-size: 12px; margin-top: 5px;"></p>
 
                     <div id="summaryTotal" class="summary-total-row"></div>
                 </div>
-                <p style="font-size: 12px; color: #888; text-align: center;">
-                    <i class="fas fa-lock"></i> Barcha to'lovlar xavfsiz himoyalangan
-                </p>
             </div>
         </div>
     </div>
 
+    <!-- Firebase SDK va Mantiq -->
     <script type="module">
         import { db, collection, addDoc } from './firebase-config.js';
 
-        // Mavzuni qo'llash
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.documentElement.setAttribute('data-theme', savedTheme);
-
-        window.selectMethod = (el, method) => {
-            document.querySelectorAll('.method-item').forEach(c => c.classList.remove('active'));
-            el.classList.add('active');
-            document.getElementById('paymentMethod').value = method;
-            
-            const cardDetails = document.getElementById('cardDetails');
-            cardDetails.style.display = method === 'card' ? 'block' : 'none';
-        }
-
-        // Avtomatik to'ldirish
-        const user = JSON.parse(localStorage.getItem('krist_user'));
-        if (user) {
-            setTimeout(() => {
-                const nameInput = document.getElementById('fullName');
-                if (nameInput) nameInput.value = user.name;
-            }, 100);
-        }
-
-        const cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
-        const summaryItems = document.getElementById('summaryItems');
-        const summaryTotal = document.getElementById('summaryTotal');
+        // Global o'zgaruvchilar
         let total = 0;
         let discount = 0;
+        const cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
 
         if (cart.length === 0) {
             window.location.href = 'index.html';
         }
 
+        // To'lov usulini tanlash (Global funksiya sifatida window'ga biriktiramiz)
+        window.selectPayment = (method) => {
+            document.getElementById('paymentMethod').value = method;
+            document.getElementById('payCash').classList.toggle('active', method === 'cash');
+            document.getElementById('payCard').classList.toggle('active', method === 'card');
+            document.getElementById('cardDetails').style.display = method === 'card' ? 'block' : 'none';
+        };
+
+        // Ekranni yangilash
         function updateDisplay() {
-            summaryItems.innerHTML = '';
+            const itemsDiv = document.getElementById('summaryItems');
+            const totalDiv = document.getElementById('summaryTotal');
+            itemsDiv.innerHTML = '';
             total = 0;
+
             cart.forEach(item => {
                 total += item.price;
-                summaryItems.innerHTML += `
+                itemsDiv.innerHTML += `
                     <div class="summary-item">
                         <span>${item.name}</span>
                         <span>$${item.price.toFixed(2)}</span>
@@ -137,25 +122,19 @@
             });
 
             const finalTotal = total - (total * discount);
-            summaryTotal.innerHTML = `
-                <div class="summary-item">
-                    <span>Subtotal:</span> <span>$${total.toFixed(2)}</span>
-                </div>
-                ${discount > 0 ? `
-                <div class="summary-item" style="color: #27ae60;">
-                    <span>Chegirma (${discount * 100}%):</span> <span>-$${(total * discount).toFixed(2)}</span>
-                </div>` : ''}
-                <div class="summary-item" style="margin-top:10px; font-size: 1.2em;">
-                    <span>Jami:</span> <span>$${finalTotal.toFixed(2)}</span>
-                </div>
+            totalDiv.innerHTML = `
+                <div class="summary-item"><span>Subtotal:</span> <span>$${total.toFixed(2)}</span></div>
+                ${discount > 0 ? `<div class="summary-item" style="color: #27ae60;"><span>Chegirma:</span> <span>-$${(total * discount).toFixed(2)}</span></div>` : ''}
+                <div class="summary-item" style="margin-top:10px; font-size: 1.2em;"><span>Jami:</span> <span>$${finalTotal.toFixed(2)}</span></div>
             `;
         }
 
-        const validPromos = { "KRIST10": 0.10, "GLOW20": 0.20, "YANGIYIL": 0.30 };
-
-        window.applyPromo = () => {
+        // Promo-kod qo'llash
+        document.getElementById('applyPromoBtn').onclick = () => {
             const input = document.getElementById('promoInput').value.toUpperCase();
             const msg = document.getElementById('promoMessage');
+            const validPromos = { "KRIST10": 0.10, "GLOW20": 0.20, "YANGIYIL": 0.30 };
+
             if (validPromos[input]) {
                 discount = validPromos[input];
                 msg.innerText = "Promo-kod qo'llanildi!";
@@ -168,20 +147,10 @@
             updateDisplay();
         };
 
-        // Karta formatlash
-        document.getElementById('cardNumber')?.addEventListener('input', (e) => {
-            e.target.value = e.target.value.replace(/\D/g, '').replace(/(.{4})/g, '$1 ').trim();
-        });
-        document.getElementById('cardExpiry')?.addEventListener('input', (e) => {
-            let v = e.target.value.replace(/\D/g, '');
-            if (v.length > 2) v = v.substring(0,2) + '/' + v.substring(2,4);
-            e.target.value = v;
-        });
-
-        updateDisplay();
-
+        // Formani topshirish
         document.getElementById('orderForm').onsubmit = async (e) => {
             e.preventDefault();
+            
             const orderData = {
                 id: Date.now(),
                 customer: {
@@ -190,36 +159,41 @@
                     address: document.getElementById('address').value
                 },
                 items: cart,
-                subtotal: total,
-                discount: total * discount,
                 total: total - (total * discount),
                 paymentMethod: document.getElementById('paymentMethod').value,
                 date: new Date().toISOString()
             };
 
             try {
-                // Firebase-ga yuborish
+                // 1. Firebase-ga yuborish (apiKey to'g'ri bo'lsa)
                 await addDoc(collection(db, "orders"), orderData);
-
-                // Lokal orders'ga ham qo'shib qo'yamiz (profil uchun)
-                const allOrders = JSON.parse(localStorage.getItem('krist_orders')) || [];
-                allOrders.push(orderData);
-                localStorage.setItem('krist_orders', JSON.stringify(allOrders));
-
-                Swal.fire({
-                    title: 'Rahmat!',
-                    text: 'Buyurtmangiz muvaffaqiyatli qabul qilindi!',
-                    icon: 'success',
-                    confirmButtonColor: '#131118'
-                }).then(() => {
-                    localStorage.removeItem('krist_cart');
-                    window.location.href = 'index.html';
-                });
+                console.log("Firebase success");
             } catch (err) {
-                console.error("Firebase error:", err);
-                alert("Buyurtmani yuborishda xatolik yuz berdi!");
+                console.warn("Firebase ulanmagan yoki xato, lokal saqlanmoqda.");
             }
+
+            // 2. Har doim lokal saqlash (zaxira va profil uchun)
+            const allOrders = JSON.parse(localStorage.getItem('krist_orders')) || [];
+            allOrders.push(orderData);
+            localStorage.setItem('krist_orders', JSON.stringify(allOrders));
+
+            // 3. Muvaffaqiyatli xabar
+            Swal.fire({
+                title: 'Rahmat!',
+                text: 'Buyurtmangiz muvaffaqiyatli qabul qilindi!',
+                icon: 'success',
+                confirmButtonColor: '#131118'
+            }).then(() => {
+                localStorage.removeItem('krist_cart');
+                window.location.href = 'index.html';
+            });
         };
+
+        // Boshlang'ich sozlamalar
+        const user = JSON.parse(localStorage.getItem('krist_user'));
+        if (user) document.getElementById('fullName').value = user.name;
+        
+        updateDisplay();
     </script>
 </body>
 </html>
