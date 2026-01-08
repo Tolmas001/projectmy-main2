@@ -46,11 +46,12 @@ async function loadProductsFromServer() {
         const res = await fetch(`${API_URL}/products`);
         if (!res.ok) throw new Error("Server xatosi");
         allProducts = await res.json();
+        // Zaxira: LocalStorage'ga keshlab qo'yamiz (detail sahifasi uchun)
+        localStorage.setItem('krist_products', JSON.stringify(allProducts));
         filteredProducts = [...allProducts];
         renderPage(1);
     } catch (err) {
         console.error("Server xatosi!", err);
-        // Zaxira: LocalStorage'dan o'qish (agar server o'chiq bo'lsa)
         allProducts = JSON.parse(localStorage.getItem('krist_products')) || [];
         filteredProducts = [...allProducts];
         renderPage(1);
@@ -75,7 +76,7 @@ function renderProducts(data) {
                 </div>
                 <div class="product-info-krist">
                     <h4 onclick="window.location.href='product-detail.html?id=${p.id}'" style="cursor:pointer">${p.name}</h4>
-                    <p>$${p.price.toFixed(2)}</p>
+                    <p>$${parseFloat(p.price).toFixed(2)}</p>
                 </div>
             </div>`;
     });
@@ -115,15 +116,14 @@ window.toggleWishlist = (id) => {
     } else {
         const prod = allProducts.find(item => item.id.toString() === id.toString());
         if (prod) wishlist.push(prod);
-        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Saralanganlarga qo\'shildi', showConfirmButton: false, timer: 1500 });
+        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Qo\'shildi', showConfirmButton: false, timer: 1500 });
     }
     updateWishCount();
     renderPage(currentPage);
 };
 
 function updateWishCount() {
-    const el = document.getElementById('wishCount');
-    if (el) el.innerText = wishlist.length;
+    if (document.getElementById('wishCount')) document.getElementById('wishCount').innerText = wishlist.length;
     localStorage.setItem('krist_wishlist', JSON.stringify(wishlist));
 }
 
@@ -133,7 +133,7 @@ window.showWishlist = () => {
     if (!modal) return;
     modal.style.display = "block";
     itemsDiv.innerHTML = wishlist.length === 0 ? '<p style="text-align:center;">Bo\'sh</p>' : 
-        wishlist.map(p => `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px;"><span>${p.name}</span><i class="fas fa-trash" style="color:red; cursor:pointer;" onclick="toggleWishlist('${p.id}'); showWishlist();"></i></div>`).join('');
+        wishlist.map(p => `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;"><span>${p.name}</span><i class="fas fa-trash" style="color:red; cursor:pointer;" onclick="toggleWishlist('${p.id}'); showWishlist();"></i></div>`).join('');
 };
 
 window.closeWishlist = () => { document.getElementById('wishlistModal').style.display = "none"; };
@@ -148,26 +148,15 @@ window.filterByCategory = (cat) => {
 window.addToCart = (id) => {
     const p = allProducts.find(prod => prod.id.toString() === id.toString());
     if (p) {
-        cart.push({...p, cartId: Date.now()}); // Noyob cartId qo'shamiz o'chirish oson bo'lishi uchun
+        cart.push(p);
         updateCart();
-        Swal.fire({ 
-            toast: true, 
-            position: 'top-end', 
-            icon: 'success', 
-            title: 'Savatchaga qo\'shildi', 
-            showConfirmButton: false, 
-            timer: 1500 
-        });
-    } else {
-        console.error("Mahsulot topilmadi: ID", id);
+        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Savatchaga qo\'shildi', showConfirmButton: false, timer: 1500 });
     }
 };
 
 function updateCart() {
-    const countEl = document.getElementById('cartCount');
-    if (countEl) countEl.innerText = cart.length;
+    if (document.getElementById('cartCount')) document.getElementById('cartCount').innerText = cart.length;
     localStorage.setItem('krist_cart', JSON.stringify(cart));
-    
     const itemsDiv = document.getElementById('cartItems');
     if (itemsDiv) {
         if (cart.length === 0) {
@@ -179,21 +168,17 @@ function updateCart() {
                         <img src="${p.image}" style="width:40px; height:40px; object-fit:cover; border-radius:5px;">
                         <div>
                             <h5 style="font-size:13px; margin:0;">${p.name}</h5>
-                            <span style="font-size:12px; color:var(--primary-color);">$${p.price.toFixed(2)}</span>
+                            <span style="font-size:12px; color:var(--primary-color);">$${parseFloat(p.price).toFixed(2)}</span>
                         </div>
                     </div>
                     <i class="fas fa-times" style="color:#ccc; cursor:pointer;" onclick="removeFromCart(${i})"></i>
                 </div>`).join('');
         }
-        const totalSumEl = document.getElementById('cartTotalSum');
-        if (totalSumEl) totalSumEl.innerText = cart.reduce((s, p) => s + p.price, 0).toFixed(2);
+        if (document.getElementById('cartTotalSum')) document.getElementById('cartTotalSum').innerText = cart.reduce((s, p) => s + parseFloat(p.price), 0).toFixed(2);
     }
 }
 
-window.removeFromCart = (i) => {
-    cart.splice(i, 1);
-    updateCart();
-};
+window.removeFromCart = (i) => { cart.splice(i, 1); updateCart(); };
 
 function setLanguage(lang) {
     document.querySelectorAll('[data-i18n]').forEach(el => {
@@ -237,53 +222,7 @@ document.addEventListener('DOMContentLoaded', () => {
     updateCart();
     updateWishCount();
 
-    // Smart Search input
-    const sInput = document.getElementById('searchInput');
-    const autoDiv = document.getElementById('searchAutocomplete');
-    if (sInput) {
-        sInput.addEventListener('input', (e) => {
-            const term = e.target.value.toLowerCase();
-            filteredProducts = allProducts.filter(p => p.name.toLowerCase().includes(term));
-            renderPage(1);
-            if (term.length > 0) {
-                const matches = allProducts.filter(p => p.name.toLowerCase().includes(term)).slice(0, 5);
-                if (autoDiv) {
-                    autoDiv.style.display = matches.length ? 'block' : 'none';
-                    autoDiv.innerHTML = matches.map(p => `
-                        <div onclick="window.location.href='product-detail.html?id=${p.id}'" style="display:flex; align-items:center; gap:10px; padding:10px; cursor:pointer; border-bottom:1px solid #eee;">
-                            <img src="${p.image}" style="width:30px; height:30px; object-fit:cover; border-radius:3px;">
-                            <span style="font-size:12px; color:var(--text-color);">${p.name}</span>
-                        </div>`).join('');
-                }
-            } else if(autoDiv) { autoDiv.style.display = 'none'; }
-        });
-    }
-
-    const priceF = document.getElementById('priceFilter');
-    if (priceF) {
-        priceF.addEventListener('change', (e) => {
-            const val = e.target.value;
-            if (val === 'all') filteredProducts = [...allProducts];
-            else if (val === '0-50') filteredProducts = allProducts.filter(p => p.price <= 50);
-            else if (val === '51-100') filteredProducts = allProducts.filter(p => p.price > 50 && p.price <= 100);
-            else if (val === '101+') filteredProducts = allProducts.filter(p => p.price > 100);
-            renderPage(1);
-        });
-    }
-
-    const burger = document.getElementById('hamburger');
-    if (burger) {
-        burger.addEventListener('click', () => {
-            const nav = document.getElementById('navMenu');
-            if(nav) nav.classList.toggle('active');
-            burger.querySelector('i').classList.toggle('fa-bars');
-            burger.querySelector('i').classList.toggle('fa-times');
-        });
-    }
-
     window.onclick = (e) => { 
-        if (e.target.classList.contains('modal')) {
-            e.target.style.display = "none";
-        }
+        if (e.target.classList.contains('modal')) e.target.style.display = "none";
     };
 });
