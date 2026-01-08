@@ -1,10 +1,12 @@
+// 1. Pagination va Qidiruv o'zgaruvchilari
+let currentPage = 1;
+const itemsPerPage = 12;
+
 // Tizimga kirganlikni tekshirish
 function checkAuth() {
     const user = JSON.parse(localStorage.getItem('krist_user'));
-    const currentPage = window.location.pathname;
-    if (!user && !currentPage.includes('register.html')) {
-        window.location.href = 'register.html';
-    }
+    const path = window.location.pathname;
+    if (!user && !path.includes('register.html')) window.location.href = 'register.html';
 }
 checkAuth();
 
@@ -31,38 +33,24 @@ const translations = {
     }
 };
 
-let products = [];
+let allProducts = [];
+let filteredProducts = [];
 let cart = JSON.parse(localStorage.getItem('krist_cart')) || [];
 let wishlist = JSON.parse(localStorage.getItem('krist_wishlist')) || [];
 
-// 1. Mahsulotlarni serverdan yuklash
 async function loadProductsFromServer() {
     try {
         const res = await fetch(`${API_URL}/products`);
-        products = await res.json();
-        renderProducts(products);
-    } catch (err) {
-        console.error("Serverga ulanishda xato!", err);
-    }
-}
-
-function setLanguage(lang) {
-    document.querySelectorAll('[data-i18n]').forEach(el => {
-        const key = el.getAttribute('data-i18n');
-        if (translations[lang]?.[key]) el.innerText = translations[lang][key];
-    });
-    localStorage.setItem('selectedLang', lang);
+        allProducts = await res.json();
+        filteredProducts = [...allProducts];
+        renderPage(1);
+    } catch (err) { console.error("Server xatosi!", err); }
 }
 
 function renderProducts(data) {
     const grid = document.getElementById('productGrid');
     if (!grid) return;
-    grid.innerHTML = '';
-    
-    if (data.length === 0) {
-        grid.innerHTML = '<div style="grid-column: 1/-1; text-align: center; padding: 50px;"><h3>Mahsulotlar topilmadi</h3></div>';
-        return;
-    }
+    grid.innerHTML = data.length === 0 ? '<div style="grid-column: 1/-1; text-align: center; padding: 50px;"><h3>Hech narsa topilmadi</h3></div>' : '';
 
     data.forEach(p => {
         const isWished = wishlist.some(item => item.id === p.id);
@@ -83,42 +71,73 @@ function renderProducts(data) {
     });
 }
 
+window.renderPage = (page) => {
+    currentPage = page;
+    const start = (page - 1) * itemsPerPage;
+    const end = start + itemsPerPage;
+    renderProducts(filteredProducts.slice(start, end));
+    renderPagination();
+};
+
+function renderPagination() {
+    const totalPages = Math.ceil(filteredProducts.length / itemsPerPage);
+    const container = document.getElementById('pagination');
+    if (!container) return;
+    container.innerHTML = '';
+    for (let i = 1; i <= totalPages; i++) {
+        container.innerHTML += `<button onclick="renderPage(${i})" style="padding:5px 12px; margin:0 2px; border:1px solid #ddd; background:${i === currentPage ? '#000' : '#fff'}; color:${i === currentPage ? '#fff' : '#000'}; cursor:pointer; border-radius:5px;">${i}</button>`;
+    }
+}
+
+// Smart Search
+const searchInput = document.getElementById('searchInput');
+const autocompleteDiv = document.getElementById('searchAutocomplete');
+
+if (searchInput) {
+    searchInput.addEventListener('input', (e) => {
+        const term = e.target.value.toLowerCase();
+        filteredProducts = allProducts.filter(p => p.name.toLowerCase().includes(term));
+        renderPage(1);
+        if (term.length > 0) {
+            const matches = allProducts.filter(p => p.name.toLowerCase().includes(term)).slice(0, 5);
+            autocompleteDiv.style.display = matches.length ? 'block' : 'none';
+            autocompleteDiv.innerHTML = matches.map(p => `<div onclick="window.location.href='product-detail.html?id=${p.id}'" style="display:flex; align-items:center; gap:10px; padding:10px; cursor:pointer; border-bottom:1px solid #eee;"><img src="${p.image}" style="width:30px; height:30px; object-fit:cover;"><span>${p.name}</span></div>`).join('');
+        } else { autocompleteDiv.style.display = 'none'; }
+    });
+}
+
 window.toggleWishlist = (id) => {
     const idx = wishlist.findIndex(p => p.id === id);
     if (idx > -1) wishlist.splice(idx, 1);
-    else wishlist.push(products.find(item => item.id === id));
+    else wishlist.push(allProducts.find(item => item.id === id));
     updateWishCount();
-    renderProducts(products);
+    renderPage(currentPage);
 };
 
 function updateWishCount() {
-    const el = document.getElementById('wishCount');
-    if (el) el.innerText = wishlist.length;
+    if (document.getElementById('wishCount')) document.getElementById('wishCount').innerText = wishlist.length;
     localStorage.setItem('krist_wishlist', JSON.stringify(wishlist));
 }
 
 window.showWishlist = () => {
-    const itemsDiv = document.getElementById('wishlistItems');
-    if(!itemsDiv) return;
     document.getElementById('wishlistModal').style.display = "block";
-    itemsDiv.innerHTML = wishlist.length === 0 ? '<p style="text-align:center;">Saralanganlar bo\'sh.</p>' : 
-        wishlist.map(p => `<div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px; border-bottom:1px solid #eee; padding-bottom:5px;"><span>${p.name}</span><i class="fas fa-trash" style="color:red; cursor:pointer;" onclick="toggleWishlist(${p.id}); showWishlist();"></i></div>`).join('');
+    const itemsDiv = document.getElementById('wishlistItems');
+    itemsDiv.innerHTML = wishlist.length === 0 ? '<p style="text-align:center;">Bo\'sh</p>' : 
+        wishlist.map(p => `<div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>${p.name}</span><i class="fas fa-trash" style="color:red; cursor:pointer;" onclick="toggleWishlist(${p.id}); showWishlist();"></i></div>`).join('');
 };
 
 window.closeWishlist = () => { document.getElementById('wishlistModal').style.display = "none"; };
 
 window.filterByCategory = (cat) => {
-    renderProducts(products.filter(p => p.category === cat));
+    filteredProducts = allProducts.filter(p => p.category === cat);
+    renderPage(1);
     document.getElementById('products').scrollIntoView({ behavior: 'smooth' });
 };
 
 window.addToCart = (id) => {
-    const p = products.find(prod => prod.id === id);
-    if(p) {
-        cart.push(p);
-        updateCart();
-        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Savatchaga qo\'shildi', showConfirmButton: false, timer: 1500 });
-    }
+    cart.push(allProducts.find(p => p.id === id));
+    updateCart();
+    Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: 'Qo\'shildi', showConfirmButton: false, timer: 1500 });
 };
 
 function updateCart() {
@@ -127,11 +146,19 @@ function updateCart() {
     const itemsDiv = document.getElementById('cartItems');
     if (itemsDiv) {
         itemsDiv.innerHTML = cart.map((p, i) => `<div style="display:flex; justify-content:space-between; margin-bottom:10px;"><span>${p.name}</span><span>$${p.price.toFixed(2)} <i class="fas fa-trash" style="color:red; cursor:pointer;" onclick="removeFromCart(${i})"></i></span></div>`).join('');
-        document.getElementById('cartTotalSum').innerText = cart.reduce((s, p) => s + p.price, 0).toFixed(2);
+        if (document.getElementById('cartTotalSum')) document.getElementById('cartTotalSum').innerText = cart.reduce((s, p) => s + p.price, 0).toFixed(2);
     }
 }
 
 window.removeFromCart = (i) => { cart.splice(i, 1); updateCart(); };
+
+function setLanguage(lang) {
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (translations[lang]?.[key]) el.innerText = translations[lang][key];
+    });
+    localStorage.setItem('selectedLang', lang);
+}
 
 function toggleTheme() {
     const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
@@ -140,10 +167,7 @@ function toggleTheme() {
     if(document.getElementById('themeIcon')) document.getElementById('themeIcon').className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
 }
 
-window.toggleCartModal = (show) => {
-    const modal = document.getElementById('cartModal');
-    if (modal) modal.style.display = show ? "block" : "none";
-};
+window.toggleCartModal = (show) => { document.getElementById('cartModal').style.display = show ? "block" : "none"; };
 
 document.addEventListener('DOMContentLoaded', () => {
     const theme = localStorage.getItem('theme') || 'light';
@@ -158,37 +182,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     setLanguage(savedLang);
 
-    loadProductsFromServer(); // Serverdan yuklash
+    loadProductsFromServer();
     updateCart();
     updateWishCount();
-
-    if (document.getElementById('searchInput')) {
-        document.getElementById('searchInput').addEventListener('input', (e) => {
-            renderProducts(products.filter(p => p.name.toLowerCase().includes(e.target.value.toLowerCase())));
-        });
-    }
-
-    if (document.getElementById('priceFilter')) {
-        document.getElementById('priceFilter').addEventListener('change', (e) => {
-            let f = products;
-            if (e.target.value === '0-50') f = products.filter(p => p.price <= 50);
-            else if (e.target.value === '51-100') f = products.filter(p => p.price > 50 && p.price <= 100);
-            else if (e.target.value === '101+') f = products.filter(p => p.price > 100);
-            renderProducts(f);
-        });
-    }
-
-    const hamburger = document.getElementById('hamburger');
-    if (hamburger) {
-        hamburger.addEventListener('click', () => {
-            document.getElementById('navMenu').classList.toggle('active');
-            hamburger.querySelector('i').classList.toggle('fa-bars');
-            hamburger.querySelector('i').classList.toggle('fa-times');
-        });
-    }
 
     window.onclick = (e) => { 
         if (e.target == document.getElementById('cartModal')) toggleCartModal(false);
         if (e.target == document.getElementById('wishlistModal')) closeWishlist();
+        if (!e.target.closest('.search-box')) autocompleteDiv.style.display = 'none';
     };
 });
