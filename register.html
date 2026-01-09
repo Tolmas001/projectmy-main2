@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Krist - Kirish va Ro'yxatdan o'tish</title>
+    <title>Krist - Akkaunt yaratish</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="auth.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
@@ -11,45 +11,28 @@
 </head>
 <body>
     <div class="auth-container">
-        <div class="auth-box">
+        <div class="auth-box" id="authBox">
             <h1 class="logo" style="font-size: 36px; margin-bottom: 10px;">Krist</h1>
             <p id="authSubtitle" style="margin-bottom: 25px; color: #666;">Go'zallik olamiga xush kelibsiz!</p>
             
-            <!-- Registration Form -->
             <form id="registerForm">
                 <div class="profile-upload" onclick="document.getElementById('profileInput').click()">
                     <img id="profilePreview" src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150" alt="Avatar">
                     <div class="upload-icon"><i class="fas fa-camera"></i></div>
                     <input type="file" id="profileInput" hidden accept="image/*">
                 </div>
-                <div class="input-group">
-                    <label>To'liq ism</label>
-                    <input type="text" id="regName" required placeholder="Ismingiz">
-                </div>
-                <div class="input-group">
-                    <label>Email</label>
-                    <input type="email" id="regEmail" required placeholder="example@mail.com">
-                </div>
-                <div class="input-group">
-                    <label>Parol</label>
-                    <input type="password" id="regPass" required minlength="6" placeholder="Kamida 6 ta belgi">
-                </div>
+                <div class="input-group"><label>To'liq ism</label><input type="text" id="username" required placeholder="Ismingiz"></div>
+                <div class="input-group"><label>Email</label><input type="email" id="email" required placeholder="mail@example.com"></div>
+                <div class="input-group"><label>Parol</label><input type="password" id="password" required placeholder="********"></div>
                 <button type="submit" class="btn-primary-krist">Ro'yxatdan o'tish</button>
-                <p style="margin-top: 15px; font-size: 14px;">Akkauntingiz bormi? <a href="#" onclick="toggleAuth(false)">Kirish</a></p>
+                <p style="margin-top: 20px; font-size: 14px;">Akkauntingiz bormi? <a href="#" onclick="toggleAuth(false)" style="color: var(--primary-color); font-weight: 600;">Kirish</a></p>
             </form>
 
-            <!-- Login Form -->
             <form id="loginForm" style="display: none;">
-                <div class="input-group">
-                    <label>Email</label>
-                    <input type="email" id="loginEmail" required placeholder="example@mail.com">
-                </div>
-                <div class="input-group">
-                    <label>Parol</label>
-                    <input type="password" id="loginPass" required placeholder="********">
-                </div>
+                <div class="input-group"><label>Email</label><input type="email" id="loginEmail" required placeholder="mail@example.com"></div>
+                <div class="input-group"><label>Parol</label><input type="password" id="loginPassword" required placeholder="********"></div>
                 <button type="submit" class="btn-primary-krist">Tizimga kirish</button>
-                <p style="margin-top: 15px; font-size: 14px;">Yangi foydalanuvchimisiz? <a href="#" onclick="toggleAuth(true)">Ro'yxatdan o'tish</a></p>
+                <p style="margin-top: 20px; font-size: 14px;">Yangi foydalanuvchimisiz? <a href="#" onclick="toggleAuth(true)" style="color: var(--primary-color); font-weight: 600;">Ro'yxatdan o'tish</a></p>
             </form>
         </div>
     </div>
@@ -64,51 +47,53 @@
         };
 
         const profileInput = document.getElementById('profileInput');
-        profileInput.onchange = (e) => {
-            const file = e.target.files[0];
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                base64Image = reader.result;
-                document.getElementById('profilePreview').src = base64Image;
+        if (profileInput) {
+            profileInput.onchange = (e) => {
+                const file = e.target.files[0];
+                if (!file) return;
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    base64Image = reader.result;
+                    document.getElementById('profilePreview').src = base64Image;
+                };
+                reader.readAsDataURL(file);
             };
-            if (file) reader.readAsDataURL(file);
-        };
+        }
 
-        // REGISTRATION
         document.getElementById('registerForm').onsubmit = (e) => {
             e.preventDefault();
             const userData = {
-                name: document.getElementById('regName').value,
-                email: document.getElementById('regEmail').value,
-                password: document.getElementById('regPass').value,
+                name: document.getElementById('username').value,
+                email: document.getElementById('email').value,
+                password: document.getElementById('password').value,
                 avatar: base64Image || "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150",
                 joinedDate: new Date().toISOString()
             };
             
-            let users = JSON.parse(localStorage.getItem('krist_all_users')) || [];
-            if (users.some(u => u.email === userData.email)) {
-                return Swal.fire('Xato!', 'Bu email allaqachon ro\'yxatdan o\'tgan', 'error');
+            let allUsers = JSON.parse(localStorage.getItem('krist_all_users')) || [];
+            if (allUsers.some(u => u.email === userData.email)) {
+                Swal.fire('Xato!', 'Bu email allaqachon mavjud', 'error');
+                return;
             }
             
-            users.push(userData);
-            localStorage.setItem('krist_all_users', JSON.stringify(users));
+            allUsers.push(userData);
+            localStorage.setItem('krist_all_users', JSON.stringify(allUsers));
             localStorage.setItem('krist_user', JSON.stringify(userData));
-
+            
             Swal.fire('Tabriklaymiz!', 'Profil yaratildi', 'success').then(() => window.location.href = 'index.html');
         };
 
-        // LOGIN
         document.getElementById('loginForm').onsubmit = (e) => {
             e.preventDefault();
             const email = document.getElementById('loginEmail').value;
-            const pass = document.getElementById('loginPass').value;
-            const users = JSON.parse(localStorage.getItem('krist_all_users')) || [];
+            const pass = document.getElementById('loginPassword').value;
             
-            const foundUser = users.find(u => u.email === email && u.password === pass);
-
+            const allUsers = JSON.parse(localStorage.getItem('krist_all_users')) || [];
+            const foundUser = allUsers.find(u => u.email === email && u.password === pass);
+            
             if (foundUser) {
                 localStorage.setItem('krist_user', JSON.stringify(foundUser));
-                Swal.fire('Xush kelibsiz!', foundUser.name, 'success').then(() => window.location.href = 'index.html');
+                Swal.fire('Xush kelibsiz!', `Salom, ${foundUser.name}!`, 'success').then(() => window.location.href = 'index.html');
             } else {
                 Swal.fire('Xatolik!', 'Email yoki parol noto\'g\'ri!', 'error');
             }

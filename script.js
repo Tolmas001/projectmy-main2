@@ -13,30 +13,6 @@ function checkAuth() {
 }
 checkAuth();
 
-const translations = {
-    uz: {
-        "nav-home": "Bosh sahifa", "nav-shop": "Katalog", "nav-story": "Biz haqimizda", "nav-contact": "Aloqa",
-        "hero-sub": "Tabiiy va Nafis", "hero-title": "Go'zallik siri sizda", "hero-off": "CHEGIRMA -30%",
-        "shop-now": "Sotib olish", "category-title": "Toifalar", "bestseller-title": "Xit mahsulotlar",
-        "add-to-cart": "Savatga qo'shish", "footer-info": "Ma'lumotlar",
-        "sort-title": "Saralash", "sort-low": "Arzonroq", "sort-high": "Qimmatroq", "sort-new": "Yangi"
-    },
-    en: {
-        "nav-home": "Home", "nav-shop": "Shop", "nav-story": "About Us", "nav-contact": "Contact Us",
-        "hero-sub": "Natural & Elegant", "hero-title": "Unveil Your Beauty", "hero-off": "UPTO 30% OFF",
-        "shop-now": "Shop Now", "category-title": "Categories", "bestseller-title": "Our Bestsellers",
-        "add-to-cart": "Add to Cart", "footer-info": "Information",
-        "sort-title": "Sort by", "sort-low": "Price: Low to High", "sort-high": "Price: High to Low", "sort-new": "Newest"
-    },
-    ru: {
-        "nav-home": "Главная", "nav-shop": "Каталог", "nav-story": "О нас", "nav-blog": "Советы", "nav-contact": "Контакты",
-        "hero-sub": "Натурально и Изящно", "hero-title": "Секрет красоты у вас", "hero-off": "СКИДКА -30%",
-        "shop-now": "Купить", "category-title": "Категории", "bestseller-title": "Хиты продаж",
-        "add-to-cart": "В корзину", "footer-info": "Информация",
-        "sort-title": "Сортировка", "sort-low": "Дешевле", "sort-high": "Дороже", "sort-new": "Новинки"
-    }
-};
-
 function formatCurrency(amount) {
     return new Intl.NumberFormat('uz-UZ').format(amount) + " so'm";
 }
@@ -51,6 +27,30 @@ window.toggleTheme = () => {
 
 window.setLanguage = (lang) => {
     localStorage.setItem('selectedLang', lang);
+    const translations = {
+        uz: {
+            "nav-home": "Bosh sahifa", "nav-shop": "Katalog", "nav-story": "Biz haqimizda", "nav-contact": "Aloqa",
+            "hero-sub": "Tabiiy va Nafis", "hero-title": "Go'zallik siri sizda", "hero-off": "CHEGIRMA -30%",
+            "shop-now": "Sotib olish", "category-title": "Toifalar", "bestseller-title": "Xit mahsulotlar",
+            "add-to-cart": "Savatga qo'shish", "footer-info": "Ma'lumotlar",
+            "sort-title": "Saralash", "sort-low": "Arzonroq", "sort-high": "Qimmatroq", "sort-new": "Yangi"
+        },
+        en: {
+            "nav-home": "Home", "nav-shop": "Shop", "nav-story": "About Us", "nav-contact": "Contact Us",
+            "hero-sub": "Natural & Elegant", "hero-title": "Unveil Your Beauty", "hero-off": "UPTO 30% OFF",
+            "shop-now": "Shop Now", "category-title": "Categories", "bestseller-title": "Our Bestsellers",
+            "add-to-cart": "Add to Cart", "footer-info": "Information",
+            "sort-title": "Sort by", "sort-low": "Price: Low to High", "sort-high": "Price: High to Low", "sort-new": "Newest"
+        },
+        ru: {
+            "nav-home": "Главная", "nav-shop": "Каталог", "nav-story": "О нас", "nav-contact": "Контакты",
+            "hero-sub": "Натурально и Изящно", "hero-title": "Секрет красоты у вас", "hero-off": "СКИДКА -30%",
+            "shop-now": "Купить", "category-title": "Категории", "bestseller-title": "Хиты продаж",
+            "add-to-cart": "В корзину", "footer-info": "Информация",
+            "sort-title": "Сортировка", "sort-low": "Дешевле", "sort-high": "Дороже", "sort-new": "Новинки"
+        }
+    };
+
     document.querySelectorAll('[data-i18n]').forEach(el => {
         const key = el.getAttribute('data-i18n');
         if (translations[lang]?.[key]) el.innerText = translations[lang][key];
@@ -62,9 +62,15 @@ function renderProducts(data) {
     const grid = document.getElementById('productGrid');
     const lang = localStorage.getItem('selectedLang') || 'uz';
     if (!grid) return;
-    grid.innerHTML = data.length === 0 ? '<h3>Topilmadi</h3>' : '';
+    grid.innerHTML = data.length === 0 ? '<div style="grid-column: 1/-1; text-align: center; padding: 50px;"><h3>Hech narsa topilmadi</h3></div>' : '';
 
     const wishlist = JSON.parse(localStorage.getItem('krist_wishlist')) || [];
+    const translations = {
+        uz: { "add-to-cart": "Savatga qo'shish" },
+        en: { "add-to-cart": "Add to Cart" },
+        ru: { "add-to-cart": "В корзину" }
+    };
+
     data.forEach(p => {
         const isWished = wishlist.some(item => item.id.toString() === p.id.toString());
         grid.innerHTML += `

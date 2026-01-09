@@ -1,5 +1,1356 @@
 {
-  "products": [],
+  "products": [
+    {
+      "id": "1",
+      "name": "Matte Lipstick #1",
+      "price": 151000,
+      "oldPrice": 201000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=1"
+    },
+    {
+      "id": "2",
+      "name": "Vitamin C Serum #2",
+      "price": 352000,
+      "oldPrice": 402000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=2"
+    },
+    {
+      "id": "3",
+      "name": "Luxury Perfume #3",
+      "price": 853000,
+      "oldPrice": 903000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=3"
+    },
+    {
+      "id": "4",
+      "name": "Cleansing Gel #4",
+      "price": 124000,
+      "oldPrice": 174000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=4"
+    },
+    {
+      "id": "5",
+      "name": "Eyeshadow Palette #5",
+      "price": 455000,
+      "oldPrice": 505000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=5"
+    },
+    {
+      "id": "6",
+      "name": "Hair Mask #6",
+      "price": 206000,
+      "oldPrice": 256000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=6"
+    },
+    {
+      "id": "7",
+      "name": "Matte Lipstick #7",
+      "price": 157000,
+      "oldPrice": 207000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=7"
+    },
+    {
+      "id": "8",
+      "name": "Vitamin C Serum #8",
+      "price": 358000,
+      "oldPrice": 408000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=8"
+    },
+    {
+      "id": "9",
+      "name": "Luxury Perfume #9",
+      "price": 859000,
+      "oldPrice": 909000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=9"
+    },
+    {
+      "id": "10",
+      "name": "Cleansing Gel #10",
+      "price": 130000,
+      "oldPrice": 180000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=10"
+    },
+    {
+      "id": "11",
+      "name": "Eyeshadow Palette #11",
+      "price": 461000,
+      "oldPrice": 511000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=11"
+    },
+    {
+      "id": "12",
+      "name": "Hair Mask #12",
+      "price": 212000,
+      "oldPrice": 262000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=12"
+    },
+    {
+      "id": "13",
+      "name": "Matte Lipstick #13",
+      "price": 163000,
+      "oldPrice": 213000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=13"
+    },
+    {
+      "id": "14",
+      "name": "Vitamin C Serum #14",
+      "price": 364000,
+      "oldPrice": 414000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=14"
+    },
+    {
+      "id": "15",
+      "name": "Luxury Perfume #15",
+      "price": 865000,
+      "oldPrice": 915000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=15"
+    },
+    {
+      "id": "16",
+      "name": "Cleansing Gel #16",
+      "price": 136000,
+      "oldPrice": 186000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=16"
+    },
+    {
+      "id": "17",
+      "name": "Eyeshadow Palette #17",
+      "price": 467000,
+      "oldPrice": 517000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=17"
+    },
+    {
+      "id": "18",
+      "name": "Hair Mask #18",
+      "price": 218000,
+      "oldPrice": 268000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=18"
+    },
+    {
+      "id": "19",
+      "name": "Matte Lipstick #19",
+      "price": 169000,
+      "oldPrice": 219000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=19"
+    },
+    {
+      "id": "20",
+      "name": "Vitamin C Serum #20",
+      "price": 370000,
+      "oldPrice": 420000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=20"
+    },
+    {
+      "id": "21",
+      "name": "Luxury Perfume #21",
+      "price": 871000,
+      "oldPrice": 921000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=21"
+    },
+    {
+      "id": "22",
+      "name": "Cleansing Gel #22",
+      "price": 142000,
+      "oldPrice": 192000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=22"
+    },
+    {
+      "id": "23",
+      "name": "Eyeshadow Palette #23",
+      "price": 473000,
+      "oldPrice": 523000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=23"
+    },
+    {
+      "id": "24",
+      "name": "Hair Mask #24",
+      "price": 224000,
+      "oldPrice": 274000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=24"
+    },
+    {
+      "id": "25",
+      "name": "Matte Lipstick #25",
+      "price": 175000,
+      "oldPrice": 225000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=25"
+    },
+    {
+      "id": "26",
+      "name": "Vitamin C Serum #26",
+      "price": 376000,
+      "oldPrice": 426000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=26"
+    },
+    {
+      "id": "27",
+      "name": "Luxury Perfume #27",
+      "price": 877000,
+      "oldPrice": 927000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=27"
+    },
+    {
+      "id": "28",
+      "name": "Cleansing Gel #28",
+      "price": 148000,
+      "oldPrice": 198000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=28"
+    },
+    {
+      "id": "29",
+      "name": "Eyeshadow Palette #29",
+      "price": 479000,
+      "oldPrice": 529000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=29"
+    },
+    {
+      "id": "30",
+      "name": "Hair Mask #30",
+      "price": 230000,
+      "oldPrice": 280000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=30"
+    },
+    {
+      "id": "31",
+      "name": "Matte Lipstick #31",
+      "price": 181000,
+      "oldPrice": 231000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=31"
+    },
+    {
+      "id": "32",
+      "name": "Vitamin C Serum #32",
+      "price": 382000,
+      "oldPrice": 432000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=32"
+    },
+    {
+      "id": "33",
+      "name": "Luxury Perfume #33",
+      "price": 883000,
+      "oldPrice": 933000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=33"
+    },
+    {
+      "id": "34",
+      "name": "Cleansing Gel #34",
+      "price": 154000,
+      "oldPrice": 204000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=34"
+    },
+    {
+      "id": "35",
+      "name": "Eyeshadow Palette #35",
+      "price": 485000,
+      "oldPrice": 535000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=35"
+    },
+    {
+      "id": "36",
+      "name": "Hair Mask #36",
+      "price": 236000,
+      "oldPrice": 286000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=36"
+    },
+    {
+      "id": "37",
+      "name": "Matte Lipstick #37",
+      "price": 187000,
+      "oldPrice": 237000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=37"
+    },
+    {
+      "id": "38",
+      "name": "Vitamin C Serum #38",
+      "price": 388000,
+      "oldPrice": 438000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=38"
+    },
+    {
+      "id": "39",
+      "name": "Luxury Perfume #39",
+      "price": 889000,
+      "oldPrice": 939000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=39"
+    },
+    {
+      "id": "40",
+      "name": "Cleansing Gel #40",
+      "price": 160000,
+      "oldPrice": 210000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=40"
+    },
+    {
+      "id": "41",
+      "name": "Eyeshadow Palette #41",
+      "price": 491000,
+      "oldPrice": 541000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=41"
+    },
+    {
+      "id": "42",
+      "name": "Hair Mask #42",
+      "price": 242000,
+      "oldPrice": 292000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=42"
+    },
+    {
+      "id": "43",
+      "name": "Matte Lipstick #43",
+      "price": 193000,
+      "oldPrice": 243000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=43"
+    },
+    {
+      "id": "44",
+      "name": "Vitamin C Serum #44",
+      "price": 394000,
+      "oldPrice": 444000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=44"
+    },
+    {
+      "id": "45",
+      "name": "Luxury Perfume #45",
+      "price": 895000,
+      "oldPrice": 945000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=45"
+    },
+    {
+      "id": "46",
+      "name": "Cleansing Gel #46",
+      "price": 166000,
+      "oldPrice": 216000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=46"
+    },
+    {
+      "id": "47",
+      "name": "Eyeshadow Palette #47",
+      "price": 497000,
+      "oldPrice": 547000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=47"
+    },
+    {
+      "id": "48",
+      "name": "Hair Mask #48",
+      "price": 248000,
+      "oldPrice": 298000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=48"
+    },
+    {
+      "id": "49",
+      "name": "Matte Lipstick #49",
+      "price": 199000,
+      "oldPrice": 249000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=49"
+    },
+    {
+      "id": "50",
+      "name": "Vitamin C Serum #50",
+      "price": 400000,
+      "oldPrice": 450000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=50"
+    },
+    {
+      "id": "51",
+      "name": "Luxury Perfume #51",
+      "price": 901000,
+      "oldPrice": 951000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=51"
+    },
+    {
+      "id": "52",
+      "name": "Cleansing Gel #52",
+      "price": 172000,
+      "oldPrice": 222000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=52"
+    },
+    {
+      "id": "53",
+      "name": "Eyeshadow Palette #53",
+      "price": 503000,
+      "oldPrice": 553000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=53"
+    },
+    {
+      "id": "54",
+      "name": "Hair Mask #54",
+      "price": 254000,
+      "oldPrice": 304000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=54"
+    },
+    {
+      "id": "55",
+      "name": "Matte Lipstick #55",
+      "price": 205000,
+      "oldPrice": 255000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=55"
+    },
+    {
+      "id": "56",
+      "name": "Vitamin C Serum #56",
+      "price": 406000,
+      "oldPrice": 456000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=56"
+    },
+    {
+      "id": "57",
+      "name": "Luxury Perfume #57",
+      "price": 907000,
+      "oldPrice": 957000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=57"
+    },
+    {
+      "id": "58",
+      "name": "Cleansing Gel #58",
+      "price": 178000,
+      "oldPrice": 228000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=58"
+    },
+    {
+      "id": "59",
+      "name": "Eyeshadow Palette #59",
+      "price": 509000,
+      "oldPrice": 559000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=59"
+    },
+    {
+      "id": "60",
+      "name": "Hair Mask #60",
+      "price": 260000,
+      "oldPrice": 310000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=60"
+    },
+    {
+      "id": "61",
+      "name": "Matte Lipstick #61",
+      "price": 211000,
+      "oldPrice": 261000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=61"
+    },
+    {
+      "id": "62",
+      "name": "Vitamin C Serum #62",
+      "price": 412000,
+      "oldPrice": 462000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=62"
+    },
+    {
+      "id": "63",
+      "name": "Luxury Perfume #63",
+      "price": 913000,
+      "oldPrice": 963000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=63"
+    },
+    {
+      "id": "64",
+      "name": "Cleansing Gel #64",
+      "price": 184000,
+      "oldPrice": 234000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=64"
+    },
+    {
+      "id": "65",
+      "name": "Eyeshadow Palette #65",
+      "price": 515000,
+      "oldPrice": 565000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=65"
+    },
+    {
+      "id": "66",
+      "name": "Hair Mask #66",
+      "price": 266000,
+      "oldPrice": 316000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=66"
+    },
+    {
+      "id": "67",
+      "name": "Matte Lipstick #67",
+      "price": 217000,
+      "oldPrice": 267000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=67"
+    },
+    {
+      "id": "68",
+      "name": "Vitamin C Serum #68",
+      "price": 418000,
+      "oldPrice": 468000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=68"
+    },
+    {
+      "id": "69",
+      "name": "Luxury Perfume #69",
+      "price": 919000,
+      "oldPrice": 969000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=69"
+    },
+    {
+      "id": "70",
+      "name": "Cleansing Gel #70",
+      "price": 190000,
+      "oldPrice": 240000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=70"
+    },
+    {
+      "id": "71",
+      "name": "Eyeshadow Palette #71",
+      "price": 521000,
+      "oldPrice": 571000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=71"
+    },
+    {
+      "id": "72",
+      "name": "Hair Mask #72",
+      "price": 272000,
+      "oldPrice": 322000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=72"
+    },
+    {
+      "id": "73",
+      "name": "Matte Lipstick #73",
+      "price": 223000,
+      "oldPrice": 273000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=73"
+    },
+    {
+      "id": "74",
+      "name": "Vitamin C Serum #74",
+      "price": 424000,
+      "oldPrice": 474000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=74"
+    },
+    {
+      "id": "75",
+      "name": "Luxury Perfume #75",
+      "price": 925000,
+      "oldPrice": 975000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=75"
+    },
+    {
+      "id": "76",
+      "name": "Cleansing Gel #76",
+      "price": 196000,
+      "oldPrice": 246000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=76"
+    },
+    {
+      "id": "77",
+      "name": "Eyeshadow Palette #77",
+      "price": 527000,
+      "oldPrice": 577000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=77"
+    },
+    {
+      "id": "78",
+      "name": "Hair Mask #78",
+      "price": 278000,
+      "oldPrice": 328000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=78"
+    },
+    {
+      "id": "79",
+      "name": "Matte Lipstick #79",
+      "price": 229000,
+      "oldPrice": 279000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=79"
+    },
+    {
+      "id": "80",
+      "name": "Vitamin C Serum #80",
+      "price": 430000,
+      "oldPrice": 480000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=80"
+    },
+    {
+      "id": "81",
+      "name": "Luxury Perfume #81",
+      "price": 931000,
+      "oldPrice": 981000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=81"
+    },
+    {
+      "id": "82",
+      "name": "Cleansing Gel #82",
+      "price": 202000,
+      "oldPrice": 252000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=82"
+    },
+    {
+      "id": "83",
+      "name": "Eyeshadow Palette #83",
+      "price": 533000,
+      "oldPrice": 583000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=83"
+    },
+    {
+      "id": "84",
+      "name": "Hair Mask #84",
+      "price": 284000,
+      "oldPrice": 334000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=84"
+    },
+    {
+      "id": "85",
+      "name": "Matte Lipstick #85",
+      "price": 235000,
+      "oldPrice": 285000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=85"
+    },
+    {
+      "id": "86",
+      "name": "Vitamin C Serum #86",
+      "price": 436000,
+      "oldPrice": 486000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=86"
+    },
+    {
+      "id": "87",
+      "name": "Luxury Perfume #87",
+      "price": 937000,
+      "oldPrice": 987000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=87"
+    },
+    {
+      "id": "88",
+      "name": "Cleansing Gel #88",
+      "price": 208000,
+      "oldPrice": 258000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=88"
+    },
+    {
+      "id": "89",
+      "name": "Eyeshadow Palette #89",
+      "price": 539000,
+      "oldPrice": 589000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=89"
+    },
+    {
+      "id": "90",
+      "name": "Hair Mask #90",
+      "price": 290000,
+      "oldPrice": 340000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=90"
+    },
+    {
+      "id": "91",
+      "name": "Matte Lipstick #91",
+      "price": 241000,
+      "oldPrice": 291000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=91"
+    },
+    {
+      "id": "92",
+      "name": "Vitamin C Serum #92",
+      "price": 442000,
+      "oldPrice": 492000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=92"
+    },
+    {
+      "id": "93",
+      "name": "Luxury Perfume #93",
+      "price": 943000,
+      "oldPrice": 993000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=93"
+    },
+    {
+      "id": "94",
+      "name": "Cleansing Gel #94",
+      "price": 214000,
+      "oldPrice": 264000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=94"
+    },
+    {
+      "id": "95",
+      "name": "Eyeshadow Palette #95",
+      "price": 545000,
+      "oldPrice": 595000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=95"
+    },
+    {
+      "id": "96",
+      "name": "Hair Mask #96",
+      "price": 296000,
+      "oldPrice": 346000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=96"
+    },
+    {
+      "id": "97",
+      "name": "Matte Lipstick #97",
+      "price": 247000,
+      "oldPrice": 297000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=97"
+    },
+    {
+      "id": "98",
+      "name": "Vitamin C Serum #98",
+      "price": 448000,
+      "oldPrice": 498000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=98"
+    },
+    {
+      "id": "99",
+      "name": "Luxury Perfume #99",
+      "price": 949000,
+      "oldPrice": 999000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=99"
+    },
+    {
+      "id": "100",
+      "name": "Cleansing Gel #100",
+      "price": 220000,
+      "oldPrice": 270000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=100"
+    },
+    {
+      "id": "101",
+      "name": "Eyeshadow Palette #101",
+      "price": 551000,
+      "oldPrice": 601000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=101"
+    },
+    {
+      "id": "102",
+      "name": "Hair Mask #102",
+      "price": 302000,
+      "oldPrice": 352000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=102"
+    },
+    {
+      "id": "103",
+      "name": "Matte Lipstick #103",
+      "price": 253000,
+      "oldPrice": 303000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=103"
+    },
+    {
+      "id": "104",
+      "name": "Vitamin C Serum #104",
+      "price": 454000,
+      "oldPrice": 504000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=104"
+    },
+    {
+      "id": "105",
+      "name": "Luxury Perfume #105",
+      "price": 955000,
+      "oldPrice": 1005000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=105"
+    },
+    {
+      "id": "106",
+      "name": "Cleansing Gel #106",
+      "price": 226000,
+      "oldPrice": 276000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=106"
+    },
+    {
+      "id": "107",
+      "name": "Eyeshadow Palette #107",
+      "price": 557000,
+      "oldPrice": 607000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=107"
+    },
+    {
+      "id": "108",
+      "name": "Hair Mask #108",
+      "price": 308000,
+      "oldPrice": 358000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=108"
+    },
+    {
+      "id": "109",
+      "name": "Matte Lipstick #109",
+      "price": 259000,
+      "oldPrice": 309000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=109"
+    },
+    {
+      "id": "110",
+      "name": "Vitamin C Serum #110",
+      "price": 460000,
+      "oldPrice": 510000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=110"
+    },
+    {
+      "id": "111",
+      "name": "Luxury Perfume #111",
+      "price": 961000,
+      "oldPrice": 1011000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=111"
+    },
+    {
+      "id": "112",
+      "name": "Cleansing Gel #112",
+      "price": 232000,
+      "oldPrice": 282000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=112"
+    },
+    {
+      "id": "113",
+      "name": "Eyeshadow Palette #113",
+      "price": 563000,
+      "oldPrice": 613000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=113"
+    },
+    {
+      "id": "114",
+      "name": "Hair Mask #114",
+      "price": 314000,
+      "oldPrice": 364000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=114"
+    },
+    {
+      "id": "115",
+      "name": "Matte Lipstick #115",
+      "price": 265000,
+      "oldPrice": 315000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=115"
+    },
+    {
+      "id": "116",
+      "name": "Vitamin C Serum #116",
+      "price": 466000,
+      "oldPrice": 516000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=116"
+    },
+    {
+      "id": "117",
+      "name": "Luxury Perfume #117",
+      "price": 967000,
+      "oldPrice": 1017000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=117"
+    },
+    {
+      "id": "118",
+      "name": "Cleansing Gel #118",
+      "price": 238000,
+      "oldPrice": 288000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=118"
+    },
+    {
+      "id": "119",
+      "name": "Eyeshadow Palette #119",
+      "price": 569000,
+      "oldPrice": 619000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=119"
+    },
+    {
+      "id": "120",
+      "name": "Hair Mask #120",
+      "price": 320000,
+      "oldPrice": 370000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=120"
+    },
+    {
+      "id": "121",
+      "name": "Matte Lipstick #121",
+      "price": 271000,
+      "oldPrice": 321000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=121"
+    },
+    {
+      "id": "122",
+      "name": "Vitamin C Serum #122",
+      "price": 472000,
+      "oldPrice": 522000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=122"
+    },
+    {
+      "id": "123",
+      "name": "Luxury Perfume #123",
+      "price": 973000,
+      "oldPrice": 1023000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=123"
+    },
+    {
+      "id": "124",
+      "name": "Cleansing Gel #124",
+      "price": 244000,
+      "oldPrice": 294000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=124"
+    },
+    {
+      "id": "125",
+      "name": "Eyeshadow Palette #125",
+      "price": 575000,
+      "oldPrice": 625000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=125"
+    },
+    {
+      "id": "126",
+      "name": "Hair Mask #126",
+      "price": 326000,
+      "oldPrice": 376000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=126"
+    },
+    {
+      "id": "127",
+      "name": "Matte Lipstick #127",
+      "price": 277000,
+      "oldPrice": 327000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=127"
+    },
+    {
+      "id": "128",
+      "name": "Vitamin C Serum #128",
+      "price": 478000,
+      "oldPrice": 528000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=128"
+    },
+    {
+      "id": "129",
+      "name": "Luxury Perfume #129",
+      "price": 979000,
+      "oldPrice": 1029000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=129"
+    },
+    {
+      "id": "130",
+      "name": "Cleansing Gel #130",
+      "price": 250000,
+      "oldPrice": 300000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=130"
+    },
+    {
+      "id": "131",
+      "name": "Eyeshadow Palette #131",
+      "price": 581000,
+      "oldPrice": 631000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=131"
+    },
+    {
+      "id": "132",
+      "name": "Hair Mask #132",
+      "price": 332000,
+      "oldPrice": 382000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=132"
+    },
+    {
+      "id": "133",
+      "name": "Matte Lipstick #133",
+      "price": 283000,
+      "oldPrice": 333000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=133"
+    },
+    {
+      "id": "134",
+      "name": "Vitamin C Serum #134",
+      "price": 484000,
+      "oldPrice": 534000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=134"
+    },
+    {
+      "id": "135",
+      "name": "Luxury Perfume #135",
+      "price": 985000,
+      "oldPrice": 1035000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=135"
+    },
+    {
+      "id": "136",
+      "name": "Cleansing Gel #136",
+      "price": 256000,
+      "oldPrice": 306000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=136"
+    },
+    {
+      "id": "137",
+      "name": "Eyeshadow Palette #137",
+      "price": 587000,
+      "oldPrice": 637000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=137"
+    },
+    {
+      "id": "138",
+      "name": "Hair Mask #138",
+      "price": 338000,
+      "oldPrice": 388000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=138"
+    },
+    {
+      "id": "139",
+      "name": "Matte Lipstick #139",
+      "price": 289000,
+      "oldPrice": 339000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=139"
+    },
+    {
+      "id": "140",
+      "name": "Vitamin C Serum #140",
+      "price": 490000,
+      "oldPrice": 540000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=140"
+    },
+    {
+      "id": "141",
+      "name": "Luxury Perfume #141",
+      "price": 991000,
+      "oldPrice": 1041000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=141"
+    },
+    {
+      "id": "142",
+      "name": "Cleansing Gel #142",
+      "price": 262000,
+      "oldPrice": 312000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=142"
+    },
+    {
+      "id": "143",
+      "name": "Eyeshadow Palette #143",
+      "price": 593000,
+      "oldPrice": 643000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=143"
+    },
+    {
+      "id": "144",
+      "name": "Hair Mask #144",
+      "price": 344000,
+      "oldPrice": 394000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=144"
+    },
+    {
+      "id": "145",
+      "name": "Matte Lipstick #145",
+      "price": 295000,
+      "oldPrice": 345000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d?w=500&sig=145"
+    },
+    {
+      "id": "146",
+      "name": "Vitamin C Serum #146",
+      "price": 496000,
+      "oldPrice": 546000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1599733594230-6b823276abcc?w=500&sig=146"
+    },
+    {
+      "id": "147",
+      "name": "Luxury Perfume #147",
+      "price": 997000,
+      "oldPrice": 1047000,
+      "category": "Atirlar",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1541643600914-78b084683601?w=500&sig=147"
+    },
+    {
+      "id": "148",
+      "name": "Cleansing Gel #148",
+      "price": 268000,
+      "oldPrice": 318000,
+      "category": "Yuz parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1556228578-0d85b1a4d571?w=500&sig=148"
+    },
+    {
+      "id": "149",
+      "name": "Eyeshadow Palette #149",
+      "price": 599000,
+      "oldPrice": 649000,
+      "category": "Makiyaj",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1512496015851-a90fb38ba796?w=500&sig=149"
+    },
+    {
+      "id": "150",
+      "name": "Hair Mask #150",
+      "price": 350000,
+      "oldPrice": 400000,
+      "category": "Soch parvarishi",
+      "description": "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
+      "image": "https://images.unsplash.com/photo-1527799822340-304bc6475a6c?w=500&sig=150"
+    }
+  ],
   "users": [],
   "orders": []
 }
