@@ -1,10 +1,17 @@
-// 1. O'zgaruvchilar
+// script.js - Katalog va umumiy mantiq
 let currentPage = 1;
 const itemsPerPage = 12;
 let allProducts = [];
 let filteredProducts = [];
 
 const API_URL = "http://localhost:3000/api";
+
+// 1. Kirish tekshiruvi
+function checkAuth() {
+    const user = JSON.parse(localStorage.getItem('krist_user'));
+    if (!user && !window.location.pathname.includes('register.html')) window.location.href = 'register.html';
+}
+checkAuth();
 
 const translations = {
     uz: {
@@ -22,7 +29,7 @@ const translations = {
         "sort-title": "Sort by", "sort-low": "Price: Low to High", "sort-high": "Price: High to Low", "sort-new": "Newest"
     },
     ru: {
-        "nav-home": "Главная", "nav-shop": "Каталог", "nav-story": "О нас", "nav-contact": "Контакты",
+        "nav-home": "Главная", "nav-shop": "Каталог", "nav-story": "О нас", "nav-blog": "Советы", "nav-contact": "Контакты",
         "hero-sub": "Натурально и Изящно", "hero-title": "Секрет красоты у вас", "hero-off": "СКИДКА -30%",
         "shop-now": "Купить", "category-title": "Категории", "bestseller-title": "Хиты продаж",
         "add-to-cart": "В корзину", "footer-info": "Информация",
@@ -30,7 +37,10 @@ const translations = {
     }
 };
 
-// 2. GLOBAL FUNKSIYALAR
+function formatCurrency(amount) {
+    return new Intl.NumberFormat('uz-UZ').format(amount) + " so'm";
+}
+
 window.toggleTheme = () => {
     const theme = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     document.documentElement.setAttribute('data-theme', theme);
@@ -48,7 +58,6 @@ window.setLanguage = (lang) => {
     renderPage(currentPage);
 };
 
-// 3. Render
 function renderProducts(data) {
     const grid = document.getElementById('productGrid');
     const lang = localStorage.getItem('selectedLang') || 'uz';
@@ -69,13 +78,12 @@ function renderProducts(data) {
                 </div>
                 <div class="product-info-krist">
                     <h4 onclick="window.location.href='product-detail.html?id=${p.id}'" style="cursor:pointer">${p.name}</h4>
-                    <p>$${parseFloat(p.price).toFixed(2)}</p>
+                    <p>${formatCurrency(p.price)}</p>
                 </div>
             </div>`;
     });
 }
 
-// 4. Katalog mantiqi
 async function loadProductsFromServer() {
     try {
         const res = await fetch(`${API_URL}/products`);
@@ -126,15 +134,15 @@ window.toggleWishlist = (id) => {
     if (idx > -1) wishlist.splice(idx, 1);
     else wishlist.push(allProducts.find(item => item.id.toString() === id.toString()));
     localStorage.setItem('krist_wishlist', JSON.stringify(wishlist));
-    document.getElementById('wishCount').innerText = wishlist.length;
+    if(document.getElementById('wishCount')) document.getElementById('wishCount').innerText = wishlist.length;
     renderPage(currentPage);
 };
 
-// 5. Init
 document.addEventListener('DOMContentLoaded', () => {
     const theme = localStorage.getItem('theme') || 'light';
     document.documentElement.setAttribute('data-theme', theme);
-    if(document.getElementById('themeIcon')) document.getElementById('themeIcon').className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
+    const icon = document.getElementById('themeIcon');
+    if(icon) icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
     
     const lang = localStorage.getItem('selectedLang') || 'uz';
     const langSelect = document.getElementById('langSelect');
@@ -154,4 +162,6 @@ document.addEventListener('DOMContentLoaded', () => {
             renderPage(1);
         });
     }
+
+    window.onclick = (e) => { if (e.target.classList.contains('modal')) e.target.style.display = "none"; };
 });

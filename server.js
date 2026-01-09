@@ -19,7 +19,8 @@ const readDB = () => {
             db = JSON.parse(fs.readFileSync(DB_PATH));
         } catch (e) { console.error("JSON Error"); }
     }
-    if (!db.products || db.products.length === 0) {
+    // Agar baza bo'sh bo'lsa yoki narxlar eski ($) bo'lsa, yangilaymiz
+    if (!db.products || db.products.length === 0 || db.products[0].price < 1000) {
         db.products = generateInitialProducts();
         fs.writeFileSync(DB_PATH, JSON.stringify(db, null, 2));
     }
@@ -30,24 +31,24 @@ const writeDB = (data) => fs.writeFileSync(DB_PATH, JSON.stringify(data, null, 2
 
 function generateInitialProducts() {
     const productData = [
-        { name: "Matte Lipstick", category: "Makiyaj", basePrice: 12, img: "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d" },
-        { name: "Vitamin C Serum", category: "Yuz parvarishi", basePrice: 35, img: "https://images.unsplash.com/photo-1599733594230-6b823276abcc" },
-        { name: "Luxury Perfume", category: "Atirlar", basePrice: 75, img: "https://images.unsplash.com/photo-1541643600914-78b084683601" },
-        { name: "Cleansing Gel", category: "Yuz parvarishi", basePrice: 20, img: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571" },
-        { name: "Eyeshadow Palette", category: "Makiyaj", basePrice: 30, img: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796" },
-        { name: "Hair Mask", category: "Soch parvarishi", basePrice: 25, img: "https://images.unsplash.com/photo-1527799822340-304bc6475a6c" }
+        { name: "Matte Lipstick", category: "Makiyaj", basePrice: 150000, img: "https://images.unsplash.com/photo-1586790170083-2f9ceadc732d" },
+        { name: "Vitamin C Serum", category: "Yuz parvarishi", basePrice: 350000, img: "https://images.unsplash.com/photo-1599733594230-6b823276abcc" },
+        { name: "Luxury Perfume", category: "Atirlar", basePrice: 850000, img: "https://images.unsplash.com/photo-1541643600914-78b084683601" },
+        { name: "Cleansing Gel", category: "Yuz parvarishi", basePrice: 120000, img: "https://images.unsplash.com/photo-1556228578-0d85b1a4d571" },
+        { name: "Eyeshadow Palette", category: "Makiyaj", basePrice: 450000, img: "https://images.unsplash.com/photo-1512496015851-a90fb38ba796" },
+        { name: "Hair Mask", category: "Soch parvarishi", basePrice: 200000, img: "https://images.unsplash.com/photo-1527799822340-304bc6475a6c" }
     ];
     const products = [];
     for (let i = 1; i <= 150; i++) {
         const base = productData[(i - 1) % productData.length];
-        const p = base.basePrice + (i % 10);
+        const p = base.basePrice + (i * 1000);
         products.push({
             id: i.toString(),
             name: `${base.name} #${i}`,
             price: p,
-            oldPrice: p + 5,
+            oldPrice: p + 50000,
             category: base.category,
-            description: "Premium mahsulot.",
+            description: "Ushbu premium mahsulot teringizni oziqlantiradi va unga tabiiy go'zallik bag'ishlaydi.",
             image: `${base.img}?w=500&sig=${i}`
         });
     }
