@@ -37,6 +37,7 @@
         </div>
     </div>
     <script>
+        const formatSum = (n) => new Intl.NumberFormat('uz-UZ').format(n) + " so'm";
         const user = JSON.parse(localStorage.getItem('krist_user'));
         if (!user) window.location.href = 'register.html';
 
@@ -47,9 +48,16 @@
         let total = 0;
         cart.forEach(item => {
             total += parseFloat(item.price);
-            summaryBox.innerHTML += `<div class="summary-item" style="display:flex; justify-content:space-between; margin-bottom:8px;"><span>${item.name}</span> <span>$${parseFloat(item.price).toFixed(2)}</span></div>`;
+            summaryBox.innerHTML += `
+                <div class="summary-item" style="display:flex; justify-content:space-between; margin-bottom:8px; font-size:14px;">
+                    <span>${item.name}</span> 
+                    <span>${formatSum(item.price)}</span>
+                </div>`;
         });
-        summaryBox.innerHTML += `<div class="summary-total-row" style="margin-top:15px; border-top:1px solid #ddd; padding-top:10px; font-weight:bold;">Jami: $${total.toFixed(2)}</div>`;
+        summaryBox.innerHTML += `
+            <div class="summary-total-row" style="margin-top:15px; border-top:1px solid #ddd; padding-top:10px; font-weight:bold; font-size:1.1rem; display:flex; justify-content:space-between;">
+                <span>Jami:</span> <span>${formatSum(total)}</span>
+            </div>`;
 
         window.selectPayment = (method) => {
             document.getElementById('paymentMethod').value = method;
@@ -66,7 +74,7 @@
             const orderData = {
                 customer: {
                     name: document.getElementById('fullName').value,
-                    email: user.email, // Muhim: Email qo'shildi!
+                    email: user.email,
                     phone: document.getElementById('phone').value,
                     address: document.getElementById('address').value
                 },
@@ -82,22 +90,23 @@
                     body: JSON.stringify(orderData)
                 });
                 
-                const result = await response.json();
-                const savedOrder = result.order;
-
+                if (response.ok) {
+                    const result = await response.json();
+                    const savedOrder = result.order;
+                    const allOrders = JSON.parse(localStorage.getItem('krist_orders')) || [];
+                    allOrders.push(savedOrder);
+                    localStorage.setItem('krist_orders', JSON.stringify(allOrders));
+                    localStorage.removeItem('krist_cart');
+                    Swal.fire({ title: 'Muvaffaqiyatli!', text: 'Buyurtma berildi!', icon: 'success' }).then(() => { window.location.href = 'index.html'; });
+                }
+            } catch (err) {
+                // Fail-safe
+                const backupOrder = { ...orderData, id: Date.now().toString(), status: 'pending' };
                 const allOrders = JSON.parse(localStorage.getItem('krist_orders')) || [];
-                allOrders.push(savedOrder);
+                allOrders.push(backupOrder);
                 localStorage.setItem('krist_orders', JSON.stringify(allOrders));
                 localStorage.removeItem('krist_cart');
-
-                Swal.fire({ title: 'Muvaffaqiyatli!', text: 'Buyurtma berildi!', icon: 'success' }).then(() => { window.location.href = 'index.html'; });
-            } catch (err) {
-                console.error(err);
-                Swal.fire({ title: 'Xatolik!', text: 'Serverga ulanib bo\'lmadi.', icon: 'error' }).then(() => {
-                    // Fail-safe: Baribir davom etamiz
-                    localStorage.removeItem('krist_cart');
-                    window.location.href = 'index.html';
-                });
+                Swal.fire({ title: 'Buyurtma qabul qilindi!', text: 'Lokal rejimda saqlandi.', icon: 'info' }).then(() => { window.location.href = 'index.html'; });
             }
         };
 
