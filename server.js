@@ -60,15 +60,22 @@ app.get('/api/products', (req, res) => res.json(readDB().products));
 app.post('/api/products', (req, res) => {
     const db = readDB();
     const p = req.body;
+    
+    // Agar ID bo'lsa - TAXRIRLASH, agar yo'q bo'lsa - QO'SHISH
     if (p.id) {
-        const i = db.products.findIndex(x => x.id.toString() === p.id.toString());
-        if (i !== -1) db.products[i] = p;
+        const index = db.products.findIndex(x => x.id.toString() === p.id.toString());
+        if (index !== -1) {
+            db.products[index] = { ...db.products[index], ...p };
+        } else {
+            return res.status(404).json({ message: "Mahsulot topilmadi" });
+        }
     } else {
         p.id = Date.now().toString();
         db.products.unshift(p);
     }
+    
     writeDB(db);
-    res.json(p);
+    res.json({ message: "Muvaffaqiyatli saqlandi!", product: p });
 });
 
 app.delete('/api/products/:id', (req, res) => {
