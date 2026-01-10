@@ -14,6 +14,7 @@ window.updateCartCount = () => {
 };
 
 window.addToCart = (productId) => {
+    // Bazadagi barcha mahsulotlarni olamiz
     const allProducts = JSON.parse(localStorage.getItem('krist_products')) || [];
     const product = allProducts.find(p => p.id.toString() === productId.toString());
 
@@ -72,4 +73,10 @@ window.toggleCartModal = (show) => {
     }
 };
 
-document.addEventListener('DOMContentLoaded', window.updateCartCount);
+document.addEventListener('DOMContentLoaded', () => {
+    window.updateCartCount();
+    window.addEventListener('click', (e) => {
+        const modal = document.getElementById('cartModal');
+        if (e.target === modal) toggleCartModal(false);
+    });
+});
